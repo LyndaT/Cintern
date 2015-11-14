@@ -18,7 +18,9 @@ var applicationSchema = mongoose.Schema({
  * @param{Object} questions
  * @param{Function} callback(err, Application)
  */
-applicationSchema.statics.createApplication = function(questions, callback) {}
+applicationSchema.statics.createApplication = function(questions, callback) {
+
+}
 
 /**
  * Deletes the application associated with the appId, and runs the callback
