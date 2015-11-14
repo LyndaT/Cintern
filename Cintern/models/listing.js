@@ -8,47 +8,60 @@ var mongoose = require("mongoose");
 
 //Schema for listings
 var listingSchema = mongoose.Schema({
-	employerId: String, //user id of employer
-	title: String,
+	employerId: {type: String, immutable: true, required: true}, 
+	title: {type: String, required: true},
 	description: String,
-	requirements: [String],
+	requirements: String,
 	deadline: Date
 });
 
 
 /** Heeyoon */
 
-/* Called when employer creates a new listing.  students would be empty initially, since one must create
-the listing before students can apply
-*/
-listingSchema.statics.createListing = function(currEmployerId, applicationId, title, desc, reqs, deadline, callback) {
+/**
+ * Creates a new Listing, then calls 
+ * @param {String} currEmployerId the id of the employer who creates the listing
+ * @param {String} title the title of the internship position
+ * @param {String} desc of the internship position
+ * @param {String} reqs the requirements that the employer wants you to have, e.g. Graduates on June 2017, B.S. Computer Science, etc.
+ * @param {Date} deadline the date at which the application for this listing will close
+ * @param {Function} callback(err, listing) 
+ */
+listingSchema.statics.createListing = function(currEmployerId, title, desc, reqs, deadline, callback) {
 	Listing.create({
 		employerId: currEmployerId,
-		customAppId: applicationId,
 		title: title,
 		description: desc,
 		requirements: reqs,
 		deadline: deadline
 	}, function(err, user) {
 	      if (err) {
-	        console.log(err);
-	        callback();
+	        callback(err.msg);
 	      } else {
 	        callback();
 	      }
     });
 };
 
-listingSchema.statics.deleteListing = function(listingId) {
-
-};
-
-listingSchema.statics.getApplicantsForListing = function(listingId) {
-
+/**
+ * Deletes the listing with id listingId
+ * @param {String} listingId the id of the listing to delete
+ * @param {Function} callback(err, listing) 
+ */
+listingSchema.statics.deleteListing = function(listingId, callback) {
+	Listing.remove({_id: listingId}, function(err, user) {
+      if (err) {
+        callback(err.msg);
+      } else {
+        callback();
+      }
+    });
 };
 
 
 /** Maddie */
+//Retrieve employerId,title, deadline
+//Retrieve employer from User using employerId
 listingSchema.statics.getAllListings = function(listingId) {
 
 };
@@ -60,10 +73,6 @@ listingSchema.statics.filterListings = function(query) {
 listingSchema.statics.getAllEmployerListings = function(employerId) {
 
 };
-
-
-
-
 
 
 
