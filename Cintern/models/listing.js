@@ -16,10 +16,9 @@ var listingSchema = mongoose.Schema({
 });
 
 
-/** Heeyoon */
-
 /**
- * Creates a new Listing, then calls 
+ * Creates a new Listing, then calls callback function
+ *
  * @param {String} currEmployerId the id of the employer who creates the listing
  * @param {String} title the title of the internship position
  * @param {String} desc of the internship position
@@ -32,7 +31,8 @@ listingSchema.statics.createListing = function(currEmployerId, title, desc, reqs
 };
 
 /**
- * Deletes the listing with id listingId
+ * Deletes the listing with id listingId, then calls callback function
+ *
  * @param {String} listingId the id of the listing to delete
  * @param {Function} callback(err, listing) 
  */
@@ -41,21 +41,75 @@ listingSchema.statics.deleteListing = function(listingId, callback) {
 };
 
 
-/** Maddie */
-listingSchema.statics.getAllListings = function(listingId) {
+/**
+ * Retrieve all listings and pass them to the provided callback.
+ * Gather only the employerId, title, and deadline for each listing,
+ * and fetch the company name for each employerId.
+ *
+ * @param callback: a function to pass the listing info to. The
+ *					callback takes in an error and the list of listings
+ */
+listingSchema.statics.getAllListings = function(callback) {
+	
+};
+
+
+/**
+ * Retrieve listings that match the given query and pass them to
+ * the provided callback. Gather only the employerId, title,
+ * and deadline for each listing, and fetch the company name for each
+ * employerId.
+ *
+ * @param query: a JSON object that represents a MongoDB query
+ * @param callback: a function to pass the listing info to. The
+ * 					callback takes in an error and the list of listings
+ */
+var getListings = function(query, callback) {
 
 };
 
-listingSchema.statics.filterListings = function(query) {
+
+/**
+ * Retrieve listings that match the given filter query and pass them
+ * to the provided callback. Gather only the employerId, title,
+ * and deadline for each listing, and fetch the company name for each
+ * employerId.
+ *
+ * @param query: a JSON object that represents a MongoDB query
+ * @param callback: a function to pass the listing info to. The
+ * 					callback takes in an error and the list of listings
+ */
+listingSchema.statics.filterListings = function(query, callback) {
 
 };
 
-listingSchema.statics.getAllEmployerListings = function(employerId) {
+
+/**
+ * Retrieve all listings posted by the employer with given ID and
+ * pass them to the provided callback. Gather only the employerId, title,
+ * and deadline for each listing, and fetch the company name for each
+ * employerId.
+ *
+ * @param employerId: the ID of the employer whose listings to retrieve
+ * @param callback: a function to pass the listing info to. The
+ * 					callback takes in an error and the list of listings
+ */
+listingSchema.statics.getAllEmployerListings = function(employerId, callback) {
 
 };
 
 
+/**
+ * Retrieve all information for the listing with ID listingId and pass it
+ * to the provided callback.
+ *
+ * @param listingId:
+ * @param callback: a funciton to pass the listing to. The callback takes
+ * 					in an error and the listing
+ */
+listingSchema.statics.getListingInformation = function(listingId, callback) {
 
+};
 
 var Listing = mongoose.model('Listing', listingSchema);
 module.exports = Listing;
