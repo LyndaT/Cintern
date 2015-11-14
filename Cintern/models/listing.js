@@ -28,19 +28,7 @@ var listingSchema = mongoose.Schema({
  * @param {Function} callback(err, listing) 
  */
 listingSchema.statics.createListing = function(currEmployerId, title, desc, reqs, deadline, callback) {
-	Listing.create({
-		employerId: currEmployerId,
-		title: title,
-		description: desc,
-		requirements: reqs,
-		deadline: deadline
-	}, function(err, user) {
-	      if (err) {
-	        callback(err.msg);
-	      } else {
-	        callback();
-	      }
-    });
+
 };
 
 /**
@@ -49,19 +37,11 @@ listingSchema.statics.createListing = function(currEmployerId, title, desc, reqs
  * @param {Function} callback(err, listing) 
  */
 listingSchema.statics.deleteListing = function(listingId, callback) {
-	Listing.remove({_id: listingId}, function(err, user) {
-      if (err) {
-        callback(err.msg);
-      } else {
-        callback();
-      }
-    });
+
 };
 
 
 /** Maddie */
-//Retrieve employerId,title, deadline
-//Retrieve employer from User using employerId
 listingSchema.statics.getAllListings = function(listingId) {
 
 };
