@@ -1,3 +1,7 @@
+/**
+ * @author Lynda Tang
+ */
+
 var mongoose = require("mongoose");
 
 var StudentSchema = mongoose.Schema({
