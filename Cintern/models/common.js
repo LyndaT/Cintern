@@ -12,7 +12,7 @@ var commonSchema = mongoose.Schema({
  * @param{ObjectId} userId
  * @param{Function} callback(err, Application)
  */
-commonSchema.statics.submitCommon = function(questions, userId, callback) {}
+commonSchema.statics.createCommon = function(questions, userId, callback) {}
 
 /**
  * Gets the common app associated with the userId, then runs the callback
@@ -20,7 +20,7 @@ commonSchema.statics.submitCommon = function(questions, userId, callback) {}
  * @param{ObjectId} userId
  * @param{Function} callback(err, Application) 
  */
-commonSchema.statics.getCommonApp = function(userId, callback) {}
+commonSchema.statics.getCommon = function(userId, callback) {}
 
 /**
  * Gets all the common apps where the owners are from userIds, then runs callback

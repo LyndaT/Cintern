@@ -13,6 +13,18 @@ var applicationSchema = mongoose.Schema({
 });
 
 /**
+ */
+applicationSchema.statics.createApplication = function(questions, userId, callback) {}
+
+/**
+ */
+applicationSchema.statics.deleteApplication = function(appId, callback) {}
+
+/**
+ */
+applicationSchema.methods.isOwner = function(userId) {}
+
+/**
  * Sets the application questions to newQuestions and if isSubmission is true
  * checks if application can be submitted and update state appropriately, then 
  * run the callback
@@ -23,8 +35,6 @@ var applicationSchema = mongoose.Schema({
  * @param{Function} callback(err, Application)
  */
 applicationSchema.statics.updateQuestions = function(appId, newQuestions, isSubmission, callback) {}
-
-
 
 var Application = mongoose.model("Application", applicationSchema);
 module.exports = Application;
