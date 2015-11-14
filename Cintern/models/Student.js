@@ -5,7 +5,7 @@
 var mongoose = require("mongoose");
 
 var StudentSchema = mongoose.Schema({
-  user: {type: mongoose.Schema.Types.ObjectId , ref: 'User'},
+  user: {type: mongoose.Schema.Types.ObjectId , ref: 'User', unique: true, immutable: true},
 });
 
 /**

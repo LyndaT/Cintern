@@ -5,8 +5,8 @@
 var mongoose = require("mongoose");
 
 var EmployerSchema = mongoose.Schema({
-  user: {type: mongoose.Schema.Types.ObjectId , ref: 'User'},
-  company: String,
+  user: {type: mongoose.Schema.Types.ObjectId , ref: 'User', unique: true, immutable: true},
+  company: {type: String, unique: true},
 });
 
 /**

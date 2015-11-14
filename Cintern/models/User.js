@@ -5,9 +5,9 @@
 var mongoose = require("mongoose");
 
 var UserSchema = mongoose.Schema({
-  email: String,
-  password: String,
-  isStudent: Boolean
+  email: {type: String, unique: true, required: true},
+  password: {type: String, required: true},
+  isStudent: {type: Boolean, required: true}
 });
 
 /**
