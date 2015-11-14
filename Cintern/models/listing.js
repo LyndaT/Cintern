@@ -39,34 +39,97 @@ listingSchema.statics.createListing = function(currEmployerId, applicationId, ti
     });
 };
 
-listingSchema.statics.deleteListing = function(listingId) {
+listingSchema.statics.deleteListing = function(listingId, callback) {
 
 };
 
-listingSchema.statics.getApplicantsForListing = function(listingId) {
+listingSchema.statics.getApplicantsForListing = function(listingId, callback) {
 
 };
-
 
 /** Maddie */
-listingSchema.statics.getAllListings = function(listingId) {
 
+/**
+ * Retrieve all listings and pass them to the provided callback.
+ * Gather only the employerId, title, and deadline for each listing,
+ * and fetch the company name for each employerId.
+ *
+ * @param callback: a function to pass the listing info to. The
+ *					callback takes in an error and the list of listings
+ */
+listingSchema.statics.getAllListings = function(callback) {
+	getListings({}, callback);
 };
 
-listingSchema.statics.filterListings = function(query) {
-
+/**
+ * Retrieve listings that match the given query and pass them to
+ * the provided callback. Gather only the employerId, title,
+ * and deadline for each listing, and fetch the company name for each
+ * employerId.
+ *
+ * @param query: a JSON object that represents a MongoDB query
+ * @param callback: a function to pass the listing info to. The
+ * 					callback takes in an error and the list of listings
+ */
+var getListings = function(query, callback) {
+	Listing.find(query, 
+		{ employerId: 1, title: 1, description: 0, requirements: 0, deadline: 1 },
+		function(err, listing_data) {
+		if (err) {
+			callback(err);
+		} else {
+			callback(null, listing_data);
+		}
+	});
 };
 
-listingSchema.statics.getAllEmployerListings = function(employerId) {
-
+/**
+ * Retrieve listings that match the given filter query and pass them
+ * to the provided callback. Gather only the employerId, title,
+ * and deadline for each listing, and fetch the company name for each
+ * employerId.
+ *
+ * @param query: a JSON object that represents a MongoDB query
+ * @param callback: a function to pass the listing info to. The
+ * 					callback takes in an error and the list of listings
+ */
+listingSchema.statics.filterListings = function(query, callback) {
+	getListings(query, callback);
 };
 
+/**
+ * Retrieve all listings posted by the employer with given ID and
+ * pass them to the provided callback. Gather only the employerId, title,
+ * and deadline for each listing, and fetch the company name for each
+ * employerId.
+ *
+ * @param employerId: the ID of the employer whose listings to retrieve
+ * @param callback: a function to pass the listing info to. The
+ * 					callback takes in an error and the list of listings
+ */
+listingSchema.statics.getAllEmployerListings = function(employerId, callback) {
+	getListings({employerId: employerId}, callback);
+};
 
-
-
-
-
-
+/**
+ * Retrieve all information for the listing with ID listingId and pass it
+ * to the provided callback.
+ *
+ * @param listingId:
+ * @param callback: a funciton to pass the listing to. The callback takes
+ * 					in an error and the listing
+ */
+listingSchema.statics.getListingInformation = function(listingId, callback) {
+	Listing.findOne({ _id: listingId }, function(err, listing) {
+		if (!listing) {
+			callback({ msg: 'Invalid listing.' });
+		} else if (err) {
+			callback(err);
+		} else {
+			callback(none, listing);
+		}
+	});
+};
 
 var Listing = mongoose.model('Listing', listingSchema);
 module.exports = Listing;
