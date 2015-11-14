@@ -9,20 +9,24 @@ var applicationSchema = mongoose.Schema({
 		"answer" : { type : String },
 		"options" : [{ type : String }],
 	}],
-	owner : { type : mongoose.Schema.Types.ObjectId, ref : "User", required : true, immutable : true },
 });
 
 /**
+ * Creates an Application where questions are set as questions, and then runs
+ * the callback on the new Application
+ *
+ * @param{Object} questions
+ * @param{Function} callback(err, Application)
  */
-applicationSchema.statics.createApplication = function(questions, userId, callback) {}
+applicationSchema.statics.createApplication = function(questions, callback) {}
 
 /**
+ * Deletes the application associated with the appId, and runs the callback
+ *
+ * @param{ObjectId} appId
+ * @param{Function} callback(err)
  */
 applicationSchema.statics.deleteApplication = function(appId, callback) {}
-
-/**
- */
-applicationSchema.methods.isOwner = function(userId) {}
 
 /**
  * Sets the application questions to newQuestions and if isSubmission is true

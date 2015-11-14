@@ -13,7 +13,8 @@ var stateTable = {
 var customSchema = mongoose.Schema({
 	listing : { type : mongoose.Schema.Types.ObjectId, ref: "Listing" },
 	state : { type: String, enum : Object.keys(stateTable), required : true },
-	application : { type : mongoose.Schema.Types.ObjectId, ref: "Application" }
+	application : { type : mongoose.Schema.Types.ObjectId, ref: "Application" },
+	owner : { type : mongoose.Schema.Types.ObjectId, ref : "User", required : true, immutable : true },
 });
 
 /**
