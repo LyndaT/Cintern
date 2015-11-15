@@ -4,9 +4,20 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
+require('handlebars/runtime');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+
+//Setting up MongoDB
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/cintern');
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback) {
+    console.log("database connected");
+});
 
 var app = express();
 
@@ -20,10 +31,33 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({ secret : '6170', resave : true, saveUninitialized : true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+
+// Authentication middleware. This function
+// is called on _every_ request and populates
+// the req.currentUser field with the logged-in
+// user object based off the username provided
+// in the session variable (accessed by the
+// encrypted cookied).
+app.use(function(req, res, next) {
+  if (req.session.username) {
+    User.findOne({username: req.session.username}, function(err, user){
+      if (user) {
+        req.currentUser = user.username;
+      } else {
+        req.session.destroy();
+      }
+      console.log("Current user" + req.currentuser);
+      next();
+    });
+  } else {
+      next();
+  }
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
