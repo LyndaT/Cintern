@@ -5,7 +5,7 @@ var _ = require("../helpers/lodash");
 var applicationSchema = mongoose.Schema({
 	questions : [{
 		"question" : { type : String, required : true },
-		"type" : { type : String, required : true, enum : [ "form", "list", "box" ] },
+		"type" : { type : String, required : true, enum : [ "text", "radio", "check" ] },
 		"required" : { type : Boolean, required : true },
 		"answer" : { type : String },
 		"options" : [{ type : String }],
@@ -21,8 +21,8 @@ var createQuestion = function(question, type, required, answer, options) {
 };
 
 var commonQuestions = [
-	createQuestion("Email", "form", true, null, null),
-	createQuestion("Name", "form", true, null, null)
+	createQuestion("Email", "text", true, null, null),
+	createQuestion("Name", "text", true, null, null)
 ]
 
 /**
@@ -142,15 +142,17 @@ var verifyForSubmissions = function(origQuestions, newQuestions) {
 	//console.log(newQuestions);
 	//console.log(verifyForUpdate(origQuestions, newQuestions));
 	if (verifyForUpdate(origQuestions, newQuestions)) {
+		var verified = true;
+
 		// check that all required fields are filled out
 		origQuestions.forEach(function(question, i) {
 			var question2 = newQuestions[i];
 			if (question.required) {
-				if (!("answer" in question2)) return false;
-				if (question2["answer"] == '') return false;
+				if (!("answer" in question2)) verified = false;
+				if (question2["answer"] == '') verified = false;
 			}
 		});
-		return true;
+		return verified
 	}
 	return false;
 };
