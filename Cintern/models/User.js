@@ -48,12 +48,12 @@ UserSchema.statics.addUser = function(email, password, isStudent, callback){
 UserSchema.statics.loginUser = function(email, password, callback){
 	findUser(email, function(err, user){
 		if (user == null) {
-			callback({message:"This user does not exist"});
+			callback("This user does not exist");
 		} else {
 			if (user.password == password) {
 				callback(null, {success: true, curruser:email});
 			} else {
-				callback({message: "Wrong username and password"});
+				callback("Wrong username and password");
 			}
 		}
 	});
