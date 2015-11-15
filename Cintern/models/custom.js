@@ -167,7 +167,7 @@ customSchema.methods.deleteCustom = function(callback) {
 		Custom.remove({ "_id" : this._id }, function(err) {
 			if (err) callback(err.message);
 			// delete the Application associated with the Custom from the DB
-			else Application.deleteApplication(applicationId, callback);
+			else Application.deleteNotCommonApplication(applicationId, callback);
 		});
 	}
 	else callback("Cannot delete this Custom");

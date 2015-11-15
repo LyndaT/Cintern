@@ -26,17 +26,20 @@ var commonQuestions = [
 ];
 
 /**
- * Checks that any "list" typed question has at least one option, checks that
- * any non-"list" typed question have no options
+ * Checks that any "radio" typed question has at least 2 options, checks that
+ * any non-"radio" typed question have no options and that no answer is being saved
  */
 applicationSchema.pre("save", function(next) {
 	this.questions.forEach(function(e) {
-		if (e.type === "list" && e.options.length === 0) {
-			return next(new Error("list questions must have at least one option"));
-		} else if (e.type !== "list" && e.options.length !== 0) {
-			return next(new Error("non list questions don't have options"));
+		if (e.type === "radio" && e.options.length < 2) {
+			return next(new Error("radio questions must have at least one option"));
+		} else if (e.type !== "radio" && e.options.length !== 0) {
+			return next(new Error("non radio questions don't have options"));
 		}
 	});
+	if(!verifyAnsweredQuestionsCorrectly(this.questions)) {
+		next(new Error("answer is wrongly formatted"));
+	}
 	next();
 });
 
@@ -71,7 +74,7 @@ applicationSchema.statics.createCommon = function(questions, callback) {
  * @param{ObjectId} appId
  * @param{Function} callback(err)
  */
-applicationSchema.statics.deleteApplication = function(appId, callback) {
+applicationSchema.statics.deleteNotCommonApplication = function(appId, callback) {
 	Application.remove({ "_id" : appId, "isCommon" : false }, function(err) {
 		if (err) callback(err.message);
 		else callback(null);
@@ -94,10 +97,12 @@ applicationSchema.statics.updateQuestions = function(appId, newQuestions, isSubm
 		else if (!app) callback("Invalid application");
 		else {
 			var readyToUpdate = ((isSubmission && verifyForSubmissions(app.questions, newQuestions)) ||
-								(!isSubmission && verifyForSave(app.question, newQuestions)));
+								(!isSubmission && verifyForUpdate(app.questions, newQuestions)));
 
 			if (readyToUpdate) {
-				Application.findOneAndUpdate({ "_id" : appId }, { $set : newQuestions }, function(err, app) {
+				console.log("here");
+				console.log(newQuestions);
+				Application.findOneAndUpdate({ "_id" : appId }, { $set : { questions : newQuestions } }, function(err, app) {
 					if (err) callback(err.message);
 					else callback(null, app);
 				});
@@ -166,31 +171,59 @@ var verifyForSubmissions = function(origQuestions, newQuestions) {
  * every every question in newQuestions (with exception to answers)
  */
 var verifyForUpdate = function(origQuestions, newQuestions) {
-	// check that both lists are same length
+	// check that both question lists are same length
 	if (origQuestions.length !== newQuestions.length) return false;
 
 	var verified = true;
 
+	// check that all question, required, type, options are the same for question and question2
 	origQuestions.forEach(function(question, i) {
 		var question2 = newQuestions[i];
 		
-		// check that all question, required, type, options are the same for question and question2
 		if (question.question !== question2.question) verified = false;
 		if (question.required !== question2.required) verified = false;
 		if (question.type !== question2.type) verified = false;
-		if (!(_.isEqual(question.options, question2.options))) verified = false;
+		if (!sameOptions(question.options, question2.options)) verified = false;
+	});
 
-		// check that if type is "box", answer is "yes" or "no" or empty
-		if (question.type === "box" && "answer" in question2) {
-			if (question2.answer !== "yes" && question2.answer !== "no") verified = false;
+	// if format matches for origQuestions and newQuestions, check that each question is answered correctly
+	if (verified) return verifyAnsweredQuestionsCorrectly(newQuestions)
+	else return verified;	
+};
+
+/**
+ * This function checks if two options are supposed to be treated as the same,
+ * where options is the field that belongs in the schema for questions
+ *
+ * @param{Variable} optoins1 is an Array of Strings or undefined
+ * @param{Variable} options2 is an Array of Strings or undefined
+ * @return Boolean that is true if both Arrays and equal, or if one is undefined
+ * and the other is an empty array, or if both are undefined; otherwise return false
+ */
+var sameOptions = function(options1, options2) {
+	if (!options1) {
+		if (!options2) return true
+		else return options2.length === 0
+	} 
+	else if (!options2) return options1.length === 0
+	else return _.isEqual(options1, options2);
+}
+
+
+var verifyAnsweredQuestionsCorrectly = function(questions) {
+	var verified = true
+	questions.forEach(function(question) {
+		// check that if type is "check", answer is "yes" or "no" or empty
+		if (question.type === "check" && question.answer) {
+			if (question.answer !== "yes" && question.answer !== "no") verified = false;
 		}
-		// check that if type is "options", answer is in options or empty
-		if (question.type === "list" && "answer" in question2) {
-			if (question.options.indexOf(question2.answer) < 0) verified = false;
+		// check that if type is "radio", answer is in options or empty
+		if (question.type === "radio" && question.answer) {
+			if (question.options.indexOf(question.answer) < 0) verified = false;
 		}
 	});
-	return verified;	
-};
+	return verified;
+}
 
 var Application = mongoose.model("Application", applicationSchema);
 module.exports = Application;
