@@ -10,7 +10,7 @@ var applicationSchema = mongoose.Schema({
 		"answer" : { type : String },
 		"options" : [{ type : String }],
 	}],
-	isCommon : { type : Boolean, required: true }
+	isCommon : { type : Boolean, required: true, immutable : true }
 });
 
 var createQuestion = function(question, type, required, answer, options) {

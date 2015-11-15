@@ -93,7 +93,21 @@ describe('Application', function() {
       }];
       Application.createCommon(questions, function() {
         Application.find({}, function(err, apps) {
-          console.log(apps);
+          assert.equal(0, apps.length);
+          done();
+        });
+      });
+    });
+
+    it ('should not create a common if missing question from commonQuestions', function(done) {
+      var questions = [{
+        "question" : "Email",
+        "type" : "form",
+        "required" : true,
+        "answer" : "abc@gmail.com",
+      }];
+      Application.createCommon(questions, function() {
+        Application.find({}, function(err, apps) {
           assert.equal(0, apps.length);
           done();
         });
