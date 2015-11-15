@@ -248,7 +248,7 @@ var createCustom = function(listingId, questions, ownerId, isTemplate, state, ca
 				else {
 					var custom = { 
 						"listing" : listingId,
-						"application" : app,
+						"application" : app._id,
 						"owner" : ownerId,
 						"isTemplate" : isTemplate
 					};
