@@ -9,7 +9,20 @@ var applicationSchema = mongoose.Schema({
 		"answer" : { type : String },
 		"options" : [{ type : String }],
 	}],
+	isCommon : { type : Boolean, required: true }
 });
+
+var commonQuestions = [
+	createQuestion("Email", "email", true, null, null),
+	createQuestion("Name", "form", true, null, null)
+]
+
+var createQuestion(question, type, required, answer, options) {
+	var q = { "question" : question, "type" : type, "required" : required }
+	if (answer !== null) q["answer"] = answer;
+	if (options !== null) q["options"] = options;
+	return q;
+}
 
 /**
  * Checks that any "list" typed question has at least one option, checks that
@@ -23,34 +36,42 @@ applicationSchema.pre("save", function(next) {
 			return next(new Error("non list questions don't have options"));
 		}
 	});
+	next();
 });
 
 /**
- * Creates an Application where questions are set as questions, and then runs
- * the callback on the new Application
+ * Creates an Application where questions are set as questions and isCommon is false, 
+ * and then runs the callback on the new Application
  *
- * @param{Object} questions
+ * @param{Array} questions is an Array of Objects
  * @param{Function} callback(err, Application)
  */
-applicationSchema.statics.createApplication = function(questions, callback) {
-	var app = { "questions" : questions };
-	var newApp = new Application(app);
-
-	// save the new app in the DB
-	newApp.save(function(err, newApp) {
-		if (err) callback(err.message);
-		else callback(null, newApp);
-	});
+applicationSchema.statics.createNotCommon = function(questions, callback) {
+	createApp(questions, false, callback);
 };
 
 /**
- * Deletes the application associated with the appId, and runs the callback
+ * Creates an Application where questions are set as questions and isCommon is true, 
+ * and the questions is a valid submission for commonQuestions, and then runs the 
+ * callback on the new Application
+ *
+ * @param{Array} questions is an Array of Objects
+ * @param{Function} callback(err, Application)
+ */
+applicationSchema.statics.createCommon = function(questions, callback) {
+	if (verifyForSubmissions(commonQuestions, questions)) createApp(questions, true, callback);
+	else callback("Invalid common submission");		
+};
+
+/**
+ * Deletes the application associated with the appId if it's not a common, 
+ * and runs the callback
  *
  * @param{ObjectId} appId
  * @param{Function} callback(err)
  */
 applicationSchema.statics.deleteApplication = function(appId, callback) {
-	Application.remove({ "_id" : this._id }, function(err) {
+	Application.remove({ "_id" : appId, "isCommon" : false }, function(err) {
 		if (err) callback(err.message);
 		else callback(null);
 	});
@@ -62,7 +83,7 @@ applicationSchema.statics.deleteApplication = function(appId, callback) {
  * run the callback
  *
  * @param{ObjectId} appId
- * @param{Object} newQuestions
+ * @param{Array} newQuestions is an Array of Objects
  * @param{Boolean} isSubmission
  * @param{Function} callback(err, Application)
  */
@@ -86,9 +107,31 @@ applicationSchema.statics.updateQuestions = function(appId, newQuestions, isSubm
 };
 
 /**
+ * Creates an Application where the questions are set to questions and isCommon
+ * is set to isCommon, then runs the callback on the new Application
+ * 
+ * @param{Array} questions is an Array of Objects
+ * @param{Boolean} isCommon
+ * @param{Function} callback(err, Application)
+ */
+var createApp = function(questions, isCommon, callback) {
+	var app = { 
+		"questions" : questions,
+		"isCommon" : isCommon 
+	};
+	var newApp = new Application(app);
+
+	// save the new app in the DB
+	newApp.save(function(err, newApp) {
+		if (err) callback(err.message);
+		else callback(null, newApp);
+	});
+}
+
+/**
  * Checks if newQuestions is okay for submission given origQuestions
- * @param{Object} origQuestions
- * @param{Object} newQuestions
+ * @param{Array} origQuestions is an Array of Objects
+ * @param{Array} newQuestions is an Array of Objects
  *
  * @return Boolean that is true if every question in origQuestions matches
  * every every question in newQuestions (with exception to answers) and that
@@ -111,8 +154,8 @@ var verifyForSubmissions(origQuestions, newQuestions) {
 
 /**
  * Checks if newQuestions is okay for updating given origQuestions
- * @param{Object} origQuestions
- * @param{Object} newQuestions
+ * @param{Array} origQuestions is an Array of Objects
+ * @param{Array} newQuestions is an Array of Objects
  *
  * @return Boolean that is true if every question in origQuestions matches
  * every every question in newQuestions (with exception to answers)
