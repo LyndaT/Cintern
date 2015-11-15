@@ -117,22 +117,3 @@ describe('Application', function() {
   });
 });
 
-describe('Custom', function() {
-  beforeEach(function(done) {
-    mongoose.connect('mongodb://localhost/test');
-    Application.remove({}, function() {
-      done();
-    });
-  });
-
-  afterEach(function(done) {
-    Application.remove({}, function() {
-      mongoose.connection.close();
-      done();
-    });
-  });
-
-  describe('#createCustom', function() {
-  });
-
-});
