@@ -1,3 +1,7 @@
+/**
+ * Lynda Tang
+ */
+
 var assert = require("assert");
 var User = require('../models/User');
 var mongoose = require('mongoose');
