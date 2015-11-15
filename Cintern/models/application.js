@@ -175,7 +175,7 @@ var verifyForUpdate = function(origQuestions, newQuestions) {
 		// check that all question, required, type, options are the same for question and question2
 		if (question.question !== question2.question) verified = false;
 		if (question.required !== question2.required) verified = false;
-		if (question.type !== question2.type) return false;
+		if (question.type !== question2.type) verified = false;
 		if (!(_.isEqual(question.options, question2.options))) verified = false;
 
 		// check that if type is "box", answer is "yes" or "no" or empty

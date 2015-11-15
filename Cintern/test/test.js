@@ -38,7 +38,7 @@ describe('Application', function() {
       });
     });
 
-    it ('should not create a common if list question not in commonQuestions', function(done) {
+    it ('should not create a common if question not in commonQuestions', function(done) {
       var questions = [{
         "question" : "Email FRAUD",
         "type" : "form",
@@ -52,6 +52,48 @@ describe('Application', function() {
       }];
       Application.createCommon(questions, function() {
         Application.find({}, function(err, apps) {
+          assert.equal(0, apps.length);
+          done();
+        });
+      });
+    });
+
+    it ('should not create a common if type is wrong for in commonQuestions', function(done) {
+      var questions = [{
+        "question" : "Email",
+        "type" : "list",
+        "required" : true,
+        "answer" : "abc@gmail.com"
+      }, {
+        "question" : "Name",
+        "type" : "form",
+        "required" : true,
+        "answer" : "Tester Smith"
+      }];
+      Application.createCommon(questions, function() {
+        Application.find({}, function(err, apps) {
+          assert.equal(0, apps.length);
+          done();
+        });
+      });
+    });
+
+    it ('should not create a common if type is options when not allowed for in commonQuestions', function(done) {
+      var questions = [{
+        "question" : "Email",
+        "type" : "form",
+        "required" : true,
+        "answer" : "abc@gmail.com",
+        "options" : ["a", "b", "c"]
+      }, {
+        "question" : "Name",
+        "type" : "form",
+        "required" : true,
+        "answer" : "Tester Smith"
+      }];
+      Application.createCommon(questions, function() {
+        Application.find({}, function(err, apps) {
+          console.log(apps);
           assert.equal(0, apps.length);
           done();
         });
