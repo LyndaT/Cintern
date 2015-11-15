@@ -13,7 +13,7 @@ var stateTable = {
 var customSchema = mongoose.Schema({
 	listing : { type : mongoose.Schema.Types.ObjectId, ref: "Listing", required: true, immutable : true },
 	state : { type: String, enum : Object.keys(stateTable) },
-	application : { type : mongoose.Schema.Types.ObjectId, ref: "Application", required : true, immutable : true },
+	application : { type : mongoose.Schema.Types.ObjectId, ref: "Application", required : true, immutable : true, unique : true },
 	owner : { type : mongoose.Schema.Types.ObjectId, ref : "User", required : true, immutable : true },
 	isTemplate : { type : Boolean, required : true, immutable : true }
 });
@@ -253,7 +253,7 @@ var createCustom = function(listingId, questions, ownerId, isTemplate, state, ca
 						"isTemplate" : isTemplate
 					};
 					if (isTemplate) custom["state"] = state;
-					var newCustom = new Application(custom);
+					var newCustom = new Custom(custom);
 
 					// save the new custom in the DB
 					newCustom.save(function(err, newCustom) {
