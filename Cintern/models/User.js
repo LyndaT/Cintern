@@ -21,14 +21,14 @@ var UserSchema = mongoose.Schema({
 UserSchema.statics.addUser = function(email, password, isStudent, callback){
 	findUser(email, function(err, user){
 		if (user){
-			callback({message:"This username has already been taken"});
+			callback("This username has already been taken");
 		} else {
 			User.create({   email: email, 
 		                password: password,
 		                isStudent: isStudent}, 
 			function(err, user) {
 			  if (err) {
-			    callback({message: err});
+			    callback(err);
 			  } else {
 			  	callback(null, {success: true, curruser: email});
 			  }

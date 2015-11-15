@@ -7,7 +7,7 @@ var User = require('../models/User.js');
 
 var StudentSchema = mongoose.Schema({
   user: {type: mongoose.Schema.Types.ObjectId , ref: 'User', unique: true, immutable: true},
-  common: {type: mongoose.Schema.Types.ObjectId, ref: 'Common', unique: true, immutable: true}
+  common: {type: mongoose.Schema.Types.ObjectId, ref: 'Common'}
 });
 
 /**
@@ -18,15 +18,14 @@ var StudentSchema = mongoose.Schema({
  * 								(err, Student)
  */
 StudentSchema.statics.createStudent = function(email, password, callback){
-	User.addUser(email, password, true, function(err, user){
+	User.addUser(email, password, true, function(errMsg, user){
 		if (err){
 			callback(err);
 		} else if (!user) {
-			callback({message: "No user created"});
+			callback("No user created");
 		} else {
 			var student = {
-				"user" : user,
-				"common" : null
+				"user" : user
 			};
 			var newStudent = new Student(student);
 			newStudent.save(function(err, newStudent) {
