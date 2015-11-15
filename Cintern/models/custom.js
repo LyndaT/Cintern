@@ -164,3 +164,6 @@ var changeState = function(customId, origState, startStates, endState, callback)
  * @param{Function} callback(err, Custom)
  */
 var createCustom = function(listingId, questions, ownerId, isTemplate, state, callback) {};
+
+var Custom = mongoose.model("Custom", customSchema);
+module.exports = Custom;
