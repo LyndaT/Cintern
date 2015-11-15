@@ -165,7 +165,7 @@ describe('Application', function() {
    *    one poorly formatted question : should not create
    *    all correctly formatted questions : should create
    */
-  describe('#createNotCommon', function() {
+  /*describe('#createNotCommon', function() {
     it('should create app empty', function(done){
       var questions = [];
       Application.createNotCommon(questions, function(e, app) {
@@ -432,14 +432,14 @@ describe('Application', function() {
         });
       });
     });
-  });
+  });*/
 
   /**
    * Input : appId
    *    isCommon is true for app associated with appId : should not delete
    *    isCommon is false for app associaed with appId : should delete
    */
-  describe('#deleteNotCommonApplication', function() {
+  /*describe('#deleteNotCommonApplication', function() {
     it('should not delete application, common', function(done) {
       var questions = [{
         "question" : "Email",
@@ -482,7 +482,7 @@ describe('Application', function() {
         });
       });
     });
-  });
+  });*/
   
   /**
    * Inputs: appId, newQuestions, isSubmission
@@ -497,7 +497,7 @@ describe('Application', function() {
    *    a question in newQuestions has field required set to true and no answer, isSubmission is false : should update
    *    newQuestions is the same as the original questions for appId, isSubmission is false : should update
    */
-  describe('#updateQuestions', function() {
+  /*describe('#updateQuestions', function() {
     it('should error if question in newQuestions does not have same question field', function(done) {
       var questions = [{
         "question" : "Email",
@@ -644,7 +644,7 @@ describe('Application', function() {
         });
       });
     });
-  });
+  });*/
 });
 
 
