@@ -18,23 +18,21 @@ var EmployerSchema = mongoose.Schema({
  * @param {Function} callback the callback function that sends the Employer User in the form
  * 								(err, Employer)
  */
-EmployerSchema.statics.createEmployer = function(userId, companyName, callback){	
-	// var newEmployer = new Employer({user: user, company: companyName});
-	// newEmployer.save(function(err, newEmployer) {
-		// if (err){
-			// callback(err);
-		// } else {
-			// callback(null, newEmployer);
-		// }
-	// });
-	Employer.create({user: userId, 
+EmployerSchema.statics.createEmployer = function(email, password, companyName, callback){	
+	User.addUser(email, password, false, function(errMsg, user){
+		if (errMsg){
+			callback(errMsg);
+		} else {
+			Employer.create({user: user.user._id, 
 	                company: companyName}, 
-		function(err, user) {
-		  if (err) {
-		    callback(err);
-		  } else {
-		  	callback(null, {success: true, curruser: userId});
-		  }
+			function(err, user) {
+			  if (err) {
+			    callback(err);
+			  } else {
+			  	callback(null, {success: true, curruser: email});
+			  }
+			});
+		}
 	});
 };
 

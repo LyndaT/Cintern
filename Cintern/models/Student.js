@@ -19,21 +19,18 @@ var StudentSchema = mongoose.Schema({
  */
 StudentSchema.statics.createStudent = function(email, password, callback){
 	User.addUser(email, password, true, function(errMsg, user){
-		if (err){
-			callback(err);
-		} else if (!user) {
-			callback("No user created");
+		if (errMsg){
+			callback(errMsg);
 		} else {
-			var student = {
-				"user" : user
-			};
-			var newStudent = new Student(student);
-			newStudent.save(function(err, newStudent) {
-				if (err){
-					callback(err);
-				} else {
-					callback(null, newStudent);
-				}
+			Student.create({user: user.user._id
+	                //common: here
+	                }, 
+			function(err, user) {
+			  if (err) {
+			    callback(err);
+			  } else {
+			  	callback(null, {success: true, curruser: email});
+			  }
 			});
 		}
 	});

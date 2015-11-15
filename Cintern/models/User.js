@@ -30,7 +30,7 @@ UserSchema.statics.addUser = function(email, password, isStudent, callback){
 			  if (err) {
 			    callback(err);
 			  } else {
-			  	callback(null, {success: true, curruser: email});
+			  	callback(null, {success: true, curruser: email, user: user});
 			  }
 			});
 		}
