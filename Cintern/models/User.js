@@ -12,28 +12,56 @@ var UserSchema = mongoose.Schema({
 
 /**
  * Adds a User to this Collection
- * @param {String} username the username of this User
+ * @param {String} email the email of this User
  * @param {String} password the password of this User
  * @param {Boolean} isStudent whether or not this User is a Student
  * @param {Function} callback the callback function that sents the user created in the form
  * 								of (err, User)
  */
-UserSchema.statics.addUser = function(username, password, isStudent, callback){
-	
+UserSchema.statics.addUser = function(email, password, isStudent, callback){
+	findUser(email, function(err, user){
+		if (user){
+			callback({message:"This username has already been taken"});
+		} else {
+			User.create({   email: email, 
+		                password: password,
+		                isStudent: isStudent}, 
+			function(err, user) {
+			  if (err) {
+			    callback({message: err});
+			  } else {
+			  	callback(null, {success: true, curruser: email});
+			  }
+			});
+		}
+	});
 };
 
 /**
- * Logins a User with the username and password given
- * @param {String} username the given username
+ * Logins a User with the email and password given
+ * @param {String} email the given email
  * @param {String} password the given password
  * @param {Function} callback the callback function that sends the current User in the form
  * 								of (err, currUser). Will throw an error if the User with the
  * 								username doesn't exist or if the password does not match
  */
-UserSchema.statics.loginUser = function(username, password, callback){
-
+UserSchema.statics.loginUser = function(email, password, callback){
+	findUser(email, function(err, user){
+		if (user == null) {
+			callback({message:"This user does not exist"});
+		} else {
+			if (user.password == password) {
+				callback(null, {success: true, curruser:email});
+			} else {
+				callback({message: "Wrong username and password"});
+			}
+		}
+	});
 };
 
+var findUser = function(email, callback){
+	User.findOne({email: email}, callback);
+};
 
 var User = mongoose.model('User', UserSchema);
 module.exports = mongoose.model("User", UserSchema);
