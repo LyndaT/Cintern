@@ -127,21 +127,6 @@ listingSchema.statics.getAllEmployerListings = function(employerId, callback) {
 };
 
 /**
- * Retrieve all listings posted by the employer with given ID and
- * pass them to the provided callback. Gather only the employerId, title,
- * and deadline for each listing, and fetch the company name for each
- * employerId.
- *
- * @param employerId: the ID of the employer whose listings to retrieve
- * @param callback: a function to pass the listing info to. The
- * 					callback takes in an error and the list of listings
- */
-listingSchema.statics.getAllEmployerListings = function(employerId, callback) {
-
-};
-
-
-/**
  * Retrieve all information for the listing with ID listingId and pass it
  * to the provided callback.
  *
