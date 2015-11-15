@@ -1,4 +1,5 @@
 var mongoose = require("mongoose");
+var _ = require("../helpers/lodash");
 
 // Application schema definition
 var applicationSchema = mongoose.Schema({
@@ -12,17 +13,17 @@ var applicationSchema = mongoose.Schema({
 	isCommon : { type : Boolean, required: true }
 });
 
-var commonQuestions = [
-	createQuestion("Email", "email", true, null, null),
-	createQuestion("Name", "form", true, null, null)
-]
-
-var createQuestion(question, type, required, answer, options) {
+var createQuestion = function(question, type, required, answer, options) {
 	var q = { "question" : question, "type" : type, "required" : required }
 	if (answer !== null) q["answer"] = answer;
 	if (options !== null) q["options"] = options;
 	return q;
-}
+};
+
+var commonQuestions = [
+	createQuestion("Email", "form", true, null, null),
+	createQuestion("Name", "form", true, null, null)
+]
 
 /**
  * Checks that any "list" typed question has at least one option, checks that
@@ -88,12 +89,12 @@ applicationSchema.statics.deleteApplication = function(appId, callback) {
  * @param{Function} callback(err, Application)
  */
 applicationSchema.statics.updateQuestions = function(appId, newQuestions, isSubmission, callback) {
-	Application.findOne({ "_id", appId }, { questions : 1 }, function(err, app) {
+	Application.findOne({ "_id" : appId }, { questions : 1 }, function(err, app) {
 		if (err) callback(err.message);
 		else if (!app) callback("Invalid application");
 		else {
-			var readyToUpdate = ((isSubmission && verifyForSubmissions(app.questions, newQuestions) ||
-								(!isSubmission && verifyForSave(app.question, newQuestions));
+			var readyToUpdate = ((isSubmission && verifyForSubmissions(app.questions, newQuestions)) ||
+								(!isSubmission && verifyForSave(app.question, newQuestions)));
 
 			if (readyToUpdate) {
 				Application.findOneAndUpdate({ "_id" : appId }, { $set : newQuestions }, function(err, app) {
@@ -138,6 +139,8 @@ var createApp = function(questions, isCommon, callback) {
  * every required question has an answer
  */
 var verifyForSubmissions = function(origQuestions, newQuestions) {
+	//console.log(newQuestions);
+	//console.log(verifyForUpdate(origQuestions, newQuestions));
 	if (verifyForUpdate(origQuestions, newQuestions)) {
 		// check that all required fields are filled out
 		origQuestions.forEach(function(question, i) {
@@ -162,26 +165,29 @@ var verifyForSubmissions = function(origQuestions, newQuestions) {
  */
 var verifyForUpdate = function(origQuestions, newQuestions) {
 	// check that both lists are same length
-	if (origQuestions.length !== newQuestions) return false;
+	if (origQuestions.length !== newQuestions.length) return false;
+
+	var verified = true;
 
 	origQuestions.forEach(function(question, i) {
 		var question2 = newQuestions[i];
+		
 		// check that all question, required, type, options are the same for question and question2
-		if (question.question !== question2.question) return false;
-		if (question.required !== question2.required) return false;
+		if (question.question !== question2.question) verified = false;
+		if (question.required !== question2.required) verified = false;
 		if (question.type !== question2.type) return false;
-		if (_.isEqual(question.options, quesiton2.options)) return false;
+		if (!(_.isEqual(question.options, question2.options))) verified = false;
 
 		// check that if type is "box", answer is "yes" or "no" or empty
 		if (question.type === "box" && "answer" in question2) {
-			if (question2.answer !== "yes" && question2.answer !== "no") return false;
+			if (question2.answer !== "yes" && question2.answer !== "no") verified = false;
 		}
 		// check that if type is "options", answer is in options or empty
 		if (question.type === "list" && "answer" in question2) {
-			if (question.options.indexOf(question2.answer) < 0) return false;
+			if (question.options.indexOf(question2.answer) < 0) verified = false;
 		}
 	});
-	return true;	
+	return verified;	
 };
 
 var Application = mongoose.model("Application", applicationSchema);

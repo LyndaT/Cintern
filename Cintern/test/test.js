@@ -17,70 +17,42 @@ describe('Application', function() {
     });
   });
 
-  describe('#createTemplate', function() {
-    it('should create a template', function(done) {
-      Application.createTemplate(null, [], null, function(e, app) {
-        Application.find({}, function(err, apps) {
-          assert.equal(1, apps.length);
-          done();
-        });
-      });
-    });
-
-    it ('should not create a template if list question has no options', function(done) {
-      var questionList = [{
-        "question" : "Name",
-        "type" : "list", 
+  describe('#createCommon', function() {
+    it('should create a common', function(done) {
+      var questions = [{
+        "question" : "Email",
+        "type" : "form",
         "required" : true,
-      }];
-      Application.createTemplate(null, questionList, null, function() {
-        Application.find({}, function(err, apps) {
-          assert.equal(0, apps.length);
-          done();
-        });
-      });
-    });
-
-    it ('should not create a template if box question has options', function(done) {
-      var questionList = [{
-        "question" : "Name",
-        "type" : "box",
-        "options" : ["1", "2"], 
-        "required" : true,
-      }];
-      Application.createTemplate(null, questionList, null, function() {
-        Application.find({}, function(err, apps) {
-          assert.equal(0, apps.length);
-          done();
-        });
-      });
-    });
-
-    it ('should not create a template if form question has options', function(done) {
-      var questionList = [{
+        "answer" : "abc@gmail.com"
+      }, {
         "question" : "Name",
         "type" : "form",
-        "options" : ["1", "2"], 
         "required" : true,
+        "answer" : "Tester Smith"
       }];
-      Application.createTemplate(null, questionList, null, function() {
+      Application.createCommon(questions, function(e, app) {
         Application.find({}, function(err, apps) {
-          assert.equal(0, apps.length);
+          assert.equal(1, apps.length);
           done();
         });
       });
     });
 
-    it ('should create a template if list question has options', function(done) {
-      var questionList = [{
-        "question" : "Name",
-        "type" : "list",
-        "options" : ["1", "2"], 
+    it ('should not create a common if list question not in commonQuestions', function(done) {
+      var questions = [{
+        "question" : "Email FRAUD",
+        "type" : "form",
         "required" : true,
+        "answer" : "abc@gmail.com"
+      }, {
+        "question" : "Name",
+        "type" : "form",
+        "required" : true,
+        "answer" : "Tester Smith"
       }];
-      Application.createTemplate(null, questionList, null, function() {
+      Application.createCommon(questions, function() {
         Application.find({}, function(err, apps) {
-          assert.equal(1, apps.length);
+          assert.equal(0, apps.length);
           done();
         });
       });
