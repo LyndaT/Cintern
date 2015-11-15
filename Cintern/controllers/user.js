@@ -1,3 +1,7 @@
+/**
+ * @author Lynda Tang
+ */
+
 var ObjectID = require('mongodb').ObjectID;
 var User = require('../models/User.js');
 
@@ -6,7 +10,7 @@ var User = require('../models/User.js');
  * @param {Object} req
  * @param {Object} res 
  */
-module.exports.addUser = function(req, res, next){
+module.exports.addUser = function(req, res){
 	email = req.body.email;
 	password = req.body.password;
 	User.addUser(email, password, function(errMsg, result){
