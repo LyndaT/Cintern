@@ -49,30 +49,6 @@ listingSchema.statics.deleteListing = function(listingId, callback) {
  *					callback takes in an error and the list of listings
  */
 listingSchema.statics.getAllListings = function(callback) {
-	
-};
-
-/**
- * Retrieve listings that match the given query and pass them to
- * the provided callback. Gather only the employerId, title,
- * and deadline for each listing, and fetch the company name for each
- * employerId.
- *
- * @param query: a JSON object that represents a MongoDB query
- * @param callback: a function to pass the listing info to. The
- * 					callback takes in an error and the list of listings
- */
-var getListings = function(query, callback) {
-
-/**
- * Retrieve all listings and pass them to the provided callback.
- * Gather only the employerId, title, and deadline for each listing,
- * and fetch the company name for each employerId.
- *
- * @param callback: a function to pass the listing info to. The
- *					callback takes in an error and the list of listings
- */
-listingSchema.statics.getAllListings = function(callback) {
 	getListings({}, callback);
 };
 
