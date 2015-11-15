@@ -4,11 +4,11 @@ var _ = require("../helpers/lodash");
 // Application schema definition
 var applicationSchema = mongoose.Schema({
 	questions : [{
-		"question" : { type : String, required : true },
-		"type" : { type : String, required : true, enum : [ "text", "radio", "check" ] },
-		"required" : { type : Boolean, required : true },
+		"question" : { type : String, required : true, immutable : true },
+		"type" : { type : String, required : true, enum : [ "text", "radio", "check" ], immutable : true },
+		"required" : { type : Boolean, required : true, immutable : true },
 		"answer" : { type : String },
-		"options" : [{ type : String }],
+		"options" : [{ type : String, immutable : true }],
 	}],
 	isCommon : { type : Boolean, required: true, immutable : true }
 });
@@ -23,7 +23,7 @@ var createQuestion = function(question, type, required, answer, options) {
 var commonQuestions = [
 	createQuestion("Email", "text", true, null, null),
 	createQuestion("Name", "text", true, null, null)
-]
+];
 
 /**
  * Checks that any "list" typed question has at least one option, checks that
