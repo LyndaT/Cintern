@@ -28,7 +28,7 @@ describe('Application', function() {
    *    questions is missing a question : should not create
    *    questions has an extra question : should not create
    */
-  describe('#createCommon', function() {
+  /*describe('#createCommon', function() {
     it('should create a common', function(done) {
       var questions = [{
         "question" : "Email",
@@ -144,7 +144,7 @@ describe('Application', function() {
         });
       });
     });
-  });
+  });*/
 
   /**
    * Input: questions

@@ -60,6 +60,8 @@ customSchema.methods.copyTemplateToSave = function(listingId, newOwnerId, callba
 		if (errMsg) callback(errMsg);
 		else if (!custom) callback("No template");
 		// create copy
+
+		// FIX CUSTOM.QUESTIONS...
 		else createCustom(listingId, custom.questions, newOwnerId, false, "save", callback) 
 	})
 };
@@ -167,7 +169,7 @@ customSchema.methods.deleteCustom = function(callback) {
 		Custom.remove({ "_id" : this._id }, function(err) {
 			if (err) callback(err.message);
 			// delete the Application associated with the Custom from the DB
-			else Application.deleteNotCommonApplication(applicationId, callback);
+			else Application.deleteApplication(applicationId, callback);
 		});
 	}
 	else callback("Cannot delete this Custom");
@@ -216,7 +218,7 @@ customSchema.methods.reject = function(callback) {
  */
 customSchema.methods.update = function(newQuestions, isSubmission, callback) {
 	if (this.state === "save") {
-		Application.updateQuestions(this.application, newQuestions, isSubmission, function(errMsg, app) {
+		Application.updateAnswers(this.application, newQuestions, isSubmission, function(errMsg, app) {
 			if (errMsg) callback(errMsg);
 			else if (!isSubmission) callback(null, this)
 			else changeState(this._id, this.state, ["save"], "subm", callback);	
@@ -242,7 +244,7 @@ var createCustom = function(listingId, questions, ownerId, isTemplate, state, ca
 		else if (custom) callback("Already exists a Custom for the listing and owner");
 		else {
 			// create the Application for the application field
-			Application.createNotCommon(questions, function(errMsg, app) {
+			Application.createApplication(questions, function(errMsg, app) {
 				if (errMsg) callback(errMsg);
 				else if (!app) callback("No app created");
 				else {

@@ -9,21 +9,8 @@ var applicationSchema = mongoose.Schema({
 		"required" : { type : Boolean, required : true, immutable : true },
 		"answer" : { type : String },
 		"options" : [{ type : String, immutable : true }],
-	}],
-	isCommon : { type : Boolean, required: true, immutable : true }
+	}]
 });
-
-var createQuestion = function(question, type, required, answer, options) {
-	var q = { "question" : question, "type" : type, "required" : required }
-	if (answer !== null) q["answer"] = answer;
-	if (options !== null) q["options"] = options;
-	return q;
-};
-
-var commonQuestions = [
-	createQuestion("Email", "text", true, null, null),
-	createQuestion("Name", "text", true, null, null)
-];
 
 /**
  * Checks that any "radio" typed question has at least 2 options, checks that
@@ -44,38 +31,24 @@ applicationSchema.pre("save", function(next) {
 });
 
 /**
- * Creates an Application where questions are set as questions and isCommon is false, 
+ * Creates an Application where questions are set as questions, 
  * and then runs the callback on the new Application
  *
  * @param{Array} questions is an Array of Objects
  * @param{Function} callback(err, Application)
  */
-applicationSchema.statics.createNotCommon = function(questions, callback) {
+applicationSchema.statics.createApplication = function(questions, callback) {
 	createApp(questions, false, callback);
 };
 
 /**
- * Creates an Application where questions are set as questions and isCommon is true, 
- * and the questions is a valid submission for commonQuestions, and then runs the 
- * callback on the new Application
- *
- * @param{Array} questions is an Array of Objects
- * @param{Function} callback(err, Application)
- */
-applicationSchema.statics.createCommon = function(questions, callback) {
-	if (verifyForSubmissions(commonQuestions, questions)) createApp(questions, true, callback);
-	else callback("Invalid common submission");		
-};
-
-/**
- * Deletes the application associated with the appId if it's not a common, 
- * and runs the callback
+ * Deletes the application associated with the appId and runs the callback
  *
  * @param{ObjectId} appId
  * @param{Function} callback(err)
  */
-applicationSchema.statics.deleteNotCommonApplication = function(appId, callback) {
-	Application.remove({ "_id" : appId, "isCommon" : false }, function(err) {
+applicationSchema.statics.deleteApplication = function(appId, callback) {
+	Application.remove({ "_id" : appId }, function(err) {
 		if (err) callback(err.message);
 		else callback(null);
 	});
@@ -91,7 +64,7 @@ applicationSchema.statics.deleteNotCommonApplication = function(appId, callback)
  * @param{Boolean} isSubmission
  * @param{Function} callback(err, Application)
  */
-applicationSchema.statics.updateQuestions = function(appId, newQuestions, isSubmission, callback) {
+applicationSchema.statics.updateAnswers = function(appId, newQuestions, isSubmission, callback) {
 	Application.findOne({ "_id" : appId }, { questions : 1 }, function(err, app) {
 		if (err) callback(err.message);
 		else if (!app) callback("Invalid application");
@@ -100,9 +73,7 @@ applicationSchema.statics.updateQuestions = function(appId, newQuestions, isSubm
 								(!isSubmission && verifyForUpdate(app.questions, newQuestions)));
 
 			if (readyToUpdate) {
-				console.log("here");
-				console.log(newQuestions);
-				Application.findOneAndUpdate({ "_id" : appId }, { $set : { questions : newQuestions } }, function(err, app) {
+				Application.findOneAndUpdate({ "_id" : appId }, { $set : { questions.$ : newQuestions } }, function(err, app) {
 					if (err) callback(err.message);
 					else callback(null, app);
 				});
@@ -113,17 +84,15 @@ applicationSchema.statics.updateQuestions = function(appId, newQuestions, isSubm
 };
 
 /**
- * Creates an Application where the questions are set to questions and isCommon
- * is set to isCommon, then runs the callback on the new Application
+ * Creates an Application where the questions are set to questions, then 
+ * runs the callback on the new Application
  * 
  * @param{Array} questions is an Array of Objects
- * @param{Boolean} isCommon
  * @param{Function} callback(err, Application)
  */
-var createApp = function(questions, isCommon, callback) {
+var createApp = function(questions, callback) {
 	var app = { 
 		"questions" : questions,
-		"isCommon" : isCommon 
 	};
 	var newApp = new Application(app);
 
@@ -137,14 +106,15 @@ var createApp = function(questions, isCommon, callback) {
 /**
  * Checks if newQuestions is okay for submission given origQuestions
  * @param{Array} origQuestions is an Array of Objects
- * @param{Array} newQuestions is an Array of Objects that have keys id
- * (which maps to a question id), and answer, which maps to a string
+ * @param{Array} newQuestions is an Array of Objects
  *
  * @return Boolean that is true if every question in origQuestions matches
- * every every question in newQuestions and that every required question 
- * has an answer
+ * every every question in newQuestions (with exception to answers) and that
+ * every required question has an answer
  */
 var verifyForSubmissions = function(origQuestions, newQuestions) {
+	//console.log(newQuestions);
+	//console.log(verifyForUpdate(origQuestions, newQuestions));
 	if (verifyForUpdate(origQuestions, newQuestions)) {
 		var verified = true;
 
@@ -152,7 +122,8 @@ var verifyForSubmissions = function(origQuestions, newQuestions) {
 		origQuestions.forEach(function(question, i) {
 			var question2 = newQuestions[i];
 			if (question.required) {
-				verified = question2["answer"] === '';
+				if (!("answer" in question2)) verified = false;
+				if (question2["answer"] == '') verified = false;
 			}
 		});
 		return verified
@@ -163,8 +134,7 @@ var verifyForSubmissions = function(origQuestions, newQuestions) {
 /**
  * Checks if newQuestions is okay for updating given origQuestions
  * @param{Array} origQuestions is an Array of Objects
- * @param{Array} newQuestions is an Array of Objects that have keys id
- * (which maps to a question id), and answer, which maps to a string
+ * @param{Array} newQuestions is an Array of Objects
  *
  * @return Boolean that is true if every question in origQuestions matches
  * every every question in newQuestions (with exception to answers)
@@ -175,45 +145,40 @@ var verifyForUpdate = function(origQuestions, newQuestions) {
 
 	var verified = true;
 
-	// formatting an Array of Objects with fields question, required, type, options, and answer
-	var verifyAnswersArray = [];
-
-	// check that every question in origQuestions maps to the same question in newQuestions
+	// check that all question, required, type, options are the same for question and question2
 	origQuestions.forEach(function(question, i) {
 		var question2 = newQuestions[i];
-		if (question._id !== question2._id) verified = false;
-		verifyAnswersArray.push({
-			"question" : question.question,
-			"required" : question.required,
-			"type" : question.type,
-			"options" : question.options,
-			"answer" : question2.answer
-		})
+		
+		if (question.question !== question2.question) verified = false;
+		if (question.required !== question2.required) verified = false;
+		if (question.type !== question2.type) verified = false;
+		if (!sameOptions(question.options, question2.options)) verified = false;
 	});
 
 	// if format matches for origQuestions and newQuestions, check that each question is answered correctly
-	if (verified) return verifyAnsweredQuestionsCorrectly(verifyAnswersArray);
+	if (verified) return verifyAnsweredQuestionsCorrectly(newQuestions)
 	else return verified;	
 };
 
-var verifyForCommon = function(questionsAll) {
-	if (questions.length != commonQuestions.length) return false;
-	var verified = true;
-
-	commonQuestions.forEach(function(question, i) {
-		if ()
-	})
+/**
+ * This function checks if two options are supposed to be treated as the same,
+ * where options is the field that belongs in the schema for questions
+ *
+ * @param{Variable} optoins1 is an Array of Strings or undefined
+ * @param{Variable} options2 is an Array of Strings or undefined
+ * @return Boolean that is true if both Arrays and equal, or if one is undefined
+ * and the other is an empty array, or if both are undefined; otherwise return false
+ */
+var sameOptions = function(options1, options2) {
+	if (!options1) {
+		if (!options2) return true
+		else return options2.length === 0
+	} 
+	else if (!options2) return options1.length === 0
+	else return _.isEqual(options1, options2);
 }
 
-/**
- * This function checks if the answer portion of each question in questions is
- * approriate given the type of the question
- *
- * @param{Array} questions is an Array of Objects that contains fields question,
- * required, type, options, and answers
- * @return True if the answer of each question in questions is a valid answer for 
- * the question
- */
+
 var verifyAnsweredQuestionsCorrectly = function(questions) {
 	var verified = true
 	questions.forEach(function(question) {
