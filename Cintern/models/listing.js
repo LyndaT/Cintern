@@ -63,8 +63,10 @@ listingSchema.statics.getAllListings = function(callback) {
  * 					callback takes in an error and the list of listings
  */
 var getListings = function(query, callback) {
+	escapeQueryValues(query);
+
 	Listing.find(query, 
-		{ employerId: 1, title: 1, description: 0, requirements: 0, deadline: 1 },
+		{ employerId: 1, title: 1, deadline: 1 },
 		function(err, listing_data) {
 		if (err) {
 			callback(err);
@@ -120,6 +122,38 @@ listingSchema.statics.getListingInformation = function(listingId, callback) {
 			callback(none, listing);
 		}
 	});
+};
+
+/**
+ * For each value in a query, escape the value if it is text
+ * Characters to escape (to avoid code injection): ', ", {, }, \, ;
+ *
+ * @param query: a JSON object that represents a query
+ */
+var escapeQueryValues = function(query) {
+	//SAVE THIS FOR LATER
+	/**forEachKey(query, function(key) {
+		value = query[key]
+
+		if (typeof value == 'string') {
+			query[key] = value.replace(/\\(.)|(["';{}])/g, "\\$1$2");
+			query[key] = value.replace(/\\(\\)|(\\)/g, "\\$1$2");
+		}
+	});*/
+}
+
+/**
+ * For each key in the given JSON object, apply the given function to it
+ *
+ * @param obj: a JSON object
+ * @param fn: a function to call with each key in the object
+ */
+var forEachKey = function(obj, fn) {
+  Object.keys(obj).forEach(function(key) {
+    if (obj.hasOwnProperty(key)) {
+      fn(key);
+    }
+  });
 };
 
 var Listing = mongoose.model('Listing', listingSchema);
