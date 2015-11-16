@@ -38,10 +38,10 @@ describe('Custom', function() {
    *    one poorly formatted question : should not create
    *    all correctly formatted questions : should create
    */
-  describe('#createTemplate', function() {
+  /*describe('#createTemplate', function() {
     it('should create template empty', function(done){
       var questions = [];
-      User.addUser( function(e, user) {
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
         Listing....( function(e, listing) {
           Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
             Custom.find({}, function(err, customs) {
@@ -59,7 +59,7 @@ describe('Custom', function() {
         "type" : "text",
         "required" : true,
       }];
-      User.addUser( function(e, user) {
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
         Listing....( function(e, listing) {
           Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
             Custom.find({}, function(err, customs) {
@@ -77,7 +77,7 @@ describe('Custom', function() {
         "type" : "text",
         "required" : true,
       }];
-      User.addUser( function(e, user) {
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
         Listing....( function(e, listing) {
           Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
             Custom.find({}, function(err, customs) {
@@ -97,7 +97,7 @@ describe('Custom', function() {
         "required" : true,
         "answer" : "abc@gmail.com"
       }];
-      User.addUser( function(e, user) {
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
         Listing....( function(e, listing) {
           Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
             Custom.find({}, function(err, customs) {
@@ -114,7 +114,7 @@ describe('Custom', function() {
         "question" : "Email",
         "type" : "text",
       }];
-      User.addUser( function(e, user) {
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
         Listing....( function(e, listing) {
           Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
             Custom.find({}, function(err, customs) {
@@ -133,7 +133,7 @@ describe('Custom', function() {
         "required" : true,
         "options" : ["a", "b", "c"]
       }];
-      User.addUser( function(e, user) {
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
         Listing....( function(e, listing) {
           Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
             Custom.find({}, function(err, customs) {
@@ -152,7 +152,7 @@ describe('Custom', function() {
         "type" : "check",
         "required" : true
       }];
-      User.addUser( function(e, user) {
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
         Listing....( function(e, listing) {
           Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
             Custom.find({}, function(err, customs) {
@@ -171,7 +171,7 @@ describe('Custom', function() {
         "type" : "text",
         "required" : true,
       }];
-      User.addUser( function(e, user) {
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
         Listing....( function(e, listing) {
           Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
             Custom.find({}, function(err, customs) {
@@ -190,7 +190,7 @@ describe('Custom', function() {
         "type" : "radio",
         "required" : true,
       }];
-      User.addUser( function(e, user) {
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
         Listing....( function(e, listing) {
           Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
             Custom.find({}, function(err, customs) {
@@ -209,7 +209,7 @@ describe('Custom', function() {
         "required" : true,
         "options" : ["a"]
       }];
-      User.addUser( function(e, user) {
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
         Listing....( function(e, listing) {
           Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
             Custom.find({}, function(err, customs) {
@@ -228,7 +228,7 @@ describe('Custom', function() {
         "required" : true,
         "options" : ["a"]
       }];
-      User.addUser( function(e, user) {
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
         Listing....( function(e, listing) {
           Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
             Custom.find({}, function(err, customs) {
@@ -247,7 +247,7 @@ describe('Custom', function() {
         "required" : true,
         "options" : ["a"]
       }];
-      User.addUser( function(e, user) {
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
         Listing....( function(e, listing) {
           Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
             Custom.find({}, function(err, customs) {
@@ -273,7 +273,7 @@ describe('Custom', function() {
         "type" : "text",
         "required" : true,
       }];
-      User.addUser( function(e, user) {
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
         Listing....( function(e, listing) {
           Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
             Custom.find({}, function(err, customs) {
@@ -300,7 +300,7 @@ describe('Custom', function() {
         "type" : "text",
         "required" : true,
       }];
-      User.addUser( function(e, user) {
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
         Listing....( function(e, listing) {
           Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
             Custom.find({}, function(err, customs) {
@@ -312,16 +312,22 @@ describe('Custom', function() {
         });
       }); 
     });
-  });
+  });*/
 
   /** 
    * Input: listingId, newOwnerId
    *    listingId is invalid : should not create
+   *    newOwnerId is invalid : should not create
+   *    listing and ownerId are valid: should create
    */
   describe('#copyTemplateToSave', function() {
-    it()
+    it('listing invalid, should not create', function(done){});
 
+    it('new owner invalid, should not create', function(done){});
+
+    it('should create', function(done){});
   });
+
   
 });
 
