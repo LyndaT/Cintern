@@ -226,6 +226,10 @@ customSchema.methods.update = function(newQuestions, isSubmission, callback) {
 	}
 };
 
+// TODO: write me
+customSchema.methods.formatForShow = function(callback) {};
+
+
 /**
  * Creates a new Custom in the DB with listing set as listingId, state set as state, 
  * owner set as ownerId, and application set as an application with questions set as

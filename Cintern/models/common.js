@@ -24,6 +24,11 @@ var commonQuestions = [
 	createQuestion("Name", "text", true, null, null)
 ];
 
+commonSchema.statics.createCommon = function(formQuestions, callback){};
+
+// TODO: write me
+commonSchema.methods.formatForShow = function(callback) {};
+
 /**
  * Creates a Common where application is an Application with questions set as
  * questions and then runs the callback on the new Common
@@ -31,7 +36,7 @@ var commonQuestions = [
  * @param{Array} questions is an Array of Objects
  * @param{Function} callback(err, Common)
  */
-applicationSchema.statics.createCommon = function(questions, callback) {
+/*applicationSchema.statics.createCommon = function(questions, callback) {
 	if (verifyForSubmissions(commonQuestions, questions)) createApp(questions, true, callback);
 	else callback("Invalid common submission");		
 };
@@ -44,7 +49,7 @@ var verifyForCommon = function(questionsAll) {
 	commonQuestions.forEach(function(question, i) {
 		if ()
 	})
-}
+}*/
 
 
 var Common = mongoose.model("Common", applicationSchema);

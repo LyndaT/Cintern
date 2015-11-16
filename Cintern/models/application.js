@@ -38,7 +38,16 @@ applicationSchema.pre("save", function(next) {
  * @param{Function} callback(err, Application)
  */
 applicationSchema.statics.createApplication = function(questions, callback) {
-	createApp(questions, false, callback);
+	var app = { 
+		"questions" : questions,
+	};
+	var newApp = new Application(app);
+
+	// save the new app in the DB
+	newApp.save(function(err, newApp) {
+		if (err) callback(err.message);
+		else callback(null, newApp);
+	});
 };
 
 /**
@@ -73,6 +82,7 @@ applicationSchema.statics.updateAnswers = function(appId, newQuestions, isSubmis
 								(!isSubmission && verifyForUpdate(app.questions, newQuestions)));
 
 			if (readyToUpdate) {
+				// TODO: fix setting function
 				Application.findOneAndUpdate({ "_id" : appId }, { $set : { questions.$ : newQuestions } }, function(err, app) {
 					if (err) callback(err.message);
 					else callback(null, app);
@@ -83,30 +93,16 @@ applicationSchema.statics.updateAnswers = function(appId, newQuestions, isSubmis
 	});
 };
 
-/**
- * Creates an Application where the questions are set to questions, then 
- * runs the callback on the new Application
- * 
- * @param{Array} questions is an Array of Objects
- * @param{Function} callback(err, Application)
- */
-var createApp = function(questions, callback) {
-	var app = { 
-		"questions" : questions,
-	};
-	var newApp = new Application(app);
-
-	// save the new app in the DB
-	newApp.save(function(err, newApp) {
-		if (err) callback(err.message);
-		else callback(null, newApp);
-	});
-}
+// return an Object format of the application which can be used to generate UI
+applicationSchema.methods.formatForShow = function(callback) {};
 
 /**
  * Checks if newQuestions is okay for submission given origQuestions
- * @param{Array} origQuestions is an Array of Objects
- * @param{Array} newQuestions is an Array of Objects
+ * 
+ * @param{Array} origQuestions is an Array of Objects that is the questions
+ * 			field for a specific Application
+ * @param{Array} newQuestions is an Array of Objects with keys that is "id" 
+ * 			(mapping to an Object id), and "answer" (mapping to a String)
  *
  * @return Boolean that is true if every question in origQuestions matches
  * every every question in newQuestions (with exception to answers) and that
@@ -122,7 +118,6 @@ var verifyForSubmissions = function(origQuestions, newQuestions) {
 		origQuestions.forEach(function(question, i) {
 			var question2 = newQuestions[i];
 			if (question.required) {
-				if (!("answer" in question2)) verified = false;
 				if (question2["answer"] == '') verified = false;
 			}
 		});
@@ -133,8 +128,11 @@ var verifyForSubmissions = function(origQuestions, newQuestions) {
 
 /**
  * Checks if newQuestions is okay for updating given origQuestions
- * @param{Array} origQuestions is an Array of Objects
- * @param{Array} newQuestions is an Array of Objects
+ *
+ * @param{Array} origQuestions is an Array of Objects that is the questions
+ * 			field for a specific Application
+ * @param{Array} newQuestions is an Array of Objects with keys that is "id" 
+ * 			(mapping to an Object id), and "answer" (mapping to a String)
  *
  * @return Boolean that is true if every question in origQuestions matches
  * every every question in newQuestions (with exception to answers)
@@ -145,14 +143,20 @@ var verifyForUpdate = function(origQuestions, newQuestions) {
 
 	var verified = true;
 
+	// initialize array for checking whether or not answers have been correctly submitted
+	var verifyAnswers = [];
+
 	// check that all question, required, type, options are the same for question and question2
 	origQuestions.forEach(function(question, i) {
 		var question2 = newQuestions[i];
-		
-		if (question.question !== question2.question) verified = false;
-		if (question.required !== question2.required) verified = false;
-		if (question.type !== question2.type) verified = false;
-		if (!sameOptions(question.options, question2.options)) verified = false;
+		if (question._id !== question2._id) verified = false;
+		verifyAnswers.push({
+			"question" : question.question,
+			"required" : question.required,
+			"type" : question.type,
+			"options" : question.options,
+			"answer" : (question2.answer === '') ? undefined : question.answer
+		});
 	});
 
 	// if format matches for origQuestions and newQuestions, check that each question is answered correctly
@@ -160,25 +164,16 @@ var verifyForUpdate = function(origQuestions, newQuestions) {
 	else return verified;	
 };
 
+
 /**
- * This function checks if two options are supposed to be treated as the same,
- * where options is the field that belongs in the schema for questions
+ * Checks if answers in questions are appropriate
  *
- * @param{Variable} optoins1 is an Array of Strings or undefined
- * @param{Variable} options2 is an Array of Strings or undefined
- * @return Boolean that is true if both Arrays and equal, or if one is undefined
- * and the other is an empty array, or if both are undefined; otherwise return false
+ * @param{Array} questions is an Array of Objects with keys question,
+ * required, type, options, and answer
+ *
+ * @return Boolean that is true if each question in questions has an appropriate
+ * answer, and false otherwise
  */
-var sameOptions = function(options1, options2) {
-	if (!options1) {
-		if (!options2) return true
-		else return options2.length === 0
-	} 
-	else if (!options2) return options1.length === 0
-	else return _.isEqual(options1, options2);
-}
-
-
 var verifyAnsweredQuestionsCorrectly = function(questions) {
 	var verified = true
 	questions.forEach(function(question) {
@@ -192,7 +187,7 @@ var verifyAnsweredQuestionsCorrectly = function(questions) {
 		}
 	});
 	return verified;
-}
+};
 
 var Application = mongoose.model("Application", applicationSchema);
 module.exports = Application;
