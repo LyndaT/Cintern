@@ -1,4 +1,5 @@
 var mongoose = require("mongoose");
+var Employer = require("Employer.js");
 /**
  * This is the schema for the database that stores all the job listings on our site.  
  * Each listing includes the employer id, the associated id number for the custom 
@@ -8,7 +9,7 @@ var mongoose = require("mongoose");
 
 //Schema for listings
 var listingSchema = mongoose.Schema({
-	employerId: {type: mongoose.Schema.Types.ObjectId, ref: "User", immutable: true, required: true}, 
+	employerId: {type: mongoose.Schema.Types.ObjectId, ref: "Employer", immutable: true, required: true}, 
 	title: {type: String, required: true},
 	description: String,
 	requirements: String,
@@ -60,8 +61,6 @@ listingSchema.statics.deleteListing = function(listingId, callback) {
 
 /**
  * Retrieve all listings and pass them to the provided callback.
- * Gather only the employerId, title, and deadline for each listing,
- * and fetch the company name for each employerId.
  *
  * @param callback: a function to pass the listing info to. The
  *					callback takes in an error and the list of listings
@@ -72,9 +71,30 @@ listingSchema.statics.getAllListings = function(callback) {
 
 /**
  * Retrieve listings that match the given query and pass them to
- * the provided callback. Gather only the employerId, title,
- * and deadline for each listing, and fetch the company name for each
- * employerId.
+ * the provided callback. Gather only certain fields that are needed for
+ * displaying the listings
+ *
+ * @param query: a JSON object that represents a MongoDB query
+ * @param callback: a function to pass the listing info to. The
+ * 					callback takes in an error and the list of listings
+ */
+var getFormattedListings = function(query, callback) {
+	// SAVE THIS FOR LATER
+	// SAVE THIS FOR LATER
+	escapeQueryValues(query);
+
+	Listing.find(query, { employerId: 1, title: 1, deadline: 1 }).populate("employerId").exec(function(err, listing_data){
+		if (err) {
+			callback(err);
+		} else {
+			callback(null, listing_data);
+		}
+	});
+};
+
+/**
+ * Retrieve listings that match the given query and pass them to
+ * the provided callback.
  *
  * @param query: a JSON object that represents a MongoDB query
  * @param callback: a function to pass the listing info to. The
@@ -83,9 +103,7 @@ listingSchema.statics.getAllListings = function(callback) {
 var getListings = function(query, callback) {
 	escapeQueryValues(query);
 
-	Listing.find(query, 
-		{ employerId: 1, title: 1, deadline: 1 },
-		function(err, listing_data) {
+	Listing.find(query).populate("employerId").exec(function(err, listing_data){
 		if (err) {
 			callback(err);
 		} else {
@@ -96,9 +114,7 @@ var getListings = function(query, callback) {
 
 /**
  * Retrieve listings that match the given filter query and pass them
- * to the provided callback. Gather only the employerId, title,
- * and deadline for each listing, and fetch the company name for each
- * employerId.
+ * to the provided callback.
  *
  * @param query: a JSON object that represents a MongoDB query
  * @param callback: a function to pass the listing info to. The
@@ -110,9 +126,7 @@ listingSchema.statics.filterListings = function(query, callback) {
 
 /**
  * Retrieve all listings posted by the employer with given ID and
- * pass them to the provided callback. Gather only the employerId, title,
- * and deadline for each listing, and fetch the company name for each
- * employerId.
+ * pass them to the provided callback.
  *
  * @param employerId: the ID of the employer whose listings to retrieve
  * @param callback: a function to pass the listing info to. The
@@ -135,9 +149,9 @@ listingSchema.statics.getListingInformation = function(listingId, callback) {
 		if (!listing) {
 			callback({ msg: 'Invalid listing.' });
 		} else if (err) {
-			callback(err);
+			callback({ msg: err.message });
 		} else {
-			callback(none, listing);
+			callback(null, listing);
 		}
 	});
 };

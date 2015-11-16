@@ -28,7 +28,6 @@ LISTING1 = {
 };
 
 LISTING1_CONDENSED = {
-	employerId: ObjectId("507f1f77bcf86cd799439011"),
  	title: "hello",
  	deadline: undefined
 };
@@ -39,7 +38,6 @@ LISTING2 = {
 };
 
 LISTING2_CONDENSED = {
-	employerId: ObjectId("507f1f77bcf86cd799439011"),
  	title: "meow",
  	deadline: undefined
 }
@@ -70,8 +68,18 @@ describe('Listing', function() {
   				Listing.getAllListings(function(err, listings) {
   					assert.equal(err, null);
   					assert.equal(listings.length, 2);
-  					assert(_.isEqual(listings[0], LISTING1_CONDENSED));
-  					assert(_.isEqual(listings[1], LISTING2_CONDENSED));
+            
+            assert(_.isEqual(LISTING1_CONDENSED, {
+              title: listings[0].title,
+              deadline: listings[0].deadline
+            }));
+            assert.equal(listings[0].employerId.toHexString(), LISTING1.employerId.toHexString());
+            
+            assert(_.isEqual(LISTING2_CONDENSED, {
+              title: listings[1].title,
+              deadline: listings[1].deadline
+            }));
+            assert.equal(listings[1].employerId.toHexString(), LISTING2.employerId.toHexString());
   					done();
   				});
   			});
@@ -97,7 +105,12 @@ describe('Listing', function() {
   				Listing.filterListings({ title: "hello" }, function(err, listings) {
   					assert.equal(err, null);
   					assert.equal(listings.length, 1);
-  					assert(_.isEqual(listings[0], LISTING1_CONDENSED));
+  					
+            assert(_.isEqual(LISTING1_CONDENSED, {
+              title: listings[0].title,
+              deadline: listings[0].deadline
+            }));
+            assert.equal(listings[0].employerId.toHexString(), LISTING1.employerId.toHexString());
   					done();
   				});
   			});
@@ -114,8 +127,18 @@ describe('Listing', function() {
   				Listing.filterListings({}, function(err, listings) {
   					assert.equal(err, null);
   					assert.equal(listings.length, 2);
-  					assert(_.isEqual(listings[0], LISTING1_CONDENSED));
-  					assert(_.isEqual(listings[1], LISTING2_CONDENSED));
+  					
+            assert(_.isEqual(LISTING1_CONDENSED, {
+              title: listings[0].title,
+              deadline: listings[0].deadline
+            }));
+            assert.equal(listings[0].employerId.toHexString(), LISTING1.employerId.toHexString());
+            
+            assert(_.isEqual(LISTING2_CONDENSED, {
+              title: listings[1].title,
+              deadline: listings[1].deadline
+            }));
+            assert.equal(listings[1].employerId.toHexString(), LISTING2.employerId.toHexString());
   					done();
   				});
   			});
@@ -155,8 +178,18 @@ describe('Listing', function() {
   				Listing.getAllEmployerListings(LISTING1["employerId"], function(err, listings) {
   					assert.equal(err, null);
   					assert.equal(listings.length, 2);
-  					assert(_.isEqual(listings[0], LISTING1_CONDENSED));
-  					assert(_.isEqual(listings[1], LISTING2_CONDENSED));
+
+            assert(_.isEqual(LISTING1_CONDENSED, {
+              title: listings[0].title,
+              deadline: listings[0].deadline
+            }));
+            assert.equal(listings[0].employerId.toHexString(), LISTING1.employerId.toHexString());
+
+            assert(_.isEqual(LISTING2_CONDENSED, {
+              title: listings[1].title,
+              deadline: listings[1].deadline
+            }));
+            assert.equal(listings[1].employerId.toHexString(), LISTING2.employerId.toHexString());
   					done();
   				});
   			});
@@ -176,12 +209,24 @@ describe('Listing', function() {
   	it('should return all listing information', function(done) {
   		Listing.createListing(LISTING1["employerId"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"], function(err1, listing1) {
   			assert.equal(err1, null);
-  			
-  			Listing.getListingInformation(listing1["_id"], function(err, listing) {
-  				assert.equal(err, null);
-  				assert(_.isEqual(listing, LISTING1));
-  				done();
-  			});
+
+        Listing.getAllListings(function(err, listings) {
+          assert.equal(err, null);
+          assert.equal(listings.length, 1);
+
+          var listing_id = listings[0]._id;
+
+          Listing.getListingInformation(listing_id, function(err, listing) {
+            assert.equal(err, null);
+
+            assert(_.isEqual(LISTING1_CONDENSED, {
+              title: listing.title,
+              deadline: listing.deadline
+            }));
+            assert.equal(listing.employerId.toHexString(), LISTING1.employerId.toHexString());
+            done();
+          });
+        });
   		});
   	});
 
