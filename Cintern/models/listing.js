@@ -8,7 +8,7 @@ var mongoose = require("mongoose");
 
 //Schema for listings
 var listingSchema = mongoose.Schema({
-	employerId: {type: String, immutable: true, required: true}, 
+	employerId: {type: mongoose.Schema.Types.ObjectId, ref: "User", immutable: true, required: true}, 
 	title: {type: String, required: true},
 	description: String,
 	requirements: String,
@@ -27,7 +27,19 @@ var listingSchema = mongoose.Schema({
  * @param {Function} callback(err, listing) 
  */
 listingSchema.statics.createListing = function(currEmployerId, title, desc, reqs, deadline, callback) {
-
+	Listing.create({
+		employerId: currEmployerId,
+		title: title,
+		description: desc,
+		requirements: reqs,
+		deadline: deadline
+	}, function(err, user) {
+	      if (err) {
+	        callback(err.msg);
+	      } else {
+	        callback();
+	      }
+    });
 };
 
 /**
@@ -37,7 +49,13 @@ listingSchema.statics.createListing = function(currEmployerId, title, desc, reqs
  * @param {Function} callback(err, listing) 
  */
 listingSchema.statics.deleteListing = function(listingId, callback) {
-
+	Listing.remove({_id: listingId}, function(err, user) {
+      if (err) {
+        callback(err.msg);
+      } else {
+        callback();
+      }
+    });
 };
 
 /**
