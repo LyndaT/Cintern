@@ -1,6 +1,5 @@
 var assert = require("assert");
 var Application = require('../models/application');
-var Custom = require('../models/custom');
 var mongoose = require('mongoose');
 var _ = require("../helpers/lodash");
 
@@ -21,133 +20,6 @@ describe('Application', function() {
 
   /**
    * Input: questions
-   *    questions matches commonQuestions format and answers are filled : should create
-   *    not all questions in commonQuesions : should not create
-   *    not all required questions are answered : should not create
-   *    a field for a question in commonQuestoins has been changed : should not create
-   *    questions is missing a question : should not create
-   *    questions has an extra question : should not create
-   */
-  /*describe('#createCommon', function() {
-    it('should create a common', function(done) {
-      var questions = [{
-        "question" : "Email",
-        "type" : "text",
-        "required" : true,
-        "answer" : "abc@gmail.com"
-      }, {
-        "question" : "Name",
-        "type" : "text",
-        "required" : true,
-        "answer" : "Tester Smith"
-      }];
-      Application.createCommon(questions, function(e, app) {
-        Application.find({}, function(err, apps) {
-          assert.equal(1, apps.length);
-          assert.equal(true, apps[0].isCommon);
-          done();
-        });
-      });
-    });
-
-    it ('should not create a common if question not in commonQuestions', function(done) {
-      var questions = [{
-        "question" : "Email FRAUD",
-        "type" : "text",
-        "required" : true,
-        "answer" : "abc@gmail.com"
-      }, {
-        "question" : "Name",
-        "type" : "text",
-        "required" : true,
-        "answer" : "Tester Smith"
-      }];
-      Application.createCommon(questions, function() {
-        Application.find({}, function(err, apps) {
-          assert.equal(0, apps.length);
-          done();
-        });
-      });
-    });
-
-    it ('should not create a common if question not answered', function(done) {
-      var questions = [{
-        "question" : "Email",
-        "type" : "text",
-        "required" : true,
-      }, {
-        "question" : "Name",
-        "type" : "text",
-        "required" : true,
-        "answer" : "Tester Smith"
-      }];
-      Application.createCommon(questions, function() {
-        Application.find({}, function(err, apps) {
-          assert.equal(0, apps.length);
-          done();
-        });
-      });
-    });
-
-    it ('should not create a common if type is wrong for in commonQuestions', function(done) {
-      var questions = [{
-        "question" : "Email",
-        "type" : "text",
-        "required" : true,
-        "answer" : "abc@gmail.com"
-      }, {
-        "question" : "Name",
-        "type" : "radio",
-        "required" : true,
-        "answer" : "Tester Smith"
-      }];
-      Application.createCommon(questions, function() {
-        Application.find({}, function(err, apps) {
-          assert.equal(0, apps.length);
-          done();
-        });
-      });
-    });
-
-    it ('should not create a common if type is options when not allowed for in commonQuestions', function(done) {
-      var questions = [{
-        "question" : "Email",
-        "type" : "text",
-        "required" : true,
-        "answer" : "abc@gmail.com",
-        "options" : ["a", "b", "c"]
-      }, {
-        "question" : "Name",
-        "type" : "form",
-        "required" : true,
-        "answer" : "Tester Smith"
-      }];
-      Application.createCommon(questions, function() {
-        Application.find({}, function(err, apps) {
-          assert.equal(0, apps.length);
-          done();
-        });
-      });
-    });
-
-    it ('should not create a common if missing question from commonQuestions', function(done) {
-      var questions = [{
-        "question" : "Email",
-        "type" : "text",
-        "required" : true,
-        "answer" : "abc@gmail.com",
-      }];
-      Application.createCommon(questions, function() {
-        Application.find({}, function(err, apps) {
-          assert.equal(0, apps.length);
-          done();
-        });
-      });
-    });
-  });*/
-
-  /**
-   * Input: questions
    *    questions is an empty array : should create
    *    a question in questions is missing the question field : should not create
    *    a question in questions is missing the answer field : should create
@@ -165,13 +37,13 @@ describe('Application', function() {
    *    one poorly formatted question : should not create
    *    all correctly formatted questions : should create
    */
-  /*describe('#createNotCommon', function() {
+  describe('#createApplication', function() {
     it('should create app empty', function(done){
       var questions = [];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(1, apps.length);
-          assert.equal(false, apps[0].isCommon);
+          assert.equal(0, apps[0].questions.length);
           done();
         });
       });
@@ -183,7 +55,7 @@ describe('Application', function() {
         "required" : true,
         "answer" : "abc@gmail.com"
       }];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(0, apps.length);
           done();
@@ -202,10 +74,9 @@ describe('Application', function() {
         "required" : true,
         "answer" : "Tester Smith"
       }];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(1, apps.length);
-          assert.equal(false, apps[0].isCommon);
           done();
         });
       });
@@ -222,7 +93,7 @@ describe('Application', function() {
         "required" : true,
         "answer" : "Tester Smith"
       }];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(0, apps.length);
           done();
@@ -237,10 +108,9 @@ describe('Application', function() {
         "required" : true,
         "options" : ["a", "b", "c"]
       }];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(1, apps.length);
-          assert.equal(false, apps[0].isCommon);
           done();
         });
       });
@@ -252,10 +122,9 @@ describe('Application', function() {
         "type" : "check",
         "required" : true
       }];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(1, apps.length);
-          assert.equal(false, apps[0].isCommon);
           done();
         });
       });
@@ -267,10 +136,9 @@ describe('Application', function() {
         "type" : "text",
         "required" : true,
       }];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(1, apps.length);
-          assert.equal(false, apps[0].isCommon);
           done();
         });
       });
@@ -282,7 +150,7 @@ describe('Application', function() {
         "type" : "radio",
         "required" : true,
       }];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(0, apps.length);
           done();
@@ -297,7 +165,7 @@ describe('Application', function() {
         "required" : true,
         "options" : ["a"]
       }];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(0, apps.length);
           done();
@@ -312,7 +180,7 @@ describe('Application', function() {
         "required" : true,
         "options" : ["a"]
       }];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(0, apps.length);
           done();
@@ -327,7 +195,7 @@ describe('Application', function() {
         "required" : true,
         "options" : ["a"]
       }];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(0, apps.length);
           done();
@@ -343,7 +211,7 @@ describe('Application', function() {
         "answer" : "dog",
         "options" : ["a", "b", "c"]
       }];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(0, apps.length);
           done();
@@ -358,7 +226,7 @@ describe('Application', function() {
         "required" : true,
         "answer" : "yum",
       }];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(0, apps.length);
           done();
@@ -373,10 +241,9 @@ describe('Application', function() {
         "required" : true,
         "answer" : "yes",
       }];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(1, apps.length);
-          assert.equal(false, apps[0].isCommon);
           done();
         });
       });
@@ -398,7 +265,7 @@ describe('Application', function() {
         "type" : "text",
         "required" : true,
       }];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(0, apps.length);
           done();
@@ -423,57 +290,28 @@ describe('Application', function() {
         "type" : "text",
         "required" : true,
       }];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(1, apps.length);
           assert.equal(3, apps[0].questions.length);
-          assert.equal(false, apps[0].isCommon);
           done();
         });
       });
     });
-  });*/
+  });
 
   /**
    * Input : appId
-   *    isCommon is true for app associated with appId : should not delete
-   *    isCommon is false for app associaed with appId : should delete
+   *    appId is in DB : should delete
+   *    appId is not in DB : should not delete
    */
-  /*describe('#deleteNotCommonApplication', function() {
-    it('should not delete application, common', function(done) {
-      var questions = [{
-        "question" : "Email",
-        "type" : "text",
-        "required" : true,
-        "answer" : "abc@gmail.com"
-      }, {
-        "question" : "Name",
-        "type" : "text",
-        "required" : true,
-        "answer" : "Tester Smith"
-      }];
-      Application.createCommon(questions, function(e, app) {
-        Application.find({}, function(err, apps) {
-          assert.equal(1, apps.length);
-          assert.equal(true, apps[0].isCommon);
-          Application.deleteNotCommonApplication(apps[0]._id, function(e) {
-            Application.find({}, function(err, apps2) {
-              assert.equal(1, apps2.length);
-              assert.equal(true, apps2[0].isCommon);
-              done();
-            });
-          });
-        });
-      });
-    });
-
-    it('should delete application, not common', function(done) {
+  describe('#deleteApplication', function() {
+    it('should delete application', function(done) {
       var questions = [];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(1, apps.length);
-          assert.equal(false, apps[0].isCommon);
-          Application.deleteNotCommonApplication(apps[0]._id, function(e) {
+          Application.deleteApplication(apps[0]._id, function(e) {
             Application.find({}, function(err, apps2) {
               assert.equal(0, apps2.length);
               done();
@@ -482,7 +320,24 @@ describe('Application', function() {
         });
       });
     });
-  });*/
+
+    it('should not delete application', function(done) {
+      var questions = [];
+      Application.createApplication(questions, function(e, app) {
+        Application.find({}, function(err, apps) {
+          assert.equal(1, apps.length);
+          if(apps[0]._id !== 0) {
+            Application.deleteApplication(1, function(e) {
+              Application.find({}, function(err, apps2) {
+                assert.equal(1, apps2.length);
+                done();
+              });
+            });
+          }
+        });
+      });
+    });
+  });
   
   /**
    * Inputs: appId, newQuestions, isSubmission
@@ -511,7 +366,7 @@ describe('Application', function() {
         "required" : true,
         "options" : ["a", "b", "c"]
       }];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(1, apps.length);
           assert.equal(false, apps[0].isCommon);
@@ -536,7 +391,7 @@ describe('Application', function() {
         "required" : false,
         "options" : ["a", "b", "c"]
       }];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(1, apps.length);
           assert.equal(false, apps[0].isCommon);
@@ -561,7 +416,7 @@ describe('Application', function() {
         "required" : true,
         "options" : ["a", "b", "c"]
       }];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(1, apps.length);
           assert.equal(false, apps[0].isCommon);
@@ -584,7 +439,7 @@ describe('Application', function() {
         "type" : "check",
         "required" : false,
       }];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(1, apps.length);
           assert.equal(false, apps[0].isCommon);
@@ -608,7 +463,7 @@ describe('Application', function() {
         "required" : true,
         "answer" : "yum"
       }];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(1, apps.length);
           assert.equal(false, apps[0].isCommon);
@@ -633,7 +488,7 @@ describe('Application', function() {
         "required" : true,
         "answer" : "yum"
       }];
-      Application.createNotCommon(questions, function(e, app) {
+      Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(1, apps.length);
           assert.equal(false, apps[0].isCommon);
@@ -645,6 +500,60 @@ describe('Application', function() {
       });
     });
   });*/
+
+  /**
+   * Inputs: 
+   *    app is created without answer field questions
+   *    app is created with answer field in questions
+   */
+   describe('#formatForShow', function() {
+    it('no answer field in questions, should have answer field in formatted version', function(done) {
+       var questions = [{
+        "question" : "Email",
+        "type" : "text",
+        "required" : true,
+      }];
+      Application.createApplication(questions, function(e, app) {
+        Application.find({}, function(err, apps) {
+          assert.equal(1, apps.length);
+          Application.formatForShow(apps[0]._id, function(errMsg, formattedApps) {
+            assert.equal(1, formattedApps.length);
+            var formattedApp = formattedApps[0];
+            assert.equal('', formattedApp.answer);
+            assert.equal('Email', formattedApp.question);
+            assert.equal('text', formattedApp.type);
+            assert.equal(true, formattedApp.required);
+            assert.equal(true, _.isEqual([], formattedApp.options));
+            done();
+          });
+        });
+      });
+    });
+
+    it('answer field in questions, should have answer field in formatted version', function(done) {
+       var questions = [{
+        "question" : "Email",
+        "type" : "text",
+        "required" : true,
+        "answer" : "abc@gmail.com"
+      }];
+      Application.createApplication(questions, function(e, app) {
+        Application.find({}, function(err, apps) {
+          assert.equal(1, apps.length);
+          Application.formatForShow(apps[0]._id, function(errMsg, formattedApps) {
+            assert.equal(1, formattedApps.length);
+            var formattedApp = formattedApps[0];
+            assert.equal('abc@gmail.com', formattedApp.answer);
+            assert.equal('Email', formattedApp.question);
+            assert.equal('text', formattedApp.type);
+            assert.equal(true, formattedApp.required);
+            assert.equal(true, _.isEqual([], formattedApp.options));
+            done();
+          });
+        });
+      });
+    });
+  });
 });
 
 

@@ -7,7 +7,7 @@ var applicationSchema = mongoose.Schema({
 		"question" : { type : String, required : true, immutable : true },
 		"type" : { type : String, required : true, enum : [ "text", "radio", "check" ], immutable : true },
 		"required" : { type : Boolean, required : true, immutable : true },
-		"answer" : { type : String },
+		"answer" : { type : String, default : '' },
 		"options" : [{ type : String, immutable : true }],
 	}]
 });
@@ -83,18 +83,37 @@ applicationSchema.statics.updateAnswers = function(appId, newQuestions, isSubmis
 
 			if (readyToUpdate) {
 				// TODO: fix setting function
-				Application.findOneAndUpdate({ "_id" : appId }, { $set : { questions.$ : newQuestions } }, function(err, app) {
+				/*Application.findOneAndUpdate({ "_id" : appId }, { $set : { questions.$ : newQuestions } }, function(err, app) {
 					if (err) callback(err.message);
 					else callback(null, app);
-				});
+				});*/
 			}
 			else callback("Invalid request to update");
 		}
 	});
 };
 
+// TODO: write me
 // return an Object format of the application which can be used to generate UI
-applicationSchema.methods.formatForShow = function(callback) {};
+applicationSchema.statics.formatForShow = function(appId, callback) {
+	Application.findOne({ "_id" : appId }, function(err, app) {
+		if (err) callback(err.message);
+		else if (!app) callback("Invalid application");
+		else {
+			var formattedQuestions = [];
+			app.questions.forEach(function(e) {
+				formattedQuestions.push({
+					"question" : e.question,
+					"type" : e.type,
+					"required" : e.required,
+					"options" : e.options,
+					"answer" : e.answer
+				});
+			});
+			callback(null, formattedQuestions);
+		}	
+	});
+};
 
 /**
  * Checks if newQuestions is okay for submission given origQuestions

@@ -15,7 +15,8 @@ var customSchema = mongoose.Schema({
 	state : { type: String, enum : Object.keys(stateTable) },
 	application : { type : mongoose.Schema.Types.ObjectId, ref: "Application", required : true, immutable : true, unique : true },
 	owner : { type : mongoose.Schema.Types.ObjectId, ref : "User", required : true, immutable : true },
-	isTemplate : { type : Boolean, required : true, immutable : true }
+	isTemplate : { type : Boolean, required : true, immutable : true },
+	submitTime : { type : Date }
 });
 
 /**
@@ -27,7 +28,6 @@ customSchema.pre("save", function(next) {
 	if (!this.isTemplate && this.state === undefined) next(new Error("Invalid nontemplate save"));
 	next();
 });
-
 
 /**
  * Creates a Custom with listing set as listingId, questions set as questions
@@ -221,13 +221,26 @@ customSchema.methods.update = function(newQuestions, isSubmission, callback) {
 		Application.updateAnswers(this.application, newQuestions, isSubmission, function(errMsg, app) {
 			if (errMsg) callback(errMsg);
 			else if (!isSubmission) callback(null, this)
-			else changeState(this._id, this.state, ["save"], "subm", callback);	
+			else {
+				changeState(this._id, this.state, ["save"], "subm", function(errMsg, custom) {
+					if (errMsg) callback(errMsg);
+					else if (!custom) callback("Invalid state change");
+					else { 
+						Custom.findOneAndUpdate({ "_id" : custom._id }, { $set : { submitTime : Date.now } }, function(err, custom) {
+							if (err) callback(err.message);
+							else callback(null, custom);
+						});
+					}
+				});
+			}
 		});
 	}
 };
 
 // TODO: write me
-customSchema.methods.formatForShow = function(callback) {};
+customSchema.methods.formatForShow = function(callback) {
+	Application.formatForShow(this.application, callback);
+};
 
 
 /**
