@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 
 describe('Application', function() {
   beforeEach(function(done) {
-    mongoose.connect('mongodb://localhost/test');
+    mongoose.connect('mongodb://localhost/testcintern');
     Application.remove({}, function() {
       done();
     });

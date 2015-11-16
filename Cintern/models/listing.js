@@ -8,7 +8,7 @@ var mongoose = require("mongoose");
 
 //Schema for listings
 var listingSchema = mongoose.Schema({
-	employerId: {type: String, immutable: true, required: true}, 
+	employerId: {type: mongoose.Schema.Types.ObjectId, ref: "User", immutable: true, required: true}, 
 	title: {type: String, required: true},
 	description: String,
 	requirements: String,
