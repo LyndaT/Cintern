@@ -4,11 +4,11 @@ var _ = require("../helpers/lodash");
 // Application schema definition
 var applicationSchema = mongoose.Schema({
 	questions : [{
-		"question" : { type : String, required : true, immutable : true },
-		"type" : { type : String, required : true, enum : [ "text", "radio", "check" ], immutable : true },
-		"required" : { type : Boolean, required : true, immutable : true },
+		"question" : { type : String, required : true },
+		"type" : { type : String, required : true, enum : [ "text", "radio", "check" ] },
+		"required" : { type : Boolean, required : true },
 		"answer" : { type : String, default : '' },
-		"options" : [{ type : String, immutable : true }],
+		"options" : [{ type : String }],
 	}]
 });
 
@@ -64,29 +64,29 @@ applicationSchema.statics.deleteApplication = function(appId, callback) {
 };
 
 /**
- * Sets the application questions to newQuestions and if isSubmission is true
+ * Sets the application questions to answers and if isSubmission is true
  * checks if application can be submitted and update state appropriately, then 
  * run the callback
  *
  * @param{ObjectId} appId
- * @param{Array} newQuestions is an Array of Objects
+ * @param{Array} answers is an Array of Objects with keys that is "id" 
+ * 			(mapping to an Object id), and "answer" (mapping to a String)
  * @param{Boolean} isSubmission
  * @param{Function} callback(err, Application)
  */
-applicationSchema.statics.updateAnswers = function(appId, newQuestions, isSubmission, callback) {
+applicationSchema.statics.updateAnswers = function(appId, answers, isSubmission, callback) {
 	Application.findOne({ "_id" : appId }, { questions : 1 }, function(err, app) {
 		if (err) callback(err.message);
 		else if (!app) callback("Invalid application");
 		else {
-			var readyToUpdate = ((isSubmission && verifyForSubmissions(app.questions, newQuestions)) ||
-								(!isSubmission && verifyForUpdate(app.questions, newQuestions)));
+			var readyToUpdate = ((isSubmission && verifyForSubmissions(app.questions, answers)) ||
+								(!isSubmission && verifyForUpdate(app.questions, answers)));
 
 			if (readyToUpdate) {
-				// TODO: fix setting function
-				/*Application.findOneAndUpdate({ "_id" : appId }, { $set : { questions.$ : newQuestions } }, function(err, app) {
-					if (err) callback(err.message);
-					else callback(null, app);
-				});*/
+				app.questions.forEach(function(question, i) {
+					app.questions[i].answer = answers[i].answer;
+				});
+				app.save(callback);
 			}
 			else callback("Invalid request to update");
 		}
@@ -116,26 +116,24 @@ applicationSchema.statics.formatForShow = function(appId, callback) {
 };
 
 /**
- * Checks if newQuestions is okay for submission given origQuestions
+ * Checks if answers is okay for submission given origQuestions
  * 
  * @param{Array} origQuestions is an Array of Objects that is the questions
  * 			field for a specific Application
- * @param{Array} newQuestions is an Array of Objects with keys that is "id" 
+ * @param{Array} answers is an Array of Objects with keys that is "id" 
  * 			(mapping to an Object id), and "answer" (mapping to a String)
  *
  * @return Boolean that is true if every question in origQuestions matches
- * every every question in newQuestions (with exception to answers) and that
+ * every every question in answers (with exception to answers) and that
  * every required question has an answer
  */
-var verifyForSubmissions = function(origQuestions, newQuestions) {
-	//console.log(newQuestions);
-	//console.log(verifyForUpdate(origQuestions, newQuestions));
-	if (verifyForUpdate(origQuestions, newQuestions)) {
+var verifyForSubmissions = function(origQuestions, answers) {
+	if (verifyForUpdate(origQuestions, answers)) {
 		var verified = true;
 
 		// check that all required fields are filled out
 		origQuestions.forEach(function(question, i) {
-			var question2 = newQuestions[i];
+			var question2 = answers[i];
 			if (question.required) {
 				if (question2["answer"] == '') verified = false;
 			}
@@ -146,19 +144,19 @@ var verifyForSubmissions = function(origQuestions, newQuestions) {
 };
 
 /**
- * Checks if newQuestions is okay for updating given origQuestions
+ * Checks if answers is okay for updating given origQuestions
  *
  * @param{Array} origQuestions is an Array of Objects that is the questions
  * 			field for a specific Application
- * @param{Array} newQuestions is an Array of Objects with keys that is "id" 
+ * @param{Array} answers is an Array of Objects with keys that is "id" 
  * 			(mapping to an Object id), and "answer" (mapping to a String)
  *
  * @return Boolean that is true if every question in origQuestions matches
- * every every question in newQuestions (with exception to answers)
+ * every every question in answers (with exception to answers)
  */
-var verifyForUpdate = function(origQuestions, newQuestions) {
+var verifyForUpdate = function(origQuestions, answers) {
 	// check that both question lists are same length
-	if (origQuestions.length !== newQuestions.length) return false;
+	if (origQuestions.length !== answers.length) return false;
 
 	var verified = true;
 
@@ -167,8 +165,8 @@ var verifyForUpdate = function(origQuestions, newQuestions) {
 
 	// check that all question, required, type, options are the same for question and question2
 	origQuestions.forEach(function(question, i) {
-		var question2 = newQuestions[i];
-		if (question._id !== question2._id) verified = false;
+		var question2 = answers[i];
+		if (question._id.toString() !== question2._id.toString()) verified = false;
 		verifyAnswers.push({
 			"question" : question.question,
 			"required" : question.required,
@@ -178,8 +176,8 @@ var verifyForUpdate = function(origQuestions, newQuestions) {
 		});
 	});
 
-	// if format matches for origQuestions and newQuestions, check that each question is answered correctly
-	if (verified) return verifyAnsweredQuestionsCorrectly(newQuestions)
+	// if format matches for origQuestions and answers, check that each question is answered correctly
+	if (verified) return verifyAnsweredQuestionsCorrectly(answers)
 	else return verified;	
 };
 

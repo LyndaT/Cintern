@@ -320,13 +320,13 @@ describe('Custom', function() {
    *    newOwnerId is invalid : should not create
    *    listing and ownerId are valid: should create
    */
-  describe('#copyTemplateToSave', function() {
+  /*describe('#copyTemplateToSave', function() {
     it('listing invalid, should not create', function(done){});
 
     it('new owner invalid, should not create', function(done){});
 
     it('should create', function(done){});
-  });
+  });*/
 
   
 });

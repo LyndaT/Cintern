@@ -340,20 +340,299 @@ describe('Application', function() {
   });
   
   /**
-   * Inputs: appId, newQuestions, isSubmission
-   *    a question in newQuestions does not have same question field : should error
-   *    a question in newQuestions does not have same required field : should error
-   *    a question in newQuestions does not have same options field : should error
-   *    a question in newQuestions does not have same answer field : should update
-   *    a question in newQuestions does not have same text field : should error
-   *    a question in newQuestions has the wrong answer field : should error
-   *    a question in newQuestions has field required set to true and no answer, isSubmission is true : should error
-   *    a question in newQuestions has field required set to false and no answer, isSubmission is true : should update
-   *    a question in newQuestions has field required set to true and no answer, isSubmission is false : should update
-   *    newQuestions is the same as the original questions for appId, isSubmission is false : should update
+   * Inputs: appId, answers, isSubmission
+   *    id in answers is not an id : should error
+   *    appId is not valid : should error
+   *    wrong answer field for radio : should error
+   *    right answer field for radio : should update
+   *    wrong answer field for check : should error
+   *    right answer field for check : should update
+   *    update an already filled answer : should update
+   *    isSubmission is false, not all required filled : should update
+   *    isSubmission is true, but not all required filled : should error
+   *    isSubmission is true, all required filled : should update
+   *    missing one answer : should error
    */
-  /*describe('#updateQuestions', function() {
-    it('should error if question in newQuestions does not have same question field', function(done) {
+  describe('#updateQuestions', function() {
+    it('should not update if id wrong in answers', function(done) {
+      var questions = [{
+        "question" : "Email",
+        "type" : "text",
+        "required" : true,
+      }, {
+        "question" : "Email2",
+        "type" : "text",
+        "required" : true,
+      }];
+      Application.createApplication(questions, function(e, app) {
+        Application.find({}, function(err, apps) {
+          assert.equal(1, apps.length);
+          var answers = [
+            { "_id" : apps[0].questions[0]._id, "answer" : "yum" }, 
+            { "_id" : 2, "answer" : "a2" }
+          ];
+          Application.updateAnswers(apps[0]._id, answers, false, function(e, app) {
+            assert.equal(true, e !== null);
+            Application.find({}, function(err, apps) {
+              var app = apps[0];
+              assert.equal('', app.questions[0].answer);
+              assert.equal('', app.questions[1].answer);
+              done();
+            });
+          });
+        });
+      });
+    });
+
+    it('should not update if appId is wrong', function(done) {
+      var questions = [{
+        "question" : "Email",
+        "type" : "text",
+        "required" : true,
+      }, {
+        "question" : "Email2",
+        "type" : "text",
+        "required" : true,
+      }];
+      Application.createApplication(questions, function(e, app) {
+        Application.find({}, function(err, apps) {
+          assert.equal(1, apps.length);
+          var answers = [
+            { "_id" : apps[0].questions[0]._id, "answer" : "yum" }, 
+            { "_id" : "abc", "answer" : "a2" }
+          ];
+          Application.updateAnswers(2, answers, false, function(e, app) {
+            assert.equal(true, e !== null);
+            Application.find({}, function(err, apps) {
+              var app = apps[0];
+              assert.equal('', app.questions[0].answer);
+              assert.equal('', app.questions[1].answer);
+              done();
+            });
+          });
+        });
+      });
+    });
+
+    it('should not update if wrong answer field, radio', function(done) {
+      var questions = [{
+        "question" : "Email",
+        "type" : "radio",
+        "required" : true,
+        "options" : ["a", "b", "c"]
+      }];
+      Application.createApplication(questions, function(e, app) {
+        Application.find({}, function(err, apps) {
+          assert.equal(1, apps.length);
+          var answers = [{ "_id" : apps[0].questions[0]._id, "answer" : "yum" }];
+          Application.updateAnswers(apps[0]._id, answers, false, function(e, app) {
+            assert.equal(true, e !== null);
+            Application.find({}, function(err, apps) {
+              var app = apps[0];
+              assert.equal('', app.questions[0].answer);
+              done();
+            });
+          });
+        });
+      });
+    });
+
+    it('should update if right answer field, radio', function(done) {
+      var questions = [{
+        "question" : "Email",
+        "type" : "radio",
+        "required" : true,
+        "options" : ["a", "b", "c"]
+      }];
+      Application.createApplication(questions, function(e, app) {
+        Application.find({}, function(err, apps) {
+          assert.equal(1, apps.length);
+          var answers = [{ "_id" : apps[0].questions[0]._id, "answer" : "a" }];
+          Application.updateAnswers(apps[0]._id, answers, false, function(e, app) {
+            assert.equal(true, e === null);
+            assert.equal("a", app.questions[0].answer);
+            done();
+          });
+        });
+      });
+    });
+
+    it('should not update if wrong answer field, check', function(done) {
+      var questions = [{
+        "question" : "Email",
+        "type" : "check",
+        "required" : true,
+      }];
+      Application.createApplication(questions, function(e, app) {
+        Application.find({}, function(err, apps) {
+          assert.equal(1, apps.length);
+          var answers = [{ "_id" : apps[0].questions[0]._id, "answer" : "yum" }];
+          Application.updateAnswers(apps[0]._id, answers, false, function(e, app) {
+            assert.equal(true, e !== null);
+            Application.find({}, function(err, apps) {
+              var app = apps[0];
+              assert.equal('', app.questions[0].answer);
+              done();
+            });
+          });
+        });
+      });
+    });
+
+    it('should update if right answer field, check', function(done) {
+      var questions = [{
+        "question" : "Email",
+        "type" : "check",
+        "required" : true,
+      }];
+      Application.createApplication(questions, function(e, app) {
+        Application.find({}, function(err, apps) {
+          assert.equal(1, apps.length);
+          var answers = [{ "_id" : apps[0].questions[0]._id, "answer" : "yes" }];
+          Application.updateAnswers(apps[0]._id, answers, false, function(e, app) {
+            assert.equal(true, e === null);
+            assert.equal("yes", app.questions[0].answer);
+            done();
+          });
+        });
+      });
+    });
+
+    it('should update already filled answer', function(done) {
+      var questions = [{
+        "question" : "Email",
+        "type" : "text",
+        "required" : true,
+        "answer" : "dog"
+      }];
+      Application.createApplication(questions, function(e, app) {
+        Application.find({}, function(err, apps) {
+          assert.equal(1, apps.length);
+          var answers = [{ "_id" : apps[0].questions[0]._id, "answer" : "yum" }];
+          console.log("about to update");
+          Application.updateAnswers(apps[0]._id, answers, false, function(e, app) {
+            assert.equal(true, e === null);
+            assert.equal("yum", app.questions[0].answer);
+            done();
+          });
+        });
+      });
+    });
+
+    it('should update isSubmission false, not all required filled', function(done) {
+      var questions = [{
+        "question" : "Email",
+        "type" : "text",
+        "required" : true,
+      }, {
+        "question" : "Email2",
+        "type" : "text",
+        "required" : true,
+      }];
+      Application.createApplication(questions, function(e, app) {
+        Application.find({}, function(err, apps) {
+          assert.equal(1, apps.length);
+          var answers = [
+            { "_id" : apps[0].questions[0]._id, "answer" : "yum" }, 
+            { "_id" : apps[0].questions[1]._id, "answer" : "" }
+          ];
+          Application.updateAnswers(apps[0]._id, answers, false, function(e, app) {
+            assert.equal(true, e === null);
+            assert.equal("yum", app.questions[0].answer);
+            assert.equal('', app.questions[1].answer);
+            done();
+          });
+        });
+      });
+    });
+
+    it('should not update isSubmission true, not all required filled', function(done) {
+      var questions = [{
+        "question" : "Email",
+        "type" : "text",
+        "required" : true,
+      }, {
+        "question" : "Email2",
+        "type" : "text",
+        "required" : true,
+      }];
+      Application.createApplication(questions, function(e, app) {
+        Application.find({}, function(err, apps) {
+          assert.equal(1, apps.length);
+          var answers = [
+            { "_id" : apps[0].questions[0]._id, "answer" : "yum" }, 
+            { "_id" : apps[0].questions[1]._id, "answer" : "" }
+          ];
+          Application.updateAnswers(apps[0]._id, answers, true, function(e, app) {
+            Application.find({}, function(err, apps) {
+              var app = apps[0];
+              assert.equal('', app.questions[0].answer);
+              assert.equal('', app.questions[1].answer);
+              done();
+            });
+          });
+        });
+      });
+    });
+
+    it('should update isSubmission true, all required filled', function(done) {
+      var questions = [{
+        "question" : "Email",
+        "type" : "text",
+        "required" : true,
+      }, {
+        "question" : "Email2",
+        "type" : "text",
+        "required" : true,
+      }];
+      Application.createApplication(questions, function(e, app) {
+        Application.find({}, function(err, apps) {
+          assert.equal(1, apps.length);
+          var answers = [
+            { "_id" : apps[0].questions[0]._id, "answer" : "yum" }, 
+            { "_id" : apps[0].questions[1]._id, "answer" : "a" }
+          ];
+          Application.updateAnswers(apps[0]._id, answers, true, function(e, app) {
+            Application.find({}, function(err, apps) {
+              var app = apps[0];
+              assert.equal('yum', app.questions[0].answer);
+              assert.equal('a', app.questions[1].answer);
+              done();
+            });
+          });
+        });
+      });
+    });
+
+    it('should not update missing', function(done) {
+      var questions = [{
+        "question" : "Email",
+        "type" : "text",
+        "required" : true,
+      }, {
+        "question" : "Email2",
+        "type" : "text",
+        "required" : true,
+      }];
+      Application.createApplication(questions, function(e, app) {
+        Application.find({}, function(err, apps) {
+          assert.equal(1, apps.length);
+          var answers = [
+            { "_id" : apps[0].questions[0]._id, "answer" : "yum" }
+          ];
+          Application.updateAnswers(apps[0]._id, answers, false, function(e, app) {
+            Application.find({}, function(err, apps) {
+              var app = apps[0];
+              assert.equal('', app.questions[0].answer);
+              assert.equal('', app.questions[1].answer);
+              done();
+            });
+          });
+        });
+      });
+    });
+
+    /*it('should error if question in newQuestions does not have same question field', function(done) {
       var questions = [{
         "question" : "Email",
         "type" : "radio",
@@ -449,57 +728,8 @@ describe('Application', function() {
           });
         });
       });
-    });
-
-    it('should update if question in newQuestions does not have same answer field', function(done) {
-      var questions = [{
-        "question" : "Email",
-        "type" : "text",
-        "required" : true,
-      }];
-      var newQuestions = [{
-        "question" : "Email",
-        "type" : "text",
-        "required" : true,
-        "answer" : "yum"
-      }];
-      Application.createApplication(questions, function(e, app) {
-        Application.find({}, function(err, apps) {
-          assert.equal(1, apps.length);
-          assert.equal(false, apps[0].isCommon);
-          Application.updateQuestions(apps[0]._id, newQuestions, false, function(e, app) {
-            console.log(app + "application");
-            assert.equal(true, e === null);
-            done();
-          });
-        });
-      });
-    });
-
-    it('should error if question in newQuestions has wrong answer', function(done) {
-      var questions = [{
-        "question" : "Email",
-        "type" : "check",
-        "required" : true,
-      }];
-      var newQuestions = [{
-        "question" : "Email",
-        "type" : "check",
-        "required" : true,
-        "answer" : "yum"
-      }];
-      Application.createApplication(questions, function(e, app) {
-        Application.find({}, function(err, apps) {
-          assert.equal(1, apps.length);
-          assert.equal(false, apps[0].isCommon);
-          Application.updateQuestions(apps[0]._id, newQuestions, false, function(e, app) {
-            assert.equal(true, e !== null);
-            done();
-          });
-        });
-      });
-    });
-  });*/
+    });*/
+  });
 
   /**
    * Inputs: 
