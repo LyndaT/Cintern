@@ -1,5 +1,6 @@
 var assert = require("assert");
 var Listing = require('../models/listing');
+var Employer = require('../models/Employer');
 var mongoose = require('mongoose');
 var ObjectId = require('mongodb').ObjectID;
 var _ = require("../helpers/lodash");
@@ -46,14 +47,18 @@ describe('Listing', function() {
   beforeEach(function(done) {
     mongoose.connect('mongodb://localhost/testcintern');
     Listing.remove({}, function() {
-      done();
+      Employer.remove({}, function() {
+        done();
+      });
     });
   });
 
   afterEach(function(done) {
     Listing.remove({}, function() {
-      mongoose.connection.close();
-      done();
+      Employer.remove({}, function() {
+        mongoose.connection.close();
+        done();
+      });
     });
   });
 
