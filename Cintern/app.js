@@ -45,15 +45,15 @@ app.use('/users', users);
 // encrypted cookied).
 app.use(function(req, res, next) {
   if (req.session.username) {
-  	User.findOne({username: req.session.username}, function(err, user){
-  		if (user) {
-  			req.currentUser = user.username;
-  		} else {
-  			req.session.destroy();
-  		}
-  		console.log("Current user" + req.currentuser);
-  		next();
-  	});
+    User.findOne({username: req.session.username}, function(err, user){
+      if (user) {
+        req.currentUser = user.username;
+      } else {
+        req.session.destroy();
+      }
+      console.log("Current user" + req.currentuser);
+      next();
+    });
   } else {
       next();
   }

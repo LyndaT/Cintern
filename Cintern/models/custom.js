@@ -91,46 +91,54 @@ customSchema.statics.getListingTemplate = function(listingId, callback) {};
 /**
  * Sets a submitted or starred Custom's state to withdrawn, then runs callback
  *
+ * @param{ObjectId} customId
  * @param{Function} callback(err, Custom)
  */
-customSchema.methods.withdraw = function(callback) {};
+customSchema.statics.withdraw = function(customId, callback) {};
+
 /**
  * Deletes the Custom from the db if the Custom has the saved state, then runs calblack
  *
+ * @param{ObjectId} customId
  * @param{Function} callback(err)
  */
-customSchema.methods.deleteCustom = function(callback) {};
+customSchema.statics.deleteCustom = function(customId, callback) {};
 
 /**
  * Sets a submitted Custom's state to starred, then runs callback
  *
+ * @param{ObjectId} customId
  * @param{Function} callback(err, Custom)
  */
-customSchema.methods.star = function(callback) {};
+customSchema.statics.star = function(customId, callback) {};
 /**
  * Sets a starred Custom's state to unstar, then runs callback
  *
+ * @param{ObjectId} customId
  * @param{Function} callback(err, Custom)
  */
-customSchema.methods.unstar = function(callback) {};
+customSchema.statics.unstar = function(customId, callback) {};
 
 /**
  * Sets a submitted or starred Custom's state to rejected, then runs callback
  *
+ * @param{ObjectId} customId
  * @param{Function} callback(err, Custom)
  */
-customSchema.methods.reject = function(callback) {};
+customSchema.statics.reject = function(customId, callback) {};
 
 /**
- * Updates the questions of the Custom to newQuestions if Custom's state is save
+ * Updates the questions of the Custom to answers if Custom's state is save
  * if isSubmission is true, set state to subm if questions are correctly formatted,
  * then runs the callback on the updated Custom
  * 
- * @param{Array} newQuesions is an Array of Objects
+ * @param{ObjectId} customId
+ * @param{Array} answers is an Array of Objects with keys that is "id" 
+ * 			(mapping to an Object id), and "answer" (mapping to a String)
  * @param{Boolean} isSubmission
  * @param{Function} callback(err, Custom)
  */
-customSchema.methods.update = function(newQuestions, isSubmission, callback) {};
+customSchema.statics.update = function(customId, answers, isSubmission, callback) {};
 
 /**
  * @param{Array} questions is an Array of Objects
@@ -141,16 +149,15 @@ customSchema.methods.update = function(newQuestions, isSubmission, callback) {};
 var noAnswerInQuestions = function(questions) {};
 
 /**
- * If the origState is in startStates, then the Custom associated with customId's
+ * If the Custom's state is in startStates, then the Custom associated with customId's
  * state is set to the endState, and the callback is run on the updated Custom
  *
  * @param{ObjectId} customId
- * @param{String} origState is the state of the Custom associated with customId
  * @param{Array} startStates is an Array of Strings that are keys of stateTable
  * @param{String} endState is a String that is a key of stateTable
  * @param{Function} callback(err, Custom)
  */
-var changeState = function(customId, origState, startStates, endState, callback) {};
+var changeState = function(customId, startStates, endState, callback) {};
 
 /**
  * Creates a new Custom in the DB with listing set as listingId, state set as state, 
