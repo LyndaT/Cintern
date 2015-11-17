@@ -328,7 +328,23 @@ describe('Custom', function() {
    *    listing and ownerId are valid: should create
    */
   /*describe('#copyTemplateToSave', function() {
-    it('listing invalid, should not create', function(done){});
+    it('listing invalid, should not create', function(done){
+      var questions = [];
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
+        Listing....( function(e, listing) {
+          Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
+            User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+              custom.copyTemplateToSave(listing._id, user2._id, function(e, custom) {
+                assert.equal(user2._id, custom.owner);
+                assert.equal(listing._id, custom.listing);
+                assert.equal(false, custom.isTemplate);
+                assert.equal("save", custom.state);
+              });
+            });
+          });
+        });
+      });
+    });
 
     it('new owner invalid, should not create', function(done){});
 
