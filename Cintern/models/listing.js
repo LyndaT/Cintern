@@ -36,7 +36,7 @@ listingSchema.statics.createListing = function(currEmployerId, title, desc, reqs
 		deadline: deadline
 	}, function(err, user) {
 	      if (err) {
-	        callback(err.msg);
+	        callback(err.message);
 	      } else {
 	        callback();
 	      }
@@ -52,7 +52,7 @@ listingSchema.statics.createListing = function(currEmployerId, title, desc, reqs
 listingSchema.statics.deleteListing = function(listingId, callback) {
 	Listing.remove({_id: listingId}, function(err, user) {
       if (err) {
-        callback(err.msg);
+        callback(err.message);
       } else {
         callback();
       }
@@ -81,11 +81,10 @@ listingSchema.statics.getAllListings = function(callback) {
 var getFormattedListings = function(query, callback) {
 	// SAVE THIS FOR LATER
 	// SAVE THIS FOR LATER
-	escapeQueryValues(query);
 
 	Listing.find(query, { employerId: 1, title: 1, deadline: 1 }).populate("employerId").exec(function(err, listing_data){
 		if (err) {
-			callback(err);
+			callback(err.message);
 		} else {
 			callback(null, listing_data);
 		}
@@ -101,11 +100,9 @@ var getFormattedListings = function(query, callback) {
  * 					callback takes in an error and the list of listings
  */
 var getListings = function(query, callback) {
-	escapeQueryValues(query);
-
 	Listing.find(query).populate("employerId").exec(function(err, listing_data) {
 		if (err) {
-			callback(err);
+			callback(err.message);
 		} else {
 			callback(null, listing_data);
 		}
@@ -147,45 +144,13 @@ listingSchema.statics.getAllEmployerListings = function(employerId, callback) {
 listingSchema.statics.getListingInformation = function(listingId, callback) {
 	Listing.findOne({ _id: listingId }, function(err, listing) {
 		if (!listing) {
-			callback({ msg: 'Invalid listing.' });
+			callback('Invalid listing.');
 		} else if (err) {
-			callback({ msg: err.message });
+			callback(err.message);
 		} else {
 			callback(null, listing);
 		}
 	});
-};
-
-/**
- * For each value in a query, escape the value if it is text
- * Characters to escape (to avoid code injection): ', ", {, }, \, ;
- *
- * @param query: a JSON object that represents a query
- */
-var escapeQueryValues = function(query) {
-	//SAVE THIS FOR LATER
-	/**forEachKey(query, function(key) {
-		value = query[key]
-
-		if (typeof value == 'string') {
-			query[key] = value.replace(/\\(.)|(["';{}])/g, "\\$1$2");
-			query[key] = value.replace(/\\(\\)|(\\)/g, "\\$1$2");
-		}
-	});*/
-}
-
-/**
- * For each key in the given JSON object, apply the given function to it
- *
- * @param obj: a JSON object
- * @param fn: a function to call with each key in the object
- */
-var forEachKey = function(obj, fn) {
-  Object.keys(obj).forEach(function(key) {
-    if (obj.hasOwnProperty(key)) {
-      fn(key);
-    }
-  });
 };
 
 var Listing = mongoose.model('Listing', listingSchema);
