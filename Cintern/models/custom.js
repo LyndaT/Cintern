@@ -256,6 +256,8 @@ customSchema.statics.update = function(customId, answers, isSubmission, callback
 						if (errMsg) callback(errMsg);
 						else if (!custom) callback("Invalid state change");
 						else { 
+							// finding to get the actual updated version of Custom (we found that
+							// the custom in the callback of findOneAndUpdate isn't updated yet)
 							Custom.findOneAndUpdate({ "_id" : custom._id }, { $set : { submitTime : new Date() } }, function(err, custom) {
 								if (err) callback(err.message);
 								else callback(null, custom);

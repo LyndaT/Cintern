@@ -53,6 +53,8 @@ StudentSchema.statics.setCommonFilled = function(userId, callback){
 		} else if (!student) {
 			callback("Invalid student");
 		} else {
+			// finding to get the actual updated version of Student (we found that
+			// the student in the callback of findOneAndUpdate isn't updated yet)
 			Student.findOne({user : userId}, function(err, student) {
 				if (err) {
 					callback(err.message);
