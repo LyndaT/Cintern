@@ -3,6 +3,7 @@ var Custom = require('../models/custom');
 var User = require('../models/User');
 var Employer = require('../models/Employer');
 var Listing = require('../models/listing');
+var Application = require('../models/application');
 var mongoose = require('mongoose');
 var _ = require("../helpers/lodash");
 
@@ -13,8 +14,10 @@ describe('Custom', function() {
       User.remove({}, function() {
         Listing.remove({}, function() {
           Employer.remove({}, function(){
-            done();
-          })
+            Application.remove({}, function(){
+              done();
+            });
+          });
         });
       });
     });
@@ -25,8 +28,10 @@ describe('Custom', function() {
       User.remove({}, function() {
         Listing.remove({}, function() {
           Employer.remove({}, function() {
-            mongoose.connection.close();
-            done();
+            Application.remove({}, function(){
+              mongoose.connection.close();
+              done();
+            })
           });
         });
       });
@@ -360,19 +365,18 @@ describe('Custom', function() {
    *    newOwnerId is invalid : should not create
    *    listing and ownerId are valid: should create
    */
-  /*describe('#copyTemplateToSave', function() {
+  describe('#copyTemplateToSave', function() {
     it('listing invalid, should not create', function(done){
       var questions = [];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, listing) {
-          Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
-            User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
-              custom.copyTemplateToSave("1", user2._id, function(e, custom) {
-                assert.equal(user2._id, custom.owner);
-                assert.equal(listing._id, custom.listing);
-                assert.equal(false, custom.isTemplate);
-                assert.equal("save", custom.state);
-                done();
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                custom.copyTemplateToSave("1", user2._id, function(e, custom) {
+                  assert.equal(true, e !== null);
+                  done();
+                });
               });
             });
           });
@@ -382,16 +386,15 @@ describe('Custom', function() {
 
     it('new owner invalid, should not create', function(done){
       var questions = [];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, listing) {
-          Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
-            User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
-              custom.copyTemplateToSave(listing._id, "1", function(e, custom) {
-                assert.equal(user2._id, custom.owner);
-                assert.equal(listing._id, custom.listing);
-                assert.equal(false, custom.isTemplate);
-                assert.equal("save", custom.state);
-                done();
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                custom.copyTemplateToSave(listings[0]._id, "1", function(e, custom) {
+                  assert.equal(true, e !== null);
+                  done();
+                });
               });
             });
           });
@@ -399,25 +402,34 @@ describe('Custom', function() {
       });
     });
 
-    it('should not create', function(done){
-      var questions = [];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, listing) {
-          Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
-            User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
-              custom.copyTemplateToSave(listing._id, user2._id, function(e, custom) {
-                assert.equal(user2._id, custom.owner);
-                assert.equal(listing._id, custom.listing);
-                assert.equal(false, custom.isTemplate);
-                assert.equal("save", custom.state);
-                done();
+    it('should create', function(done){
+      var questions = [{
+        "question" : "Email",
+        "type" : "text",
+        "required" : true,
+      }];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, custom) {
+                  assert.equal(user2._id, custom.owner);
+                  assert.equal(listings[0]._id, custom.listing);
+                  assert.equal(false, custom.isTemplate);
+                  assert.equal("save", custom.state);
+                  Application.findOne({ "_id" : custom.application }, function(e, app) {
+                    assert.equal(1, app.questions.length);
+                    done();
+                  })
+                });
               });
             }); 
           });
         });
       });
     });
-  });*/
+  });
 
   /**
    * input: userId

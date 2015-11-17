@@ -57,12 +57,28 @@ customSchema.statics.createTemplate = function(listingId, questions, ownerId, ca
 customSchema.methods.copyTemplateToSave = function(listingId, newOwnerId, callback) {
 	// get the template Custom associated with the listing
 	Custom.getListingTemplate(listingId, function(errMsg, custom) {
+
 		if (errMsg) callback(errMsg);
 		else if (!custom) callback("No template");
 		// create copy
-
-		// FIX CUSTOM.QUESTIONS...
-		else createCustom(listingId, custom.questions, newOwnerId, false, "save", callback) 
+		else {
+			// get questions in the proper format to run createCustom
+			Application.formatForShow(custom.application, function(errMsg, formattedQuestions) {
+				if (errMsg) callback(errMsg);
+				else {
+					var formatForCreate = [];
+					formattedQuestions.forEach(function(question) {
+						formatForCreate.push({
+							"question" : question.question,
+							"options" : question.options,
+							"type" : question.type,
+							"required" : question.required,
+						});
+					});
+					createCustom(listingId, formatForCreate, newOwnerId, false, "save", callback);
+				}
+			})
+		}
 	})
 };
 
