@@ -1,6 +1,7 @@
-/*var assert = require("assert");
+var assert = require("assert");
 var Custom = require('../models/custom');
 var User = require('../models/User');
+var Employer = require('../models/Employer');
 var Listing = require('../models/listing');
 var mongoose = require('mongoose');
 var _ = require("../helpers/lodash");
@@ -11,7 +12,9 @@ describe('Custom', function() {
     Custom.remove({}, function() {
       User.remove({}, function() {
         Listing.remove({}, function() {
-          done();
+          Employer.remove({}, function(){
+            done();
+          })
         });
       });
     });
@@ -21,8 +24,10 @@ describe('Custom', function() {
     Custom.remove({}, function() {
       User.remove({}, function() {
         Listing.remove({}, function() {
-          mongoose.connection.close();
-          done();
+          Employer.remove({}, function() {
+            mongoose.connection.close();
+            done();
+          });
         });
       });
     });
@@ -45,16 +50,18 @@ describe('Custom', function() {
    *    one poorly formatted question : should not create
    *    all correctly formatted questions : should create
    */
-  /*describe('#createTemplate', function() {
+  describe('#createTemplate', function() {
     it('should create template empty', function(done){
       var questions = [];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, listing) {
-          Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
-            Custom.find({}, function(err, customs) {
-              assert.equal(1, customs.length);
-              assert.equal(false, customs[0].isTemplate);
-              done();
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+              Custom.find({}, function(err, customs) {
+                assert.equal(1, customs.length);
+                assert.equal(true, customs[0].isTemplate);
+                done();
+              });
             });
           });
         });
@@ -66,12 +73,14 @@ describe('Custom', function() {
         "type" : "text",
         "required" : true,
       }];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, listing) {
-          Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
-            Custom.find({}, function(err, customs) {
-              assert.equal(0, customs.length);
-              done();
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+              Custom.find({}, function(err, customs) {
+                assert.equal(0, customs.length);
+                done();
+              });
             });
           });
         });
@@ -84,13 +93,15 @@ describe('Custom', function() {
         "type" : "text",
         "required" : true,
       }];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, listing) {
-          Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
-            Custom.find({}, function(err, customs) {
-              assert.equal(1, customs.length);
-              assert.equal(false, customs[0].isTemplate);
-              done();
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+              Custom.find({}, function(err, customs) {
+                assert.equal(1, customs.length);
+                assert.equal(true, customs[0].isTemplate);
+                done();
+              });
             });
           });
         });
@@ -104,12 +115,14 @@ describe('Custom', function() {
         "required" : true,
         "answer" : "abc@gmail.com"
       }];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, listing) {
-          Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
-            Custom.find({}, function(err, customs) {
-              assert.equal(0, customs.length);
-              done();
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+              Custom.find({}, function(err, customs) {
+                assert.equal(0, customs.length);
+                done();
+              });
             });
           });
         });
@@ -121,12 +134,14 @@ describe('Custom', function() {
         "question" : "Email",
         "type" : "text",
       }];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, listing) {
-          Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
-            Custom.find({}, function(err, customs) {
-              assert.equal(0, customs.length);
-              done();
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+              Custom.find({}, function(err, customs) {
+                assert.equal(0, customs.length);
+                done();
+              });
             });
           });
         });
@@ -140,13 +155,15 @@ describe('Custom', function() {
         "required" : true,
         "options" : ["a", "b", "c"]
       }];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, listing) {
-          Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
-            Custom.find({}, function(err, customs) {
-              assert.equal(1, customs.length);
-              assert.equal(false, customs[0].isTemplate);
-              done();
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+              Custom.find({}, function(err, customs) {
+                assert.equal(1, customs.length);
+                assert.equal(true, customs[0].isTemplate);
+                done();
+              });
             });
           });
         });
@@ -159,13 +176,15 @@ describe('Custom', function() {
         "type" : "check",
         "required" : true
       }];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, listing) {
-          Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
-            Custom.find({}, function(err, customs) {
-              assert.equal(1, customs.length);
-              assert.equal(false, customs[0].isTemplate);
-              done();
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+              Custom.find({}, function(err, customs) {
+                assert.equal(1, customs.length);
+                assert.equal(true, customs[0].isTemplate);
+                done();
+              });
             });
           });
         });
@@ -178,13 +197,15 @@ describe('Custom', function() {
         "type" : "text",
         "required" : true,
       }];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, listing) {
-          Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
-            Custom.find({}, function(err, customs) {
-              assert.equal(1, customs.length);
-              assert.equal(false, customs[0].isTemplate);
-              done();
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+              Custom.find({}, function(err, customs) {
+                assert.equal(1, customs.length);
+                assert.equal(true, customs[0].isTemplate);
+                done();
+              });
             });
           });
         });
@@ -197,12 +218,14 @@ describe('Custom', function() {
         "type" : "radio",
         "required" : true,
       }];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, listing) {
-          Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
-            Custom.find({}, function(err, customs) {
-              assert.equal(0, customs.length);
-              done();
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+              Custom.find({}, function(err, customs) {
+                assert.equal(0, customs.length);
+                done();
+              });
             });
           });
         });
@@ -216,12 +239,14 @@ describe('Custom', function() {
         "required" : true,
         "options" : ["a"]
       }];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, listing) {
-          Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
-            Custom.find({}, function(err, customs) {
-              assert.equal(0, customs.length);
-              done();
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+              Custom.find({}, function(err, customs) {
+                assert.equal(0, customs.length);
+                done();
+              });
             });
           });
         });
@@ -235,12 +260,14 @@ describe('Custom', function() {
         "required" : true,
         "options" : ["a"]
       }];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, listing) {
-          Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
-            Custom.find({}, function(err, customs) {
-              assert.equal(0, customs.length);
-              done();
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+              Custom.find({}, function(err, customs) {
+                assert.equal(0, customs.length);
+                done();
+              });
             });
           });
         });
@@ -254,12 +281,14 @@ describe('Custom', function() {
         "required" : true,
         "options" : ["a"]
       }];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, listing) {
-          Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
-            Custom.find({}, function(err, customs) {
-              assert.equal(0, customs.length);
-              done();
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+              Custom.find({}, function(err, customs) {
+                assert.equal(0, customs.length);
+                done();
+              });
             });
           });
         });
@@ -269,7 +298,7 @@ describe('Custom', function() {
     it('should not create template, one poorly formatted', function(done) {
       var questions = [{
         "question" : "Email",
-        "type" : "check",
+        "type" : "radio",
         "required" : true,
       }, {
         "question" : "Email",
@@ -280,12 +309,14 @@ describe('Custom', function() {
         "type" : "text",
         "required" : true,
       }];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, listing) {
-          Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
-            Custom.find({}, function(err, customs) {
-              assert.equal(0, customs.length);
-              done();
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+              Custom.find({}, function(err, customs) {
+                assert.equal(0, customs.length);
+                done();
+              });
             });
           });
         });
@@ -307,19 +338,21 @@ describe('Custom', function() {
         "type" : "text",
         "required" : true,
       }];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, listing) {
-          Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
-            Custom.find({}, function(err, customs) {
-              assert.equal(1, customs.length);
-              assert.equal(false, customs[0].isTemplate);
-              done();
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+              Custom.find({}, function(err, customs) {
+                assert.equal(1, customs.length);
+                assert.equal(true, customs[0].isTemplate);
+                done();
+              });
             });
           });
         });
       }); 
     });
-  });*/
+  });
 
   /** 
    * Input: listingId, newOwnerId
@@ -577,9 +610,9 @@ customSchema.methods.unstar
 
 customSchema.methods.reject
 
-customSchema.methods.update 
+customSchema.methods.update */
   
-});*/
+});
 
 
 

@@ -296,9 +296,9 @@ var createCustom = function(listingId, questions, ownerId, isTemplate, state, ca
 						"listing" : listingId,
 						"application" : app._id,
 						"owner" : ownerId,
-						"isTemplate" : isTemplate
+						"isTemplate" : isTemplate,
 					};
-					if (isTemplate) custom["state"] = state;
+					if (!isTemplate) custom["state"] = state;
 					var newCustom = new Custom(custom);
 
 					// save the new custom in the DB
@@ -319,10 +319,11 @@ var createCustom = function(listingId, questions, ownerId, isTemplate, state, ca
  * the answer field, and false otherwise
  */
 var noAnswerInQuestions = function(questions) {
+	var noAnswers = true;
 	questions.forEach(function(question) {
-		if (question.answer !== undefined) return false;
+		if (question.answer !== undefined) noAnswers = false;
 	});
-	return true;
+	return noAnswers;
 };
 
 /**
