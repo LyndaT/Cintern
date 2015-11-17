@@ -14,6 +14,7 @@ var User = require('../models/User.js');
 module.exports.addEmployer = function(req, res){
 	email = req.body.email;
 	password = req.body.password;
+	//TODO: Change
 	User.addUser(email, password, false, function(errMsg, user){
 		if (errMsg) {
 			res.send({msg: errMsg});
