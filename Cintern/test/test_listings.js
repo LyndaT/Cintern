@@ -1,6 +1,7 @@
 var assert = require("assert");
 var Listing = require('../models/listing');
 var Employer = require('../models/Employer');
+var User = require('../models/User');
 var mongoose = require('mongoose');
 var ObjectId = require('mongodb').ObjectID;
 var _ = require("../helpers/lodash");
@@ -20,35 +21,29 @@ var _ = require("../helpers/lodash");
  *   (2) listing does not exist
  */
 
-LISTING1 = {
- 	employerId: ObjectId("507f1f77bcf86cd799439011"),
- 	title: "hello",
- 	description: "world",
- 	requirements: undefined,
- 	deadline: undefined
+EMPLOYER = {
+  email: "abc@google.com",
+  password: "pword",
+  companyName: "Google"
 };
 
-LISTING1_CONDENSED = {
+LISTING1 = {
  	title: "hello",
- 	deadline: undefined
+ 	description: "world"
 };
 
 LISTING2 = {
- 	employerId: ObjectId("507f1f77bcf86cd799439011"),
  	title: "meow"
 };
-
-LISTING2_CONDENSED = {
- 	title: "meow",
- 	deadline: undefined
-}
 
 describe('Listing', function() {
   beforeEach(function(done) {
     mongoose.connect('mongodb://localhost/testcintern');
     Listing.remove({}, function() {
       Employer.remove({}, function() {
-        done();
+        User.remove({}, function() {
+          done();
+        });
       });
     });
   });
@@ -56,39 +51,48 @@ describe('Listing', function() {
   afterEach(function(done) {
     Listing.remove({}, function() {
       Employer.remove({}, function() {
-        mongoose.connection.close();
-        done();
+        User.remove({}, function() {
+          mongoose.connection.close();
+          done();
+        });
       });
     });
   });
 
   describe('#getAllListings', function() {
   	it('should retrieve all listings', function(done) {
-  		Listing.createListing(LISTING1["employerId"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"], function(err1, listing1) {
-  			assert.equal(err1, null);
-  			
-  			Listing.createListing(LISTING2["employerId"], LISTING2["title"], LISTING2["description"], LISTING2["requirements"], LISTING2["deadline"], function(err2, listing2) {
-  				assert.equal(err2, null);
-  				
-  				Listing.getAllListings(function(err, listings) {
-  					assert.equal(err, null);
-  					assert.equal(listings.length, 2);
+      Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, result) {
+
+        console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", result);
+        console.log("RESULT", result.employer);
+        //console.log("MADDIE", employer._id, LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"]);
+
+        Listing.createListing(result.employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"], function(err1, listing1) {
+          assert.equal(err1, null);
+
+          Listing.createListing(result.employer["_id"], LISTING2["title"], LISTING2["description"], LISTING2["requirements"], LISTING2["deadline"], function(err2, listing2) {
+            assert.equal(err2, null);
             
-            assert(_.isEqual(LISTING1_CONDENSED, {
-              title: listings[0].title,
-              deadline: listings[0].deadline
-            }));
-            assert.equal(listings[0].employerId.toHexString(), LISTING1.employerId.toHexString());
-            
-            assert(_.isEqual(LISTING2_CONDENSED, {
-              title: listings[1].title,
-              deadline: listings[1].deadline
-            }));
-            assert.equal(listings[1].employerId.toHexString(), LISTING2.employerId.toHexString());
-  					done();
-  				});
-  			});
-  		});
+            Listing.getAllListings(function(err, listings) {
+              assert.equal(err, null);
+              assert.equal(listings.length, 2);
+              
+              assert(_.isEqual(LISTING1_CONDENSED, {
+                title: listings[0]["title"],
+                deadline: listings[0]["deadline"]
+              }));
+              assert.equal(listings[0]["employerId"]["_id"].toHexString(), employer["_id"].toHexString());
+              
+              assert(_.isEqual(LISTING2_CONDENSED, {
+                title: listings[1]["title"],
+                deadline: listings[1]["deadline"]
+              }));
+              assert.equal(listings[1]["employerId"]["_id"].toHexString(), employer["_id"].toHexString());
+              done();
+            });
+          });
+        });
+      });
   	});
 
   	it('should return an empty list if no listings exist', function(done) {

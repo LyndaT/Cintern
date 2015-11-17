@@ -3,6 +3,7 @@
  */
 
 var mongoose = require("mongoose");
+var User = require('../models/User.js');
 
 var EmployerSchema = mongoose.Schema({
   user: {type: mongoose.Schema.Types.ObjectId , ref: 'User', unique: true, immutable: true},
@@ -11,14 +12,31 @@ var EmployerSchema = mongoose.Schema({
 
 /**
  * Creates an Employer User
- * @param {String} username the username of the Employer
+ * @param {String} email the email of the Employer
  * @param {String} password the password of the Employer
  * @param {String} companyName the name of the company this Employer represents
  * @param {Function} callback the callback function that sends the Employer User in the form
  * 								(err, Employer)
  */
-EmployerSchema.statics.createEmployer = function(username, password, companyName, callback){
-	
+EmployerSchema.statics.createEmployer = function(email, password, companyName, callback){	
+	User.addUser(email, password, false, function(errMsg, user){
+		console.log("CREATE EMPLOYER", errMsg, user)
+
+		if (errMsg){
+			callback(errMsg);
+		} else {
+			Employer.create({user: user.user._id, 
+	                company: companyName}, 
+			function(err, employer) {
+				console.log("EMPLOYER CREATED", employer);
+			  if (err) {
+			    callback(err);
+			  } else {
+			  	callback(null, {success: true, curruser: email, employer: employer});
+			  }
+			});
+		}
+	});
 };
 
 var Employer = mongoose.model('Employer', EmployerSchema);

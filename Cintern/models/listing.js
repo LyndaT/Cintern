@@ -1,5 +1,5 @@
 var mongoose = require("mongoose");
-var Employer = require("Employer.js");
+var Employer = require("../models/Employer.js");
 /**
  * This is the schema for the database that stores all the job listings on our site.  
  * Each listing includes the employer id, the associated id number for the custom 
@@ -103,7 +103,7 @@ var getFormattedListings = function(query, callback) {
 var getListings = function(query, callback) {
 	escapeQueryValues(query);
 
-	Listing.find(query).populate("employerId").exec(function(err, listing_data){
+	Listing.find(query).populate("employerId").exec(function(err, listing_data) {
 		if (err) {
 			callback(err);
 		} else {
