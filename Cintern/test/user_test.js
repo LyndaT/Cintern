@@ -61,7 +61,7 @@ describe('User', function() {
     });   
   });
   
-  describe('loginUser', function(){
+  describe('#loginUser', function(){
   	it('should login the right user with the correct email/password', function(done){
   		User.addUser('test', 'testpw', false, function(err, user){
   			User.loginUser('test', 'testpw', function(err, res){

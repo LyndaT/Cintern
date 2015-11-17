@@ -1,4 +1,4 @@
-var assert = require("assert");
+/*var assert = require("assert");
 var Custom = require('../models/custom');
 var User = require('../models/User');
 var Listing = require('../models/listing');
@@ -557,7 +557,7 @@ describe('Custom', function() {
   
 
 
-customSchema.statics.getCustomIfOwner = function(ownerId, customId, callback) {
+/*customSchema.statics.getCustomIfOwner = function(ownerId, customId, callback) {
 };
 
 customSchema.statics.getCustomForListing = function(ownerId, listingId, callback) {
@@ -579,7 +579,7 @@ customSchema.methods.reject
 
 customSchema.methods.update 
   
-});
+});*/
 
 
 
