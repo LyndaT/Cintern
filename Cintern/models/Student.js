@@ -4,6 +4,7 @@
 
 var mongoose = require("mongoose");
 var User = require('../models/User.js');
+var Common = require('../models/common.js');
 
 var StudentSchema = mongoose.Schema({
   user: {type: mongoose.Schema.Types.ObjectId , ref: 'User', unique: true, immutable: true},
@@ -22,14 +23,19 @@ StudentSchema.statics.createStudent = function(email, password, callback){
 		if (errMsg){
 			callback(errMsg);
 		} else {
-			Student.create({user: user._id, 
-	                commonFilled: false}, 
-			function(err, student) {
-			  if (err) {
-			    callback(err.message);
-			  } else {
-			  	callback(null, student);
-			  }
+			Common.createCommon(user._id, function(errMsg, common) {
+				if (errMsg) {
+					callback(errMsg);
+				} else {
+					Student.create({ user: user._id, commonFilled: false }, 
+					function(err, student) {
+					  	if (err) {
+						    callback(err.message);
+					  	} else {
+						  	callback(null, student);
+						}
+					});
+				}
 			});
 		}
 	});
