@@ -1,3 +1,6 @@
+/**
+ * Test file for the application model
+ */
 var assert = require("assert");
 var Application = require('../models/application');
 var mongoose = require('mongoose');
@@ -631,104 +634,6 @@ describe('Application', function() {
         });
       });
     });
-
-    /*it('should error if question in newQuestions does not have same question field', function(done) {
-      var questions = [{
-        "question" : "Email",
-        "type" : "radio",
-        "required" : true,
-        "options" : ["a", "b", "c"]
-      }];
-      var newQuestions = [{
-        "question" : "Jon",
-        "type" : "radio",
-        "required" : true,
-        "options" : ["a", "b", "c"]
-      }];
-      Application.createApplication(questions, function(e, app) {
-        Application.find({}, function(err, apps) {
-          assert.equal(1, apps.length);
-          assert.equal(false, apps[0].isCommon);
-          Application.updateQuestions(apps[0]._id, newQuestions, false, function(e, app) {
-            assert.equal(true, e !== null);
-            done();
-          });
-        });
-      });
-    });
-
-    it('should error if question in newQuestions does not have same required field', function(done) {
-      var questions = [{
-        "question" : "Email",
-        "type" : "radio",
-        "required" : true,
-        "options" : ["a", "b", "c"]
-      }];
-      var newQuestions = [{
-        "question" : "Email",
-        "type" : "radio",
-        "required" : false,
-        "options" : ["a", "b", "c"]
-      }];
-      Application.createApplication(questions, function(e, app) {
-        Application.find({}, function(err, apps) {
-          assert.equal(1, apps.length);
-          assert.equal(false, apps[0].isCommon);
-          Application.updateQuestions(apps[0]._id, newQuestions, false, function(e, app) {
-            assert.equal(true, e !== null);
-            done();
-          });
-        });
-      });
-    });
-
-    it('should error if question in newQuestions does not have same options field', function(done) {
-      var questions = [{
-        "question" : "Email",
-        "type" : "radio",
-        "required" : true,
-        "options" : ["a", "b"]
-      }];
-      var newQuestions = [{
-        "question" : "Email",
-        "type" : "radio",
-        "required" : true,
-        "options" : ["a", "b", "c"]
-      }];
-      Application.createApplication(questions, function(e, app) {
-        Application.find({}, function(err, apps) {
-          assert.equal(1, apps.length);
-          assert.equal(false, apps[0].isCommon);
-          Application.updateQuestions(apps[0]._id, newQuestions, false, function(e, app) {
-            assert.equal(true, e !== null);
-            done();
-          });
-        });
-      });
-    });
-
-    it('should error if question in newQuestions does not have same type field', function(done) {
-      var questions = [{
-        "question" : "Email",
-        "type" : "text",
-        "required" : true,
-      }];
-      var newQuestions = [{
-        "question" : "Email",
-        "type" : "check",
-        "required" : false,
-      }];
-      Application.createApplication(questions, function(e, app) {
-        Application.find({}, function(err, apps) {
-          assert.equal(1, apps.length);
-          assert.equal(false, apps[0].isCommon);
-          Application.updateQuestions(apps[0]._id, newQuestions, false, function(e, app) {
-            assert.equal(true, e !== null);
-            done();
-          });
-        });
-      });
-    });*/
   });
 
   /**

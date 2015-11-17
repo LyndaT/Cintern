@@ -14,19 +14,23 @@ var applicationSchema = mongoose.Schema({
 
 /**
  * Checks that any "radio" typed question has at least 2 options, checks that
- * any non-"radio" typed question have no options and that no answer is being saved
+ * any non-"radio" typed question have no options and that no wrongly formatted
+ * answer is being saved
  */
 applicationSchema.pre("save", function(next) {
+	// check that each question has the appropriate type options relation
 	this.questions.forEach(function(e) {
 		if (e.type === "radio" && e.options.length < 2) {
 			return next(new Error("radio questions must have at least one option"));
-		} else if (e.type !== "radio" && e.options.length !== 0) {
+		} 
+		else if (e.type !== "radio" && e.options.length !== 0) {
 			return next(new Error("non radio questions don't have options"));
 		}
 	});
-	if(!verifyAnsweredQuestionsCorrectly(this.questions)) {
-		next(new Error("answer is wrongly formatted"));
-	}
+
+	// check that all answers are correctly formatted
+	if(!verifyAnsweredQuestionsCorrectly(this.questions)) next(new Error("answer is wrongly formatted"));
+	
 	next();
 });
 
@@ -34,7 +38,8 @@ applicationSchema.pre("save", function(next) {
  * Creates an Application where questions are set as questions, 
  * and then runs the callback on the new Application
  *
- * @param{Array} questions is an Array of Objects
+ * @param{Array} questions is an Array of Objects with keys that are "question",
+ * "type", "required", "options" and/or "answer"
  * @param{Function} callback(err, Application)
  */
 applicationSchema.statics.createApplication = function(questions, callback) {
@@ -79,9 +84,13 @@ applicationSchema.statics.updateAnswers = function(appId, answers, isSubmission,
 		if (err) callback(err.message);
 		else if (!app) callback("Invalid application");
 		else {
+			// ready to update is true if answers is a submission and all required
+			// questions have been correctly answered OR if answers is not a submission
+			// and all answers are well formed answers to questions
 			var readyToUpdate = ((isSubmission && verifyForSubmissions(app.questions, answers)) ||
 								(!isSubmission && verifyForUpdate(app.questions, answers)));
 
+			// set each question's answer to the corresponding one in answers
 			if (readyToUpdate) {
 				app.questions.forEach(function(question, i) {
 					app.questions[i].answer = answers[i].answer;
@@ -93,8 +102,14 @@ applicationSchema.statics.updateAnswers = function(appId, answers, isSubmission,
 	});
 };
 
-// TODO: write me
-// return an Object format of the application which can be used to generate UI
+/**
+ * Runs the callback on the Array of Objects that are the questions associated 
+ * with the Application with appId in a specific format. The Object has keys 
+ * "question", "type", "required", "options", and "answer"
+ * 
+ * @param{ObjectId} appId
+ * @param{Function} callback(err, Array)
+ */
 applicationSchema.statics.formatForShow = function(appId, callback) {
 	Application.findOne({ "_id" : appId }, function(err, app) {
 		if (err) callback(err.message);
