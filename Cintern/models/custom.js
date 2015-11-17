@@ -152,11 +152,15 @@ customSchema.statics.getListingTemplate = function(listingId, callback) {
  * @param{ObjectId} customId
  * @param{Function} callback(err, Custom)
  */
+<<<<<<< HEAD
 customSchema.statics.withdraw = function(customId, callback) {
 	var startStates = ["subm", "star"];
 	var endState = "with";
 	changeState(customId, startStates, endState, callback);
 };
+=======
+customSchema.statics.withdraw = function(customId, callback) {};
+>>>>>>> master
 
 /**
  * Deletes the Custom from the db if the Custom has the saved state, then runs calblack
@@ -164,6 +168,7 @@ customSchema.statics.withdraw = function(customId, callback) {
  * @param{ObjectId} customId
  * @param{Function} callback(err)
  */
+<<<<<<< HEAD
 customSchema.statics.deleteCustom = function(customId, callback) {
 	Custom.findOne({ "_id" : customId }, function(err, custom) {
 		if (err) callback(err.message);
@@ -182,6 +187,9 @@ customSchema.statics.deleteCustom = function(customId, callback) {
 		}
 	});
 };
+=======
+customSchema.statics.deleteCustom = function(customId, callback) {};
+>>>>>>> master
 
 /**
  * Sets a submitted Custom's state to starred, then runs callback
@@ -189,22 +197,30 @@ customSchema.statics.deleteCustom = function(customId, callback) {
  * @param{ObjectId} customId
  * @param{Function} callback(err, Custom)
  */
+<<<<<<< HEAD
 customSchema.statics.star = function(customId, callback) {
 	var startStates = ["subm"];
 	var endState = "star";
 	changeState(customId, startStates, endState, callback);
 };
+=======
+customSchema.statics.star = function(customId, callback) {};
+>>>>>>> master
 /**
  * Sets a starred Custom's state to unstar, then runs callback
  *
  * @param{ObjectId} customId
  * @param{Function} callback(err, Custom)
  */
+<<<<<<< HEAD
 customSchema.statics.unstar = function(customId, callback) {
 	var startStates = ["star"];
 	var endState = "subm";
 	changeState(customId, startStates, endState, callback);
 };
+=======
+customSchema.statics.unstar = function(customId, callback) {};
+>>>>>>> master
 
 /**
  * Sets a submitted or starred Custom's state to rejected, then runs callback
@@ -212,11 +228,15 @@ customSchema.statics.unstar = function(customId, callback) {
  * @param{ObjectId} customId
  * @param{Function} callback(err, Custom)
  */
+<<<<<<< HEAD
 customSchema.statics.reject = function(customId, callback) {
 	var startStates = ["subm", "star"];
 	var endState = "rej";
 	changeState(customId, startStates, endState, callback);
 };
+=======
+customSchema.statics.reject = function(customId, callback) {};
+>>>>>>> master
 
 /**
  * Updates the questions of the Custom to answers if Custom's state is save
@@ -229,6 +249,7 @@ customSchema.statics.reject = function(customId, callback) {
  * @param{Boolean} isSubmission
  * @param{Function} callback(err, Custom)
  */
+<<<<<<< HEAD
 customSchema.statics.update = function(customId, answers, isSubmission, callback) {
 	Custom.find({ "_id" : customId, "state" : "save" }, function(err, custom) {
 		if (err) callback(err.message);
@@ -311,6 +332,9 @@ var createCustom = function(listingId, questions, ownerId, isTemplate, state, ca
 		}
 	});
 };
+=======
+customSchema.statics.update = function(customId, answers, isSubmission, callback) {};
+>>>>>>> master
 
 /**
  * @param{Array} questions is an Array of Objects
@@ -334,6 +358,7 @@ var noAnswerInQuestions = function(questions) {
  * @param{String} endState is a String that is a key of stateTable
  * @param{Function} callback(err, Custom)
  */
+<<<<<<< HEAD
 var changeState = function(customId, startStates, endState, callback) {
 	Custom.find({ "_id" : customId }, function(err, custom) {
 		if (err) callback(err.message);
@@ -349,6 +374,22 @@ var changeState = function(customId, startStates, endState, callback) {
 		}
 	});
 };
+=======
+var changeState = function(customId, startStates, endState, callback) {};
+
+/**
+ * Creates a new Custom in the DB with listing set as listingId, state set as state, 
+ * owner set as ownerId, and application set as an application with questions set as
+ * questions, then runs the callback on the new Custom
+ *
+ * @param{ObjectId} listingId
+ * @param{Object} questions
+ * @param{ObjectId} ownerId
+ * @param{String} state
+ * @param{Function} callback(err, Custom)
+ */
+var createCustom = function(listingId, questions, ownerId, isTemplate, state, callback) {};
+>>>>>>> master
 
 var Custom = mongoose.model("Custom", customSchema);
 module.exports = Custom;
