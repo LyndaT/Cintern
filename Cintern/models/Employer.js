@@ -20,19 +20,16 @@ var EmployerSchema = mongoose.Schema({
  */
 EmployerSchema.statics.createEmployer = function(email, password, companyName, callback){	
 	User.addUser(email, password, false, function(errMsg, user){
-		console.log("CREATE EMPLOYER", errMsg, user)
-
 		if (errMsg){
 			callback(errMsg);
 		} else {
-			Employer.create({user: user.user._id, 
+			Employer.create({user: user._id, 
 	                company: companyName}, 
 			function(err, employer) {
-				console.log("EMPLOYER CREATED", employer);
 			  if (err) {
-			    callback(err);
+			    callback(err.message);
 			  } else {
-			  	callback(null, {success: true, curruser: email, employer: employer});
+			  	callback(null, employer);
 			  }
 			});
 		}
