@@ -31,7 +31,7 @@ applicationSchema.pre("save", function(next) {
 	// check that all answers are correctly formatted
 	if(!verifyAnsweredQuestionsCorrectly(this.questions)) next(new Error("answer is wrongly formatted"));
 	
-	next();
+	next(null, this);
 });
 
 /**

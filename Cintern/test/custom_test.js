@@ -373,7 +373,7 @@ describe('Custom', function() {
           Listing.find({}, function(e, listings) {
             Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
               User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
-                custom.copyTemplateToSave("1", user2._id, function(e, custom) {
+                Custom.copyTemplateToSave("1", user2._id, function(e, custom) {
                   assert.equal(true, e !== null);
                   done();
                 });
@@ -391,7 +391,7 @@ describe('Custom', function() {
           Listing.find({}, function(e, listings) {
             Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
               User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
-                custom.copyTemplateToSave(listings[0]._id, "1", function(e, custom) {
+                Custom.copyTemplateToSave(listings[0]._id, "1", function(e, custom) {
                   assert.equal(true, e !== null);
                   done();
                 });
@@ -413,7 +413,7 @@ describe('Custom', function() {
           Listing.find({}, function(e, listings) {
             Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
               User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
-                custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, custom) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, custom) {
                   assert.equal(user2._id, custom.owner);
                   assert.equal(listings[0]._id, custom.listing);
                   assert.equal(false, custom.isTemplate);
@@ -438,7 +438,7 @@ describe('Custom', function() {
    *    user has one custom, multiple users
    *    user has more than one custom
    */
-  /*describe('#getCustomsForStudentDash', function() {
+  describe('#getCustomsForStudentDash', function() {
     it('#should get no customs', function(done) {
       User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
         Custom.getCustomsForStudentDash(user._id, function(e, customs) {
@@ -450,14 +450,17 @@ describe('Custom', function() {
 
     it('#should get one custom, one user', function(done) {
       var questions = [];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, l1) {
-          Custom.createTemplate(l1._id, questions, user._id, function(e, t1) {
-            User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
-              Custom.copyTemplateToSave(l1._id, user2._id, function(e, c1) {
-                Custom.getCustomsForStudentDash(user2._id, function(e, customs) {
-                  assert.equal(1, customs.length);
-                  done();
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  Custom.getCustomsForStudentDash(user2._id, function(e, customs) {
+                    assert.equal(1, customs.length);
+                    assert.equal(listings[0]._id.toString(), customs[0].listing.toString());
+                    done();
+                  });
                 });
               });
             });
@@ -469,16 +472,19 @@ describe('Custom', function() {
     it('#should get one custom, multiple users', function(done) {
       var questions = [];
       var questions2 = [{ "question" : "Email", "type" : "text", "required" : true }];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, l1) {
-          Custom.createTemplate(l1._id, questions, user._id, function(e, t1) {
-            User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
-              User.addUser("abcde@gmail.com", "abcde", true, function(e, user3) {
-                Custom.copyTemplateToSave(l1._id, user2._id, function(e, c1) {
-                  Custom.copyTemplateToSave(l1._id, user3._id, function(e, c2) {
-                    Custom.getCustomsForStudentDash(user2._id, function(e, customs) {
-                      assert.equal(1, customs.length);
-                      done();
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                User.addUser("abcd@gmail.com", "abcde", true, function(e, user3) {
+                  Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, custom) {
+                    Custom.copyTemplateToSave(listings[0]._id, user3._id, function(e, c2) {
+                      Custom.getCustomsForStudentDash(user2._id, function(e, customs) {
+                        assert.equal(1, customs.length);
+                        assert.equal(listings[0]._id.toString(), customs[0].listing.toString());
+                        done();
+                      });
                     });
                   });
                 });
@@ -492,80 +498,64 @@ describe('Custom', function() {
     it('#should get two customs', function(done) {
       var questions = [];
       var questions2 = [{ "question" : "Email", "type" : "text", "required" : true }];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, l1) {
-          Listing...( function(e, l2) {
-            Custom.createTemplate(l1._id, questions, user._id, function(e, t1) {
-              Custom.createTemplate(l2._id, questions2, user._id, function(e, t2) {
-                User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
-                  Custom.copyTemplateToSave(l1._id, user2._id, function(e, c1) {
-                    Custom.copyTemplateToSave(l2._id, user2._id, function(e, c2) {
-                      Custom.getCustomsForStudentDash(user2._id, function(e, customs) {
-                        assert.equal(2, customs.length);
-                        done();
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.createListing(emp._id, "a", "b", "c", new Date(), function(e) {
+            Listing.find({}, function(e, listings) {
+              Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+                Custom.createTemplate(listings[1]._id, questions2, emp.user, function(e, custom2) {
+                  User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                    Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                      Custom.copyTemplateToSave(listings[1]._id, user2._id, function(e, c2) {
+                        Custom.getCustomsForStudentDash(user2._id, function(e, customs) {
+                          assert.equal(2, customs.length);
+                          done();
+                        });
                       });
                     });
                   });
-                });
+                });                
               });
             });
           });
         });
       });
     });
-  });*/
+  });
 
   /**
    * input: listingId
    *    listing has no customs
-   *    listing has one custom, one listing
-   *    listing has one custom, multiple listings
-   *    listing has more than one custom
+   *    custom under listing, not subm or star : no customs
+   *    custom under listing, subm : 1 custom
+   *    custom under listing, star : 1 custom
    */
-  /*describe('#getCustomsForListing', function() {
-    it('#should get no customs', function(done) {
-      Listing.... (function(e, l1) {
-        Custom.getCustomsForListing(l1._id, function(e, customs) {
-          assert.equal(0, customs.length);
-          done();
-        });
-      });
-    });
-
-    it('#should get one custom, one listing', function(done) {
-      var questions = [];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, l1) {
-          Custom.createTemplate(l1._id, questions, user._id, function(e, t1) {
-            User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
-              Custom.copyTemplateToSave(l1._id, user2._id, function(e, c1) {
-                Custom.getCustomsForListing(listing._id, function(e, customs) {
-                  assert.equal(1, customs.length);
-                  done();
-                });
-              });
+  describe('#getCustomsForListingDash', function() {
+    it('should get no customs', function(done) {
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.getCustomsForListingDash(listings[0]._id, function(e, customs) {
+              assert.equal(0, customs.length);
+              done();
             });
           });
         });
       });
-    })
+    });
 
-    it('#should get one custom, multiple listings', function(done) {
+    it('custom under listing, not subm or star', function(done) {
       var questions = [];
-      var questions2 = [{ "question" : "Email", "type" : "text", "required" : true }];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, l1) {
-          Listing...( function(e, l2) {
-            Custom.createTemplate(l1._id, questions, user._id, function(e, t1) {
-              Custom.createTemplate(l2._id, questions2, user._id, function(e, t2) {
-                User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
-                  Custom.copyTemplateToSave(l1._id, user2._id, function(e, c1) {
-                    Custom.copyTemplateToSave(l2._id, user2._id, function(e, c2) {
-                      Custom.getCustomsForListing(user2._id, function(e, customs) {
-                        assert.equal(2, customs.length);
-                        done();
-                      });
-                    });
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  assert.equal("save", c1.state);
+                  Custom.getCustomsForListingDash(listings[0]._id, function(e, customs) {
+                    assert.equal(0, customs.length);
+                    done();
                   });
                 });
               });
@@ -575,19 +565,49 @@ describe('Custom', function() {
       });
     });
 
-    it('#should get multiple customs', function(done) {
+    it('custom under listing, subm', function(done) {
       var questions = [];
-      var questions2 = [{ "question" : "Email", "type" : "text", "required" : true }];
-      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        Listing....( function(e, l1) {
-          Custom.createTemplate(l1._id, questions, user._id, function(e, t1) {
-            User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
-              User.addUser("abcde@gmail.com", "abcde", true, function(e, user3) {
-                Custom.copyTemplateToSave(l1._id, user2._id, function(e, c1) {
-                  Custom.copyTemplateToSave(l1._id, user3._id, function(e, c2) {
-                    Custom.getCustomsForListing(listing._id, function(e, customs) {
-                      assert.equal(2, customs.length);
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  assert.equal("save", c1.state);
+                  Custom.update(c1._id, [], true, function(e, c1) {
+                    Custom.getCustomsForListingDash(listings[0]._id, function(e, customs) {
+                      assert.equal(1, customs.length);
+                      assert.equal("subm", customs[0].state);
+                      assert.equal(listings[0]._id.toString(), customs[0].listing.toString());
                       done();
+                    });                    
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('custom under listing, star', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  assert.equal("save", c1.state);
+                  Custom.update(c1._id, [], true, function(e, c1) {
+                    assert.equal("subm", c1.state);
+                    Custom.star(c1._id, function(e, c2) {
+                      Custom.getCustomsForListingDash(listings[0]._id, function(e, customs) {
+                        assert.equal(1, customs.length);
+                        assert.equal("star", customs[0].state);
+                        assert.equal(listings[0]._id.toString(), customs[0].listing.toString());
+                        done();
+                      });                    
                     });
                   });
                 });
@@ -597,34 +617,107 @@ describe('Custom', function() {
         });
       });
     });
-  });*/
+  });
 
-  
+  /**
+   * input: ownerId, customId
+   *    customId does not match ownerId : get none
+   *    customId does match ownerId : get custom
+   */
+  describe('#getCustomIfOwner', function() {
 
+  });
 
-/*customSchema.statics.getCustomIfOwner = function(ownerId, customId, callback) {
-};
+  /**
+   * input: ownerId, listingId
+   *    ownerId does not match listingId : get none
+   *    ownerId does match listingId : get custom
+   */
+  describe('#getCustomForListing', function() {
 
-customSchema.statics.getCustomForListing = function(ownerId, listingId, callback) {
-};
+  });
 
-customSchema.statics.getListingTemplate = function(listingId, callback) {
-};
+  /**
+   * input: listingId
+   *    listingId is not valid : get none
+   *    listingId is valid : get template
+   */
+  describe('#getListingTemplate', function() {
 
-customSchema.methods.withdraw = function(callback) {
-};
+  });
 
-customSchema.methods.deleteCustom
+  /**
+   * input: customId
+   *    custom is in state save : cannot withdraw
+   *    custom is in state subm : can withdraw
+   *    custom is in state star : can withdraw
+   *    custom is in state with : can withdraw
+   *    custom is in state rej : cannot withdraw
+   */
+  describe('#withdraw', function() {
 
-customSchema.methods.star 
+  });
 
-customSchema.methods.unstar 
+  /**
+   * input: customId
+   *    custom is in state save : can delete
+   *    custom is in state subm : cannot delete
+   *    custom is in state star : cannot delete
+   *    custom is in state with : cannot delete
+   *    custom is in state rej : cannot delete
+   */
+  describe('#deleteCustom', function() {
 
-customSchema.methods.reject
+  });
 
-customSchema.methods.update */
-  
+  /**
+   * input: customId
+   *    custom is in state save : cannot star
+   *    custom is in state subm : can star
+   *    custom is in state star : can star
+   *    custom is in state with : cannot star
+   *    custom is in state rej : cannot star
+   */
+  describe('#star', function() {
+
+  });
+
+  /**
+   * input: customId
+   *    custom is in state save : cannot unstar
+   *    custom is in state subm : can unstar
+   *    custom is in state star : can unstar
+   *    custom is in state with : cannot unstar
+   *    custom is in state rej : cannot unstar
+   */
+  describe('#unstar', function() {
+
+  });
+
+  /**
+   * input: customId
+   *    custom is in state save : cannot reject
+   *    custom is in state subm : can reject
+   *    custom is in state star : can reject
+   *    custom is in state with : cannot reject
+   *    custom is in state rej : can reject
+   */
+  describe('#reject', function() {
+
+  });
+
+  /**
+   * input: customId
+   *    custom is in state save, isSubmission is true, all answered : update, state to subm
+   *    custom is in state save, isSubmission is true, not all answered : cannot update
+   *    custom is in state save, isSubmission is false : update
+   *    custom is in state subm : cannot update
+   *    custom is in state star : cannot update
+   *    custom is in state with : cannot update
+   *    custom is in state rej : can update
+   */
+  describe('#update', function() {
+
+  });
+
 });
-
-
-

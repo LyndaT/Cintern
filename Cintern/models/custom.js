@@ -54,7 +54,7 @@ customSchema.statics.createTemplate = function(listingId, questions, ownerId, ca
  * @param{ObjectId} newOwnerId
  * @param{Function} callback(err, Custom)
  */
-customSchema.methods.copyTemplateToSave = function(listingId, newOwnerId, callback) {
+customSchema.statics.copyTemplateToSave = function(listingId, newOwnerId, callback) {
 	// get the template Custom associated with the listing
 	Custom.getListingTemplate(listingId, function(errMsg, custom) {
 
@@ -107,7 +107,7 @@ customSchema.statics.getCustomsForStudentDash = function(ownerId, callback) {
 customSchema.statics.getCustomsForListingDash = function(listingId, callback) {
 	Custom.find({
 		"listing" : listingId, 
-		state : { $in : ["subm", "star "]} 
+		"state" : { $in : ["subm", "star"]} 
 	}, function(err, customs) {
 		if (err) callback(err.message);
 		else callback(null, customs);
@@ -246,19 +246,19 @@ customSchema.statics.reject = function(customId, callback) {
  * @param{Function} callback(err, Custom)
  */
 customSchema.statics.update = function(customId, answers, isSubmission, callback) {
-	Custom.find({ "_id" : customId, "state" : "save" }, function(err, custom) {
+	Custom.findOne({ "_id" : customId, "state" : "save" }, function(err, custom) {
 		if (err) callback(err.message);
 		else if (!custom) callback("Invalid custom");
 		else {
-			Application.updateAnswers(custom.application, newQuestions, isSubmission, function(errMsg, app) {
+			Application.updateAnswers(custom.application, answers, isSubmission, function(errMsg, app) {
 				if (errMsg) callback(errMsg);
 				else if (!isSubmission) callback(null, custom)
 				else {
-					changeState(custom._id, custom.state, ["save"], "subm", function(errMsg, custom) {
+					changeState(custom._id, ["save"], "subm", function(errMsg, custom) {
 						if (errMsg) callback(errMsg);
 						else if (!custom) callback("Invalid state change");
 						else { 
-							Custom.findOneAndUpdate({ "_id" : custom._id }, { $set : { submitTime : Date.now } }, function(err, custom) {
+							Custom.findOneAndUpdate({ "_id" : custom._id }, { $set : { submitTime : new Date() } }, function(err, custom) {
 								if (err) callback(err.message);
 								else callback(null, custom);
 							});
@@ -352,12 +352,12 @@ var noAnswerInQuestions = function(questions) {
  * @param{Function} callback(err, Custom)
  */
 var changeState = function(customId, startStates, endState, callback) {
-	Custom.find({ "_id" : customId }, function(err, custom) {
+	Custom.findOne({ "_id" : customId }, function(err, custom) {
 		if (err) callback(err.message);
 		else if (!custom) callback("Invalid custom");
 		else {
 			if (startStates.indexOf(custom.state) > -1) {
-				Custom.findOneAndUpdate({ '_id' : customId }, { $set : { state : endState }}, function(err, custom){
+				Custom.findOneAndUpdate({ '_id' : customId }, { $set : { "state" : endState }}, function(err, custom){
 					if (err) callback(err.message);
 					else callback(null, custom);
 				});
