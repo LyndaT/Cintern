@@ -149,62 +149,73 @@ customSchema.statics.getListingTemplate = function(listingId, callback) {
 /**
  * Sets a submitted or starred Custom's state to withdrawn, then runs callback
  *
+ * @param{ObjectId} customId
  * @param{Function} callback(err, Custom)
  */
-customSchema.methods.withdraw = function(callback) {
+customSchema.statics.withdraw = function(customId, callback) {
 	var startStates = ["subm", "star"];
 	var endState = "with";
-	changeState(this._id, this.state, startStates, endState, callback);
+	changeState(customId, startStates, endState, callback);
 };
 
 /**
  * Deletes the Custom from the db if the Custom has the saved state, then runs calblack
  *
+ * @param{ObjectId} customId
  * @param{Function} callback(err)
  */
-customSchema.methods.deleteCustom = function(callback) {
-	if (this.state === "save") {
-		var applicationId = this.applicationId;
-		// remove the Custom from the DB
-		Custom.remove({ "_id" : this._id }, function(err) {
-			if (err) callback(err.message);
-			// delete the Application associated with the Custom from the DB
-			else Application.deleteApplication(applicationId, callback);
-		});
-	}
-	else callback("Cannot delete this Custom");
+customSchema.statics.deleteCustom = function(customId, callback) {
+	Custom.findOne({ "_id" : customId }, function(err, custom) {
+		if (err) callback(err.message);
+		else if (!custom) callback("Invalid custom");
+		else {
+			if (custom.state === "save") {
+				var applicationId = custom.applicationId;
+				// remove the Custom from the DB
+				Custom.remove({ "_id" : this._id }, function(err) {
+					if (err) callback(err.message);
+					// delete the Application associated with the Custom from the DB
+					else Application.deleteApplication(applicationId, callback);
+				});
+			}
+			else callback("Cannot delete this Custom");
+		}
+	});
 };
 
 /**
  * Sets a submitted Custom's state to starred, then runs callback
  *
+ * @param{ObjectId} customId
  * @param{Function} callback(err, Custom)
  */
-customSchema.methods.star = function(callback) {
+customSchema.statics.star = function(customId, callback) {
 	var startStates = ["subm"];
 	var endState = "star";
-	changeState(this._id, this.state, startStates, endState, callback);
+	changeState(customId, startStates, endState, callback);
 };
 /**
  * Sets a starred Custom's state to unstar, then runs callback
  *
+ * @param{ObjectId} customId
  * @param{Function} callback(err, Custom)
  */
-customSchema.methods.unstar = function(callback) {
+customSchema.statics.unstar = function(customId, callback) {
 	var startStates = ["star"];
 	var endState = "subm";
-	changeState(this._id, this.state, startStates, endState, callback);
+	changeState(customId, startStates, endState, callback);
 };
 
 /**
  * Sets a submitted or starred Custom's state to rejected, then runs callback
  *
+ * @param{ObjectId} customId
  * @param{Function} callback(err, Custom)
  */
-customSchema.methods.reject = function(callback) {
+customSchema.statics.reject = function(customId, callback) {
 	var startStates = ["subm", "star"];
 	var endState = "rej";
-	changeState(this._id, this.state, startStates, endState, callback);
+	changeState(customId, startStates, endState, callback);
 };
 
 /**
@@ -212,30 +223,35 @@ customSchema.methods.reject = function(callback) {
  * if isSubmission is true, set state to subm if questions are correctly formatted,
  * then runs the callback on the updated Custom
  * 
+ * @param{ObjectId} customId
  * @param{Array} answers is an Array of Objects with keys that is "id" 
  * 			(mapping to an Object id), and "answer" (mapping to a String)
  * @param{Boolean} isSubmission
  * @param{Function} callback(err, Custom)
  */
-customSchema.methods.update = function(answers, isSubmission, callback) {
-	if (this.state === "save") {
-		Application.updateAnswers(this.application, newQuestions, isSubmission, function(errMsg, app) {
-			if (errMsg) callback(errMsg);
-			else if (!isSubmission) callback(null, this)
-			else {
-				changeState(this._id, this.state, ["save"], "subm", function(errMsg, custom) {
-					if (errMsg) callback(errMsg);
-					else if (!custom) callback("Invalid state change");
-					else { 
-						Custom.findOneAndUpdate({ "_id" : custom._id }, { $set : { submitTime : Date.now } }, function(err, custom) {
-							if (err) callback(err.message);
-							else callback(null, custom);
-						});
-					}
-				});
-			}
-		});
-	}
+customSchema.statics.update = function(customId, answers, isSubmission, callback) {
+	Custom.find({ "_id" : customId, "state" : "save" }, function(err, custom) {
+		if (err) callback(err.message);
+		else if (!custom) callback("Invalid custom");
+		else {
+			Application.updateAnswers(custom.application, newQuestions, isSubmission, function(errMsg, app) {
+				if (errMsg) callback(errMsg);
+				else if (!isSubmission) callback(null, custom)
+				else {
+					changeState(custom._id, custom.state, ["save"], "subm", function(errMsg, custom) {
+						if (errMsg) callback(errMsg);
+						else if (!custom) callback("Invalid state change");
+						else { 
+							Custom.findOneAndUpdate({ "_id" : custom._id }, { $set : { submitTime : Date.now } }, function(err, custom) {
+								if (err) callback(err.message);
+								else callback(null, custom);
+							});
+						}
+					});
+				}
+			});
+		}
+	});
 };
 
 
@@ -310,24 +326,28 @@ var noAnswerInQuestions = function(questions) {
 };
 
 /**
- * If the origState is in startStates, then the Custom associated with customId's
+ * If the Custom's state is in startStates, then the Custom associated with customId's
  * state is set to the endState, and the callback is run on the updated Custom
  *
  * @param{ObjectId} customId
- * @param{String} origState is the state of the Custom associated with customId
  * @param{Array} startStates is an Array of Strings that are keys of stateTable
  * @param{String} endState is a String that is a key of stateTable
  * @param{Function} callback(err, Custom)
  */
-var changeState = function(customId, origState, startStates, endState, callback) {
-	// check if origState is in startStates
-	if (startStates.indexOf(origState) > -1) {
-		Custom.findOneAndUpdate({ '_id' : customId }, { $set : { state : endState }}, function(err, custom){
-			if (err) callback(err.message);
-			else callback(null, custom);
-		});
-	}
-	else callback( "Not valid application state change" );
+var changeState = function(customId, startStates, endState, callback) {
+	Custom.find({ "_id" : customId }, function(err, custom) {
+		if (err) callback(err.message);
+		else if (!custom) callback("Invalid custom");
+		else {
+			if (startStates.indexOf(custom.state) > -1) {
+				Custom.findOneAndUpdate({ '_id' : customId }, { $set : { state : endState }}, function(err, custom){
+					if (err) callback(err.message);
+					else callback(null, custom);
+				});
+			}
+			else callback("Not valid application state change");
+		}
+	});
 };
 
 var Custom = mongoose.model("Custom", customSchema);

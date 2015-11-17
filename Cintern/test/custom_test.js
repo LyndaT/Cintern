@@ -334,11 +334,12 @@ describe('Custom', function() {
         Listing....( function(e, listing) {
           Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
             User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
-              custom.copyTemplateToSave(listing._id, user2._id, function(e, custom) {
+              custom.copyTemplateToSave("1", user2._id, function(e, custom) {
                 assert.equal(user2._id, custom.owner);
                 assert.equal(listing._id, custom.listing);
                 assert.equal(false, custom.isTemplate);
                 assert.equal("save", custom.state);
+                done();
               });
             });
           });
@@ -346,11 +347,237 @@ describe('Custom', function() {
       });
     });
 
-    it('new owner invalid, should not create', function(done){});
+    it('new owner invalid, should not create', function(done){
+      var questions = [];
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
+        Listing....( function(e, listing) {
+          Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
+            User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+              custom.copyTemplateToSave(listing._id, "1", function(e, custom) {
+                assert.equal(user2._id, custom.owner);
+                assert.equal(listing._id, custom.listing);
+                assert.equal(false, custom.isTemplate);
+                assert.equal("save", custom.state);
+                done();
+              });
+            });
+          });
+        });
+      });
+    });
 
-    it('should create', function(done){});
+    it('should not create', function(done){
+      var questions = [];
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
+        Listing....( function(e, listing) {
+          Custom.createTemplate(listing._id, questions, user._id, function(e, custom) {
+            User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+              custom.copyTemplateToSave(listing._id, user2._id, function(e, custom) {
+                assert.equal(user2._id, custom.owner);
+                assert.equal(listing._id, custom.listing);
+                assert.equal(false, custom.isTemplate);
+                assert.equal("save", custom.state);
+                done();
+              });
+            }); 
+          });
+        });
+      });
+    });
   });*/
 
+  /**
+   * input: userId
+   *    user has no customs
+   *    user has one custom, one user
+   *    user has one custom, multiple users
+   *    user has more than one custom
+   */
+  /*describe('#getCustomsForStudentDash', function() {
+    it('#should get no customs', function(done) {
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
+        Custom.getCustomsForStudentDash(user._id, function(e, customs) {
+          assert.equal(0, customs.length);
+          done();
+        });
+      });
+    });
+
+    it('#should get one custom, one user', function(done) {
+      var questions = [];
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
+        Listing....( function(e, l1) {
+          Custom.createTemplate(l1._id, questions, user._id, function(e, t1) {
+            User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+              Custom.copyTemplateToSave(l1._id, user2._id, function(e, c1) {
+                Custom.getCustomsForStudentDash(user2._id, function(e, customs) {
+                  assert.equal(1, customs.length);
+                  done();
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('#should get one custom, multiple users', function(done) {
+      var questions = [];
+      var questions2 = [{ "question" : "Email", "type" : "text", "required" : true }];
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
+        Listing....( function(e, l1) {
+          Custom.createTemplate(l1._id, questions, user._id, function(e, t1) {
+            User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+              User.addUser("abcde@gmail.com", "abcde", true, function(e, user3) {
+                Custom.copyTemplateToSave(l1._id, user2._id, function(e, c1) {
+                  Custom.copyTemplateToSave(l1._id, user3._id, function(e, c2) {
+                    Custom.getCustomsForStudentDash(user2._id, function(e, customs) {
+                      assert.equal(1, customs.length);
+                      done();
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('#should get two customs', function(done) {
+      var questions = [];
+      var questions2 = [{ "question" : "Email", "type" : "text", "required" : true }];
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
+        Listing....( function(e, l1) {
+          Listing...( function(e, l2) {
+            Custom.createTemplate(l1._id, questions, user._id, function(e, t1) {
+              Custom.createTemplate(l2._id, questions2, user._id, function(e, t2) {
+                User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                  Custom.copyTemplateToSave(l1._id, user2._id, function(e, c1) {
+                    Custom.copyTemplateToSave(l2._id, user2._id, function(e, c2) {
+                      Custom.getCustomsForStudentDash(user2._id, function(e, customs) {
+                        assert.equal(2, customs.length);
+                        done();
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  });*/
+
+  /**
+   * input: listingId
+   *    listing has no customs
+   *    listing has one custom, one listing
+   *    listing has one custom, multiple listings
+   *    listing has more than one custom
+   */
+  /*describe('#getCustomsForListing', function() {
+    it('#should get no customs', function(done) {
+      Listing.... (function(e, l1) {
+        Custom.getCustomsForListing(l1._id, function(e, customs) {
+          assert.equal(0, customs.length);
+          done();
+        });
+      });
+    });
+
+    it('#should get one custom, one listing', function(done) {
+      var questions = [];
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
+        Listing....( function(e, l1) {
+          Custom.createTemplate(l1._id, questions, user._id, function(e, t1) {
+            User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+              Custom.copyTemplateToSave(l1._id, user2._id, function(e, c1) {
+                Custom.getCustomsForListing(listing._id, function(e, customs) {
+                  assert.equal(1, customs.length);
+                  done();
+                });
+              });
+            });
+          });
+        });
+      });
+    })
+
+    it('#should get one custom, multiple listings', function(done) {
+      var questions = [];
+      var questions2 = [{ "question" : "Email", "type" : "text", "required" : true }];
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
+        Listing....( function(e, l1) {
+          Listing...( function(e, l2) {
+            Custom.createTemplate(l1._id, questions, user._id, function(e, t1) {
+              Custom.createTemplate(l2._id, questions2, user._id, function(e, t2) {
+                User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                  Custom.copyTemplateToSave(l1._id, user2._id, function(e, c1) {
+                    Custom.copyTemplateToSave(l2._id, user2._id, function(e, c2) {
+                      Custom.getCustomsForListing(user2._id, function(e, customs) {
+                        assert.equal(2, customs.length);
+                        done();
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('#should get multiple customs', function(done) {
+      var questions = [];
+      var questions2 = [{ "question" : "Email", "type" : "text", "required" : true }];
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
+        Listing....( function(e, l1) {
+          Custom.createTemplate(l1._id, questions, user._id, function(e, t1) {
+            User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+              User.addUser("abcde@gmail.com", "abcde", true, function(e, user3) {
+                Custom.copyTemplateToSave(l1._id, user2._id, function(e, c1) {
+                  Custom.copyTemplateToSave(l1._id, user3._id, function(e, c2) {
+                    Custom.getCustomsForListing(listing._id, function(e, customs) {
+                      assert.equal(2, customs.length);
+                      done();
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  });*/
+
+  
+
+
+customSchema.statics.getCustomIfOwner = function(ownerId, customId, callback) {
+};
+
+customSchema.statics.getCustomForListing = function(ownerId, listingId, callback) {
+};
+
+customSchema.statics.getListingTemplate = function(listingId, callback) {
+};
+
+customSchema.methods.withdraw = function(callback) {
+};
+
+customSchema.methods.deleteCustom
+
+customSchema.methods.star 
+
+customSchema.methods.unstar 
+
+customSchema.methods.reject
+
+customSchema.methods.update 
   
 });
 
