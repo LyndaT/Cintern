@@ -28,8 +28,6 @@ describe('Employer', function() {
   describe('#createEmployer', function() {
    	it('should create an Employer and a User for that Employer', function(done){
    		Employer.createEmployer('goog', 'googpw', 'Google', function(errMsg, res){
-   			assert.equal(true, res.success);
-   			assert.equal('goog', res.curruser);
 			var id = "";
    			Employer.find({company: 'Google'}, function(err, emps){
    				assert.equal(1, emps.length);
@@ -47,8 +45,6 @@ describe('Employer', function() {
    	
    	it('should not create an employer with the same name', function(done){
    		Employer.createEmployer('goog', 'googpw', 'Google', function(errMsg, res){
-   			assert.equal(true, res.success);
-   			assert.equal('goog', res.curruser);
    			User.findOne({email: 'goog'}, function(err, user){
    				assert.equal('goog', user.email);
    				assert.equal('googpw', user.password);
@@ -63,8 +59,6 @@ describe('Employer', function() {
    	
    	it('should not create an employer with the same company', function(done){
    		Employer.createEmployer('goog', 'googpw', 'Google', function(errMsg, res){
-   			assert.equal(true, res.success);
-   			assert.equal('goog', res.curruser);
    			User.findOne({email: 'goog'}, function(err, user){
    				assert.equal('goog', user.email);
    				assert.equal('googpw', user.password);

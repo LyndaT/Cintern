@@ -22,16 +22,19 @@ StudentSchema.statics.createStudent = function(email, password, callback){
 		if (errMsg){
 			callback(errMsg);
 		} else {
-			Student.create({user: user.user._id
-	                //common: here
-	                }, 
-			function(err, user) {
-			  if (err) {
-			    callback(err);
-			  } else {
-			  	callback(null, {success: true, curruser: email});
-			  }
-			});
+			//TODO: Jenn put createCommon here
+			//User id can be accessed by user.user._id
+			//Below is what I had before, use for reference 
+			//
+			// Student.create({user: user.user._id
+	                // }, 
+			// function(err, user) {
+			  // if (err) {
+			    // callback(err);
+			  // } else {
+			  	// callback(null, {success: true, curruser: email});
+			  // }
+			// });
 		}
 	});
 };

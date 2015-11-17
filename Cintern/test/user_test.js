@@ -24,18 +24,14 @@ describe('User', function() {
   describe('#addUser', function() {
     it('should add a User to the database with the correct attributes', function(done) {
       User.addUser('test', 'testpw', false, function(err, user){
-      	assert.equal(true, user.success);
-      	assert.equal('test', user.curruser);
-      	assert.equal('test', user.user.email);
-      	assert.equal('testpw', user.user.password);
-      	assert.equal(false, user.user.isStudent);
+      	assert.equal('test', user.email);
+      	assert.equal('testpw', user.password);
+      	assert.equal(false, user.isStudent);
       });     
       User.addUser('test2', 'test2pw', true, function(err, user){
-      	assert.equal(true, user.success);
-      	assert.equal('test2', user.curruser);
-      	assert.equal('test2', user.user.email);
-      	assert.equal('test2pw', user.user.password);
-      	assert.equal(true, user.user.isStudent);
+      	assert.equal('test2', user.email);
+      	assert.equal('test2pw', user.password);
+      	assert.equal(true, user.isStudent);
       	done();
       });
     });
@@ -51,18 +47,14 @@ describe('User', function() {
     
     it('should add a User to the database with the same password but different email', function(done) {
       User.addUser('test', 'testpw', false, function(err, user){
-      	assert.equal(true, user.success);
-      	assert.equal('test', user.curruser);
-      	assert.equal('test', user.user.email);
-      	assert.equal('testpw', user.user.password);
-      	assert.equal(false, user.user.isStudent);
+      	assert.equal('test', user.email);
+      	assert.equal('testpw', user.password);
+      	assert.equal(false, user.isStudent);
       	
       	User.addUser('test2', 'testpw', false, function(err, user){
-	      	assert.equal(true, user.success);
-	      	assert.equal('test2', user.curruser);
-	      	assert.equal('test2', user.user.email);
-	      	assert.equal('testpw', user.user.password);
-	      	assert.equal(false, user.user.isStudent);
+	      	assert.equal('test2', user.email);
+	      	assert.equal('testpw', user.password);
+	      	assert.equal(false, user.isStudent);
 	      	done();
       	});
       });
@@ -73,8 +65,8 @@ describe('User', function() {
   	it('should login the right user with the correct email/password', function(done){
   		User.addUser('test', 'testpw', false, function(err, user){
   			User.loginUser('test', 'testpw', function(err, res){
-  				assert.equal(true, res.success);
-  				assert.equal('test', res.curruser);
+  				assert.equal('test', user.email);
+  				assert.equal('testpw', user.password);
   				done();
   			});
   		});
