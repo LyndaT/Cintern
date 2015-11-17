@@ -40,8 +40,14 @@ StudentSchema.statics.createStudent = function(email, password, callback){
  * @param {Object} studentId the ID of the student
  * @param {Object} callback the callback in the form (err)
  */
-StudentSchema.method.setCommonFilledTrue = function(userId, callback){
-	Student.update({user: userId}, {$set: {commonFilled: true}});
+StudentSchema.statics.setCommonFilled = function(userId, callback){
+	Student.findOneAndUpdate({user: userId}, {$set: {commonFilled: true}}, function(err, student){
+		if (err){
+			callback(err.message);
+		} else {
+			callback(null, student);
+		}
+	});
 };
 
 

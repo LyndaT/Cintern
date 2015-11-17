@@ -21,7 +21,10 @@ describe('Employer', function() {
   afterEach(function(done) {
     User.remove({}, function() {
       mongoose.connection.close();
-      done();
+    });
+    Employer.remove({}, function(){
+    	mongoose.connection.close();
+    	done();
     });
   });
 
@@ -43,7 +46,7 @@ describe('Employer', function() {
    		});
    	});
    	
-   	it('should not create an employer with the same name', function(done){
+   	it('should not create an employer with the same email', function(done){
    		Employer.createEmployer('goog', 'googpw', 'Google', function(errMsg, res){
    			User.findOne({email: 'goog'}, function(err, user){
    				assert.equal('goog', user.email);
