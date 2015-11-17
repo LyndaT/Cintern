@@ -188,12 +188,12 @@ var verifyForUpdate = function(origQuestions, answers) {
 			"required" : question.required,
 			"type" : question.type,
 			"options" : question.options,
-			"answer" : (question2.answer === '') ? undefined : question.answer
+			"answer" : (question2.answer === '') ? undefined : question2.answer
 		});
 	});
 
 	// if format matches for origQuestions and answers, check that each question is answered correctly
-	if (verified) return verifyAnsweredQuestionsCorrectly(answers)
+	if (verified) return verifyAnsweredQuestionsCorrectly(verifyAnswers)
 	else return verified;	
 };
 

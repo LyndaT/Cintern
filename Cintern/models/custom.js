@@ -138,7 +138,7 @@ customSchema.statics.getCustomIfOwner = function(ownerId, customId, callback) {
  * @param{ObjectId} listingId
  * @param{Function} callback(err, Custom)
  */
-customSchema.statics.getCustomForListing = function(ownerId, listingId, callback) {
+customSchema.statics.getStarOrSubmCustomForListing = function(ownerId, listingId, callback) {
 	Custom.findOne({ 
 		"listing" : listingId, 
 		"owner" : ownerId, 
@@ -182,20 +182,17 @@ customSchema.statics.withdraw = function(customId, callback) {
  * @param{Function} callback(err)
  */
 customSchema.statics.deleteCustom = function(customId, callback) {
-	Custom.findOne({ "_id" : customId }, function(err, custom) {
+	Custom.findOne({ "_id" : customId, "state" : "save" }, function(err, custom) {
 		if (err) callback(err.message);
 		else if (!custom) callback("Invalid custom");
 		else {
-			if (custom.state === "save") {
-				var applicationId = custom.applicationId;
-				// remove the Custom from the DB
-				Custom.remove({ "_id" : this._id }, function(err) {
-					if (err) callback(err.message);
-					// delete the Application associated with the Custom from the DB
-					else Application.deleteApplication(applicationId, callback);
-				});
-			}
-			else callback("Cannot delete this Custom");
+			var applicationId = custom.applicationId;
+			// remove the Custom from the DB
+			Custom.remove({ "_id" : custom._id }, function(err) {
+				if (err) callback(err.message);
+				// delete the Application associated with the Custom from the DB
+				else Application.deleteApplication(applicationId, callback);
+			});
 		}
 	});
 };
@@ -360,7 +357,13 @@ var changeState = function(customId, startStates, endState, callback) {
 			if (startStates.indexOf(custom.state) > -1) {
 				Custom.findOneAndUpdate({ '_id' : customId }, { $set : { "state" : endState }}, function(err, custom){
 					if (err) callback(err.message);
-					else callback(null, custom);
+					else if (!custom) callback("Invalid");
+					else {
+						Custom.findOne({ '_id' : customId }, function(err, custom) {
+							if (err) callback(err.message);
+							else callback(null, custom);
+						});
+					}
 				});
 			}
 			else callback("Not valid application state change");

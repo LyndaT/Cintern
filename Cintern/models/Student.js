@@ -50,8 +50,14 @@ StudentSchema.statics.setCommonFilled = function(userId, callback){
 	Student.findOneAndUpdate({user: userId}, {$set: {commonFilled: true}}, function(err, student){
 		if (err){
 			callback(err.message);
+		} else if (!student) {
+			callback("Invalid student");
 		} else {
-			callback(null, student);
+			Student.findOne({user : userId}, function(err, student) {
+				if (err) {
+					callback(err.message);
+				} else callback(null, student);
+			});
 		}
 	});
 };
