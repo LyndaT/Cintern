@@ -5,7 +5,7 @@ var Application = require('../models/application');
 var mongoose = require('mongoose');
 var _ = require("../helpers/lodash");
 
-describe('Custom', function() {
+describe('Common', function() {
   beforeEach(function(done) {
     mongoose.connect('mongodb://localhost/testcintern');
     Common.remove({}, function() {
