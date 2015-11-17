@@ -1,6 +1,7 @@
 var assert = require("assert");
 var Common = require('../models/common');
 var User = require('../models/User');
+var Application = require('../models/application');
 var mongoose = require('mongoose');
 var _ = require("../helpers/lodash");
 
@@ -27,8 +28,8 @@ describe('Custom', function() {
     it('should create a common', function(done) {
       User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
         assert.equal(true, e === null);
-        Common.createCommon(user.user._id, function(e, common) {
-          assert.equal(user.user._id, common.owner);
+        Common.createCommon(user._id, function(e, common) {
+          assert.equal(user._id, common.owner);
           done();
         });
       });
@@ -40,18 +41,53 @@ describe('Custom', function() {
    *    answers is not filled out : should not submit
    *    answers is completely filled out : should submit
    */
-  /*describe('#submitCommon', function() {
+  describe('#submitCommon', function() {
     it('should not submit common', function(done) {
       User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
         assert.equal(true, e === null);
-        Common.createCommon(user.user._id, function(e, common) {
+        Common.createCommon(user._id, function(e, common) {
           var answers = [];
-          assert.equal(user.user._id, common.owner);
-          done();
+          Application.formatForShow(common.application, function(e, formattedQuestions) {
+            formattedQuestions.forEach(function(question) {
+              answers.push({ "_id" : question._id, "answer" : "" });
+            });
+            Common.submitCommon(common._id, answers, function(e, commonSubmitted) {
+              assert.equal(false, commonSubmitted);
+              Application.formatForShow(common.application, function(e, formattedQuestions) {
+                formattedQuestions.forEach(function(question) {
+                  assert.equal('',question.answer);
+                });
+                done();
+              });
+            });
+          });
         });
       });
     });
-  });*/
+
+    it('should submit common', function(done) {
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
+        assert.equal(true, e === null);
+        Common.createCommon(user._id, function(e, common) {
+          var answers = [];
+          Application.formatForShow(common.application, function(e, formattedQuestions) {
+            formattedQuestions.forEach(function(question) {
+              answers.push({ "_id" : question._id, "answer" : "abc" });
+            });
+            Common.submitCommon(common._id, answers, function(e, commonSubmitted) {
+              assert.equal(true, commonSubmitted);
+              Application.formatForShow(common.application, function(e, formattedQuestions) {
+                formattedQuestions.forEach(function(question) {
+                  assert.equal('abc',question.answer);
+                });
+                done();
+              });
+            });
+          });
+        });
+      });
+    });
+  });
 });
 
 

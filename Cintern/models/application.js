@@ -122,7 +122,8 @@ applicationSchema.statics.formatForShow = function(appId, callback) {
 					"type" : e.type,
 					"required" : e.required,
 					"options" : e.options,
-					"answer" : e.answer
+					"answer" : e.answer,
+					"_id" : e._id
 				});
 			});
 			callback(null, formattedQuestions);
