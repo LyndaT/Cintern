@@ -22,19 +22,15 @@ StudentSchema.statics.createStudent = function(email, password, callback){
 		if (errMsg){
 			callback(errMsg);
 		} else {
-			//TODO: Jenn put createCommon here
-			//User id can be accessed by user.user._id
-			//Below is what I had before, use for reference 
-			//
-			// Student.create({user: user.user._id
-	                // }, 
-			// function(err, user) {
-			  // if (err) {
-			    // callback(err);
-			  // } else {
-			  	// callback(null, {success: true, curruser: email});
-			  // }
-			// });
+			Student.create({user: user._id, 
+	                commonFilled: false}, 
+			function(err, student) {
+			  if (err) {
+			    callback(err.message);
+			  } else {
+			  	callback(null, student);
+			  }
+			});
 		}
 	});
 };
@@ -44,7 +40,8 @@ StudentSchema.statics.createStudent = function(email, password, callback){
  * @param {Object} studentId the ID of the student
  * @param {Object} callback the callback in the form (err)
  */
-StudentSchema.method.setCommonFilledTrue = function(studentId, callback){
+StudentSchema.method.setCommonFilledTrue = function(userId, callback){
+	Student.update({user: userId}, {$set: {commonFilled: true}});
 };
 
 
