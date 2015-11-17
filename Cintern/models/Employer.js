@@ -23,13 +23,13 @@ EmployerSchema.statics.createEmployer = function(email, password, companyName, c
 		if (errMsg){
 			callback(errMsg);
 		} else {
-			Employer.create({user: user.user._id, 
+			Employer.create({user: user._id, 
 	                company: companyName}, 
-			function(err, user) {
+			function(err, employer) {
 			  if (err) {
-			    callback(err);
+			    callback(err.message);
 			  } else {
-			  	callback(null, {success: true, curruser: email});
+			  	callback(null, employer);
 			  }
 			});
 		}
