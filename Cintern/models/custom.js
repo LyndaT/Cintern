@@ -145,6 +145,7 @@ customSchema.statics.getCustomForListing = function(ownerId, listingId, callback
 		state : { $in : ["subm", "star"] } 
 	}, function(err, custom) {
 		if (err) callback(err.message);
+		else if (!custom) callback("Invalid custom");
 		else callback(null, custom);
 	});
 };

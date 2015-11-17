@@ -625,15 +625,149 @@ describe('Custom', function() {
    *    customId does match ownerId : get custom
    */
   describe('#getCustomIfOwner', function() {
+    it('should not get if customId does not match ownerId', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  Custom.getCustomIfOwner(emp.user, c1._id, function(e, custom) {
+                    assert.equal(true, e !== null)
+                    done();
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
 
+    it('should get if customId does match ownerId', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, temp) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  Custom.getCustomIfOwner(user2._id, c1._id, function(e, custom) {
+                    assert.equal(c1.owner.toString(), custom.owner.toString());
+                    assert.equal(c1._id.toString(), custom._id.toString());
+                    Custom.getCustomIfOwner(emp.user, temp._id, function(e, custom) {
+                      assert.equal(emp.user.toString(), custom.owner.toString());
+                      assert.equal(temp._id.toString(), custom._id.toString());
+                      done();
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
   });
 
   /**
    * input: ownerId, listingId
    *    ownerId does not match listingId : get none
-   *    ownerId does match listingId : get custom
+   *    ownerId does match listingId state is not subm or save : get none
+   *    ownerId does match listingId state is subm : get custom
+   *    ownerId does match listingId state is star : get custom
    */
   describe('#getCustomForListing', function() {
+    it('should not get if listing does not match owner', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, temp) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  Custom.getCustomForListing("2", listings[0]._id, function(e, custom) {
+                    assert.equal(true, e !== null);
+                    done();
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('should not get if listing match owner but state not subm or save', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, temp) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  Custom.getCustomForListing(user2._id, listings[0]._id, function(e, custom) {
+                    assert.equal(true, e !== null);
+                    done();
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('should get if listing does match owner and state subm', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, temp) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  Custom.update(c1._id, [], true, function(e, c1) {
+                    Custom.getCustomForListing(user2._id, listings[0]._id, function(e, custom) {
+                      assert.equal("subm", custom.state);
+                      assert.equal(user2._id.toString(), custom.owner.toString());
+                      assert.equal(listings[0]._id.toString(), custom.listing.toString());
+                      done();
+                    });
+                  })
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('should get if listing does match owner and state star', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, temp) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  Custom.update(c1._id, [], true, function(e, c1) {
+                    Custom.star(c1._id, function(e, c1) {
+                      Custom.getCustomForListing(user2._id, listings[0]._id, function(e, custom) {
+                        assert.equal("star", custom.state);
+                        assert.equal(user2._id.toString(), custom.owner.toString());
+                        assert.equal(listings[0]._id.toString(), custom.listing.toString());
+                        done();
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
 
   });
 
@@ -643,6 +777,39 @@ describe('Custom', function() {
    *    listingId is valid : get template
    */
   describe('#getListingTemplate', function() {
+    it('should not get if listing ivalid', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, temp) {
+              Custom.getListingTemplate("1", function(e, temp) {
+                assert.equal(true, e !== null);
+                done();
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('should get if listing valid', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, temp) {
+              Custom.getListingTemplate(listings[0]._id, function(e, temp) {
+                assert.equal(true, temp.isTemplate);
+                assert.equal(listings[0]._id.toString(), temp.listing.toString());
+                assert.equal(emp.user.toString(), temp.owner.toString());
+                done();
+              });
+            });
+          });
+        });
+      });
+    });
 
   });
 
@@ -653,6 +820,7 @@ describe('Custom', function() {
    *    custom is in state star : can withdraw
    *    custom is in state with : can withdraw
    *    custom is in state rej : cannot withdraw
+   *    custom is a template : cannot withdraw
    */
   describe('#withdraw', function() {
 
@@ -665,6 +833,7 @@ describe('Custom', function() {
    *    custom is in state star : cannot delete
    *    custom is in state with : cannot delete
    *    custom is in state rej : cannot delete
+   *    custom is a template : cannot reject
    */
   describe('#deleteCustom', function() {
 
@@ -677,6 +846,7 @@ describe('Custom', function() {
    *    custom is in state star : can star
    *    custom is in state with : cannot star
    *    custom is in state rej : cannot star
+   *    custom is a template : cannot reject
    */
   describe('#star', function() {
 
@@ -689,6 +859,7 @@ describe('Custom', function() {
    *    custom is in state star : can unstar
    *    custom is in state with : cannot unstar
    *    custom is in state rej : cannot unstar
+   *    custom is a template : cannot reject
    */
   describe('#unstar', function() {
 
@@ -701,6 +872,7 @@ describe('Custom', function() {
    *    custom is in state star : can reject
    *    custom is in state with : cannot reject
    *    custom is in state rej : can reject
+   *    custom is a template : cannot reject
    */
   describe('#reject', function() {
 
@@ -715,6 +887,7 @@ describe('Custom', function() {
    *    custom is in state star : cannot update
    *    custom is in state with : cannot update
    *    custom is in state rej : can update
+   *    custom is a template : cannot update
    */
   describe('#update', function() {
 

@@ -29,11 +29,11 @@ describe('User', function() {
       	assert.equal(false, user.isStudent);
       	
       	User.addUser('test2', 'test2pw', true, function(err, user){
-      	assert.equal('test2', user.email);
-      	assert.equal('test2pw', user.password);
-      	assert.equal(true, user.isStudent);
-      	done();
-      });
+        	assert.equal('test2', user.email);
+        	assert.equal('test2pw', user.password);
+        	assert.equal(true, user.isStudent);
+        	done();
+        });
       });     
     });
     

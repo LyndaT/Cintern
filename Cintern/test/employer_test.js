@@ -34,15 +34,15 @@ describe('Employer', function() {
 			var id = "";
    			Employer.find({company: 'Google'}, function(err, emps){
    				assert.equal(1, emps.length);
-   			    id = emps[0].user;
+   			  id = emps[0].user;
    			    
-   			    User.findOne({email: 'goog'}, function(err, user){
-   				assert.equal(id, user._id.toString());
-   				assert.equal('goog', user.email);
-   				assert.equal('googpw', user.password);
-   				assert.equal(false, user.isStudent);
-   				done();
-   			});
+ 			    User.findOne({email: 'goog'}, function(err, user){
+     				assert.equal(id, user._id.toString());
+     				assert.equal('goog', user.email);
+     				assert.equal('googpw', user.password);
+     				assert.equal(false, user.isStudent);
+     				done();
+     			});
    			});
    		});
    	});
@@ -55,9 +55,9 @@ describe('Employer', function() {
    				assert.equal(false, user.isStudent);
    				
    				Employer.createEmployer('goog', 'goog1pw', 'Goog', function(errMsg, res){
-   				assert(errMsg);
-   				done();
-   			});
+     				assert(errMsg);
+     				done();
+     			});
    			});
    		});
    	});
@@ -70,9 +70,9 @@ describe('Employer', function() {
    				assert.equal(false, user.isStudent);
    				
    				Employer.createEmployer('goog1', 'goog1pw', 'Google', function(errMsg, res){
-   				assert(errMsg);
-   				done();
-   			});
+     				assert(errMsg);
+     				done();
+     			});
    			});
    		});
    	});
