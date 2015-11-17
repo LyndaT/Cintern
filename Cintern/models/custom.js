@@ -208,15 +208,16 @@ customSchema.methods.reject = function(callback) {
 };
 
 /**
- * Updates the questions of the Custom to newQuestions if Custom's state is save
+ * Updates the questions of the Custom to answers if Custom's state is save
  * if isSubmission is true, set state to subm if questions are correctly formatted,
  * then runs the callback on the updated Custom
  * 
- * @param{Array} newQuesions is an Array of Objects
+ * @param{Array} answers is an Array of Objects with keys that is "id" 
+ * 			(mapping to an Object id), and "answer" (mapping to a String)
  * @param{Boolean} isSubmission
  * @param{Function} callback(err, Custom)
  */
-customSchema.methods.update = function(newQuestions, isSubmission, callback) {
+customSchema.methods.update = function(answers, isSubmission, callback) {
 	if (this.state === "save") {
 		Application.updateAnswers(this.application, newQuestions, isSubmission, function(errMsg, app) {
 			if (errMsg) callback(errMsg);
@@ -237,10 +238,20 @@ customSchema.methods.update = function(newQuestions, isSubmission, callback) {
 	}
 };
 
-// TODO: write me
-customSchema.methods.formatForShow = function(callback) {
-	Application.formatForShow(this.application, callback);
-};
+
+/*customSchema.methods.formatForShow = function(callback) {
+	Application.formatForShow(this.application, function(errMsg, formattedApp) {
+		if (errMsg) callback(errMsg);
+		else { 
+			var formattedCustom = {
+
+				"application" : formattedApp,
+				"state" : state,
+				"submitTime" : submitTime
+			}
+		}
+	});
+};*/
 
 
 /**

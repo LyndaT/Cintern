@@ -1,5 +1,4 @@
 var assert = require("assert");
-var Application = require('../models/application');
 var Custom = require('../models/custom');
 var User = require('../models/User');
 var Listing = require('../models/listing');
@@ -10,14 +9,22 @@ describe('Custom', function() {
   beforeEach(function(done) {
     mongoose.connect('mongodb://localhost/testcintern');
     Custom.remove({}, function() {
-      done();
+      User.remove({}, function() {
+        Listing.remove({}, function() {
+          done();
+        });
+      });
     });
   });
 
   afterEach(function(done) {
     Custom.remove({}, function() {
-      mongoose.connection.close();
-      done();
+      User.remove({}, function() {
+        Listing.remove({}, function() {
+          mongoose.connection.close();
+          done();
+        });
+      });
     });
   });
 
