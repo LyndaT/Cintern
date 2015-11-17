@@ -60,11 +60,10 @@ describe('Listing', function() {
     });
   });
 
-  describe('tests for createListing function', function() {
+  describe('#createListing', function() {
     it('should create a listing given all fields', function(done) {
       Listing.createListing(ObjectId("507f1f77bcf86cd799439011"), "someTitle", "someDescription", "someRequirements", new Date(), function(e, listing) {
         Listing.find({}, function(err, listing) {
-
           assert.equal(1, listing.length);
           done();
         });
@@ -99,20 +98,20 @@ describe('Listing', function() {
     });
   });
 
-  describe('test for deleteListing function', function() {
+  describe('#deleteListing', function() {
     it('should delete a listing with a particular listing id', function(done) {
       Listing.createListing(ObjectId("507f1f77bcf86cd799439011"), "title", "desc", "reqs", new Date(), function(e, listing) {
         Listing.find({}, function(err, listing) {
           var listingId = listing[0]._id;
           assert.equal(1, listing.length);
           
+          Listing.deleteListing(listingId, function(err) {
+            assert.equal(err, null);
 
-          Listing.deleteListing(listingId, function(err, wasSuccessful) {
-          });  
-
-          Listing.find({}, function(err, listing) {
-            assert.equal(0, listing.length);
-            done();
+            Listing.find({}, function(err, listing) {
+              assert.equal(0, listing.length);
+              done();
+            });
           });
 
         });
@@ -121,14 +120,16 @@ describe('Listing', function() {
 
     it('should not delete if the listing with that object id does not exist in listings', function(done) {
       Listing.createListing(ObjectId("507f1f77bcf86cd799439011"), "title", "desc", "reqs", new Date(), function(e, listing) {
-      });
+        assert.equal(e, null);
 
-      Listing.deleteListing(ObjectId("507f1f77bcf86cd799439011"), function(err, wasSuccessful) {
-      });
+        Listing.deleteListing(ObjectId("507f1f77bcf86cd799439011"), function(err) {
+          assert.equal(err, null);
 
-      Listing.find({}, function(err, listing) {
-        assert.equal(1, listing.length);
-        done();
+          Listing.find({}, function(err, listing) {
+            assert.equal(1, listing.length);
+            done();
+          });
+        });
       });
     });
   });

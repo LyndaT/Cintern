@@ -38,7 +38,7 @@ listingSchema.statics.createListing = function(currEmployerId, title, desc, reqs
 	      if (err) {
 	        callback(err.message);
 	      } else {
-	        callback();
+	        callback(null);
 	      }
     });
 };
@@ -54,7 +54,7 @@ listingSchema.statics.deleteListing = function(listingId, callback) {
       if (err) {
         callback(err.message);
       } else {
-        callback();
+        callback(null);
       }
     });
 };
