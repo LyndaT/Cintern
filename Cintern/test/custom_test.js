@@ -621,11 +621,11 @@ describe('Custom', function() {
 
   /**
    * input: ownerId, customId
-   *    customId does not match ownerId : get none
-   *    customId does match ownerId : get custom
+   *    customId does not match ownerId : false
+   *    customId does match ownerId : true
    */
-  describe('#getCustomIfOwner', function() {
-    it('should not get if customId does not match ownerId', function(done) {
+  describe('#isOwner', function() {
+    it('false if customId does not match ownerId', function(done) {
       var questions = [];
       Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
         Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
@@ -633,8 +633,8 @@ describe('Custom', function() {
             Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
               User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
-                  Custom.getCustomIfOwner(emp.user, c1._id, function(e, custom) {
-                    assert.equal(true, e !== null)
+                  Custom.isOwner(emp.user, c1._id, function(e, isowner) {
+                    assert.equal(false, isowner)
                     done();
                   });
                 });
@@ -653,12 +653,10 @@ describe('Custom', function() {
             Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, temp) {
               User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
-                  Custom.getCustomIfOwner(user2._id, c1._id, function(e, custom) {
-                    assert.equal(c1.owner.toString(), custom.owner.toString());
-                    assert.equal(c1._id.toString(), custom._id.toString());
-                    Custom.getCustomIfOwner(emp.user, temp._id, function(e, custom) {
-                      assert.equal(emp.user.toString(), custom.owner.toString());
-                      assert.equal(temp._id.toString(), custom._id.toString());
+                  Custom.isOwner(user2._id, c1._id, function(e, isowner) {
+                    assert.equal(true, isowner);
+                    Custom.isOwner(emp.user, temp._id, function(e, isowner) {
+                      assert.equal(true, isowner);
                       done();
                     });
                   });

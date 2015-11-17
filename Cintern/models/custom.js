@@ -115,18 +115,16 @@ customSchema.statics.getCustomsForListingDash = function(listingId, callback) {
 };
 
 /**
- * Gets the Custom associated with the appId if the owner is the ownerId,
- * then runs the callback on Custom
+ * Rusn callback where the Boolean is true if ownerId owns the customId
  * 
  * @param{ObjectId} ownerId
  * @param{ObjectId} customId
  * @param{Function} callback(err, Custom)
  */
-customSchema.statics.getCustomIfOwner = function(ownerId, customId, callback) {
-	Custom.findOne({ "_id" : customId, "owner" : ownerId }, function(err, custom) {
+customSchema.statics.isOwner = function(ownerId, customId, callback) {
+	Custom.find({ "_id" : customId, "owner" : ownerId }, function(err, customs) {
 		if (err) callback(err.message);
-		else if (!custom) callback("Invalid Custom");
-		else callback(null, custom);
+		else callback(null, customs.length === 1);
 	});
 };
 
