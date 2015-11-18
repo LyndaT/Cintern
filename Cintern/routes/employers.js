@@ -15,18 +15,18 @@ router.get('/listings', listing.createListing);
 router.delete('/listings/:lstgid', listing.deleteListing);
 
 /* GET listing applicants */
-router.get('/applications/:lstgid', application.getApplicants);
+router.get('/applications/:lstgid', custom.getApplicants);
 
 /* POST application template */
-router.post('/applications', application.createTemplate);
+router.post('/applications', custom.createTemplate);
 
 /* POST starred application */
-router.post('/applications/starred/:appid', application.starApplication);
+router.post('/applications/starred/:appid', custom.starApplication);
 
 /* POST unstarred application */
-router.post('/applications/unstarred/:appid', application.unstarApplication);
+router.post('/applications/unstarred/:appid', custom.unstarApplication);
 
 /* POST rejected application */
-router.post('/applications/rejected/:appid', application.rejectApplication);
+router.post('/applications/rejected/:appid', custom.rejectApplication);
 
 module.exports = router;

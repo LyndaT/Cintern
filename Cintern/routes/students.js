@@ -15,19 +15,22 @@ router.get('/listings/employer/:employerid', listing.getEmployerListings);
 router.get('/listings/:lstgid', listings.getListing);
 
 /* GET all applications */
-router.get('/applications', application.getStudentApplications);
+router.get('/applications', custom.getStudentApplications);
 
 /* GET application */
 router.get('/applications/:appid', application.getApplication);
 
+/* GET template */
+router.get('/applications/template/:lstgid', custom.getListingTemplate);
+
 /* POST common application */
-router.post('/applications/common', student.submitCommonApplication);
+router.post('/applications/common', common.submitCommonApplication);
 
 /* POST custom application */
-router.post('/applications/custom', application.submitCustomApplication);
+router.post('/applications/custom', custom.submitCustomApplication);
 
 /* POST application update */
-router.post('/applications/updates/:appid', application.updateApplication);
+router.post('/applications/updates/:appid', custom.updateApplication);
 
 /* POST application withdrawal */
 router.post('/applications/withdrawal/:appid', application.withdrawApplication);
