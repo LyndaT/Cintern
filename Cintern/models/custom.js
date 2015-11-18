@@ -1,3 +1,8 @@
+/**
+ * @author Jennifer Wu
+ *
+ * Custom model
+ */
 var mongoose = require("mongoose");
 var Application = require("../models/application");
 

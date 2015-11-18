@@ -1,3 +1,8 @@
+/**
+ * @author Jennifer Wu
+ *
+ * Test file for the common model
+ */
 var assert = require("assert");
 var Common = require('../models/common');
 var User = require('../models/User');
@@ -10,7 +15,9 @@ describe('Common', function() {
     mongoose.connect('mongodb://localhost/testcintern');
     Common.remove({}, function() {
       User.remove({}, function() {
-        done();        
+        Application.remove({}, function() {
+          done();
+        });
       });
     });
   });
@@ -18,8 +25,10 @@ describe('Common', function() {
   afterEach(function(done) {
     Common.remove({}, function() {
       User.remove({}, function() {
-        mongoose.connection.close();
-        done();      
+        Application.remove({}, function() {
+          mongoose.connection.close();
+          done();      
+        });
       });
     });
   });

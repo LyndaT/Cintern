@@ -1,8 +1,13 @@
+/**
+ * @author Jennifer Wu
+ *
+ * Common model
+ */
 var mongoose = require("mongoose");
 var _ = require("../helpers/lodash");
 var Application = require("../models/application");
 
-// Application schema definition
+// Common schema definition
 var commonSchema = mongoose.Schema({
 	application : { 
 		type : mongoose.Schema.Types.ObjectId, 

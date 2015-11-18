@@ -1,4 +1,6 @@
 /**
+ * @author Jennifer Wu
+ *
  * Test file for the application model
  */
 var assert = require("assert");
