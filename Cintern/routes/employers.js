@@ -6,27 +6,27 @@ var router = express.Router();
  */
 
 /* GET listings */
-router.get('/employers/listings', listing.getEmployerListings);
+router.get('/listings', listing.getEmployerListings);
 
 /* POST listing */
-router.get('/employers/listings', listing.createListing);
+router.get('/listings', listing.createListing);
 
 /* DELETE listing */
-router.delete('/employers/listings/:lstgid', listing.deleteListing);
+router.delete('/listings/:lstgid', listing.deleteListing);
 
 /* GET listing applicants */
-router.get('/employers/applications/:lstgid', application.getApplicants);
+router.get('/applications/:lstgid', application.getApplicants);
 
 /* POST application template */
-router.post('/employers/applications', application.createTemplate);
+router.post('/applications', application.createTemplate);
 
 /* POST starred application */
-router.post('/employers/applications/starred/:appid', application.starApplication);
+router.post('/applications/starred/:appid', application.starApplication);
 
 /* POST unstarred application */
-router.post('/employers/applications/unstarred/:appid', application.unstarApplication);
+router.post('/applications/unstarred/:appid', application.unstarApplication);
 
 /* POST rejected application */
-router.post('/employers/applications/rejected/:appid', application.rejectApplication);
+router.post('/applications/rejected/:appid', application.rejectApplication);
 
 module.exports = router;

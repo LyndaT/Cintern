@@ -6,33 +6,33 @@ var router = express.Router();
  */
 
 /* GET all listings */
-router.get('/students/listings', listing.getAllListings);
+router.get('/listings', listing.getAllListings);
 
 /* GET employer listings */
-router.get('/students/listings/employer/:employerid', listing.getEmployerListings);
+router.get('/listings/employer/:employerid', listing.getEmployerListings);
 
 /* GET listing */
-router.get('/students/listings/:lstgid', listings.getListing);
+router.get('/listings/:lstgid', listings.getListing);
 
 /* GET all applications */
-router.get('/students/applications', application.getStudentApplications);
+router.get('/applications', application.getStudentApplications);
 
 /* GET application */
-router.get('/students/applications/:appid', application.getApplication);
+router.get('/applications/:appid', application.getApplication);
 
 /* POST common application */
-router.post('/students/applications/common', student.submitCommonApplication);
+router.post('/applications/common', student.submitCommonApplication);
 
 /* POST custom application */
-router.post('/students/applications/custom', application.submitCustomApplication);
+router.post('/applications/custom', application.submitCustomApplication);
 
 /* POST application update */
-router.post('/students/applications/updates/:appid', application.updateApplication);
+router.post('/applications/updates/:appid', application.updateApplication);
 
 /* POST application withdrawal */
-router.post('/students/applications/withdrawal/:appid', application.withdrawApplication);
+router.post('/applications/withdrawal/:appid', application.withdrawApplication);
 
 /* DELETE application */
-router.delete('/students/applications/:appid', application.deleteApplication);
+router.delete('/applications/:appid', application.deleteApplication);
 
 module.exports = router;
