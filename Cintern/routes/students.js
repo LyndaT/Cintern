@@ -20,8 +20,11 @@ router.get('/students/applications', application.getStudentApplications);
 /* GET application */
 router.get('/students/applications/:appid', application.getApplication);
 
-/* POST application */
-router.post('/students/applications', application.submitApplication);
+/* POST common application */
+router.post('/students/applications/common', student.submitCommonApplication);
+
+/* POST custom application */
+router.post('/students/applications/custom', application.submitCustomApplication);
 
 /* POST application update */
 router.post('/students/applications/updates/:appid', application.updateApplication);

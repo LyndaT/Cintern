@@ -6,12 +6,6 @@ var router = express.Router();
  */
 
 /* GET users listing. */
-//
-// Why is this here?
-//
-// -Maddie
-//
-//
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
