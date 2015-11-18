@@ -7,6 +7,10 @@ var ObjectId = require('mongodb').ObjectID;
 var _ = require("../helpers/lodash");
 
 /**
+ * @author: Maddie Dawson
+ */
+
+/**
  * Functions to test:
  * getAllListings
  * filterListings
