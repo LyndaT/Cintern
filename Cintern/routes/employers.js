@@ -27,6 +27,6 @@ router.post('/employers/applications/starred/:appid', application.starApplicatio
 router.post('/employers/applications/unstarred/:appid', application.unstarApplication);
 
 /* POST rejected application */
-router.post('/employers/applications/rejected/:appid', application.rejectedApplication);
+router.post('/employers/applications/rejected/:appid', application.rejectApplication);
 
 module.exports = router;
