@@ -1,9 +1,14 @@
-var express = require('express');
-var router = express.Router();
-
 /**
  * @author: Maddie Dawson
  */
+
+var express = require('express');
+var router = express.Router();
+
+var user = require('../controllers/user');
+var student = require('../controllers/student');
+var employer = require('../controllers/employer');
+var application = require('../controllers/application');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
