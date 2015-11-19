@@ -379,7 +379,7 @@ describe('Custom', function() {
             Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
               User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
                 Custom.copyTemplateToSave("1", user2._id, function(e, custom) {
-                  assert.equal(true, e !== null);
+                  assert.notEqual(null, e);
                   done();
                 });
               });
@@ -397,7 +397,7 @@ describe('Custom', function() {
             Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
               User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
                 Custom.copyTemplateToSave(listings[0]._id, "1", function(e, custom) {
-                  assert.equal(true, e !== null);
+                  assert.notEqual(null, e);
                   done();
                 });
               });
@@ -639,7 +639,7 @@ describe('Custom', function() {
               User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
                   Custom.getIfOwner(emp.user, c1._id, function(e, c) {
-                    assert.equal(true, e !== null)
+                    assert.notEqual(null, e);
                     done();
                   });
                 });
@@ -659,9 +659,9 @@ describe('Custom', function() {
               User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
                   Custom.getIfOwner(user2._id, c1._id, function(e, c) {
-                    assert.equal(true, e === null);
+                    assert.equal(null, e);
                     Custom.getIfOwner(emp.user, temp._id, function(e, c) {
-                      assert.equal(true, e === null);
+                      assert.equal(null, e);
                       done();
                     });
                   });
@@ -677,7 +677,7 @@ describe('Custom', function() {
   /**
    * input: ownerId, listingId
    *    ownerId does not match listingId : get none
-   *    ownerId does match listingId state is not subm or save : get none
+   *    ownerId does match listingId state is not subm or star : get none
    *    ownerId does match listingId state is subm : get custom
    *    ownerId does match listingId state is star : get custom
    */
@@ -691,7 +691,7 @@ describe('Custom', function() {
               User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
                   Custom.getStarOrSubmCustomForListing("2", listings[0]._id, function(e, custom) {
-                    assert.equal(true, e !== null);
+                    assert.notEqual(null, e);
                     done();
                   });
                 });
@@ -711,7 +711,7 @@ describe('Custom', function() {
               User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
                   Custom.getStarOrSubmCustomForListing(user2._id, listings[0]._id, function(e, custom) {
-                    assert.equal(true, e !== null);
+                    assert.notEqual(null, e);
                     done();
                   });
                 });
@@ -771,7 +771,6 @@ describe('Custom', function() {
         });
       });
     });
-
   });
 
   /**
@@ -787,7 +786,7 @@ describe('Custom', function() {
           Listing.find({}, function(e, listings) {
             Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, temp) {
               Custom.getListingTemplate("1", function(e, temp) {
-                assert.equal(true, e !== null);
+                assert.notEqual(null, e);
                 done();
               });
             });
@@ -813,7 +812,129 @@ describe('Custom', function() {
         });
       });
     });
+  });
 
+  /**
+   * input: ownerId, listingId, isStudent
+   * ownerId does not match listingId : get none
+   * ownerId does match listingId, isStudent true, state not subm or star : get custom
+   * ownerId does match listingId, isStudent false, state not subm or star : get none
+   * owner does match listingId, isStudent false, state is subm : get custom
+   * owner does match listingId, isStudent false, state is star : get custom
+   */
+  describe('#getByOwnerAndListing', function() {
+    it('should not get if listing does not match owner', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, temp) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  Custom.getByOwnerAndListing("2", listings[0]._id, true, function(e, custom) {
+                    assert.notEqual(null, e);
+                    assert.equal(undefined, custom);
+                    done();
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('should get if listing match owner isStudent true and state not subm or star', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, temp) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  Custom.getByOwnerAndListing(user2._id, listings[0]._id, true, function(e, custom) {
+                    assert.equal(null, e);
+                    assert.equal(user2._id.toString(), custom.owner.toString());
+                    done();
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('should not get if listing match owner isStudent false and state not subm or save', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, temp) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  Custom.getByOwnerAndListing(user2._id, listings[0]._id, false, function(e, custom) {
+                    assert.notEqual(null, e);
+                    assert.equal(undefined, custom);
+                    done();
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('should get if listing does match owner isStudent false and state subm', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, temp) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  Custom.update(c1._id, [], true, function(e, c1) {
+                    Custom.getByOwnerAndListing(user2._id, listings[0]._id, false, function(e, custom) {
+                      assert.equal("subm", custom.state);
+                      assert.equal(user2._id.toString(), custom.owner.toString());
+                      assert.equal(listings[0]._id.toString(), custom.listing.toString());
+                      done();
+                    });
+                  })
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('should get if listing does match owner isStudent false and state star', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, temp) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  Custom.update(c1._id, [], true, function(e, c1) {
+                    Custom.star(c1._id, function(e, c1) {
+                      Custom.getByOwnerAndListing(user2._id, listings[0]._id, false, function(e, custom) {
+                        assert.equal("star", custom.state);
+                        assert.equal(user2._id.toString(), custom.owner.toString());
+                        assert.equal(listings[0]._id.toString(), custom.listing.toString());
+                        done();
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
   });
 
   /**
@@ -835,7 +956,7 @@ describe('Custom', function() {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
                   assert.equal("save", c1.state);
                   Custom.withdraw(c1._id, function(e, custom) {
-                    assert.equal(true, e !== null);
+                    assert.notEqual(null, e);
                     done();
                   });
                 });
@@ -913,7 +1034,7 @@ describe('Custom', function() {
                     Custom.reject(c1._id, function(e, c1) {
                       assert.equal("rej", c1.state);
                       Custom.withdraw(c1._id, function(e, custom) {
-                        assert.equal(true, e !== null);
+                        assert.notEqual(null, e);
                         done();
                       });                    
                     });
@@ -933,7 +1054,7 @@ describe('Custom', function() {
           Listing.find({}, function(e, listings) {
             Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {        
               Custom.withdraw(t1._id, function(e, custom) {
-                assert.equal(true, e !== null);
+                assert.notEqual(null, e);
                 done();
               });
             });
@@ -1153,7 +1274,7 @@ describe('Custom', function() {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
                   assert.equal("save", c1.state);
                   Custom.star(c1._id, function(e, custom) {
-                    assert.equal(true, e !== null);
+                    assert.notEqual(null, e);
                     done();
                   });
                 });
@@ -1203,7 +1324,7 @@ describe('Custom', function() {
                     Custom.withdraw(c1._id, function(e, c1) {
                       assert.equal("with", c1.state);
                       Custom.star(c1._id, function(e, custom) {
-                        assert.equal(true, e !== null);
+                        assert.notEqual(null, e);
                         done();
                       });                    
                     });
@@ -1230,7 +1351,7 @@ describe('Custom', function() {
                     Custom.reject(c1._id, function(e, c1) {
                       assert.equal("rej", c1.state);
                       Custom.star(c1._id, function(e, custom) {
-                        assert.equal(true, e !== null);
+                        assert.notEqual(null, e);
                         done();
                       });                    
                     });
@@ -1250,7 +1371,7 @@ describe('Custom', function() {
           Listing.find({}, function(e, listings) {
             Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {        
               Custom.star(t1._id, function(e, custom) {
-                assert.equal(true, e !== null);
+                assert.notEqual(null, e);
                 done();
               });
             });
@@ -1280,7 +1401,7 @@ describe('Custom', function() {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
                   assert.equal("save", c1.state);
                   Custom.unstar(c1._id, function(e, custom) {
-                    assert.equal(true, e !== null);
+                    assert.notEqual(null, e);
                     done();
                   });
                 });
@@ -1333,7 +1454,7 @@ describe('Custom', function() {
                     Custom.withdraw(c1._id, function(e, custom) {
                       assert.equal("with", custom.state);
                       Custom.unstar(custom._id, function(e, custom) {
-                        assert.equal(true, e !== null);
+                        assert.notEqual(null, e);
                         done();
                       });
                     });                    
@@ -1360,7 +1481,7 @@ describe('Custom', function() {
                     Custom.reject(c1._id, function(e, c1) {
                       assert.equal("rej", c1.state);
                       Custom.unstar(c1._id, function(e, custom) {
-                        assert.equal(true, e !== null);
+                        assert.notEqual(null, e);
                         done();
                       });                    
                     });
@@ -1380,7 +1501,7 @@ describe('Custom', function() {
           Listing.find({}, function(e, listings) {
             Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {        
               Custom.unstar(t1._id, function(e, custom) {
-                assert.equal(true, e !== null);
+                assert.notEqual(null, e);
                 done();
               });
             });
@@ -1410,7 +1531,7 @@ describe('Custom', function() {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
                   assert.equal("save", c1.state);
                   Custom.reject(c1._id, function(e, custom) {
-                    assert.equal(true, e !== null);
+                    assert.notEqual(null, e);
                     done();
                   });
                 });
@@ -1488,7 +1609,7 @@ describe('Custom', function() {
                     Custom.withdraw(c1._id, function(e, custom) {
                       assert.equal("with", custom.state);
                       Custom.reject(c1._id, function(e, c1) {
-                        assert.equal(true, e !== null);
+                        assert.notEqual(null, e);
                         Custom.findOne({ "_id" : custom._id }, function(e, custom) {
                           assert.equal("with", custom.state);
                           done();
@@ -1511,7 +1632,7 @@ describe('Custom', function() {
           Listing.find({}, function(e, listings) {
             Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {        
               Custom.reject(t1._id, function(e, custom) {
-                assert.equal(true, e !== null);
+                assert.notEqual(null, e);
                 done();
               });
             });
@@ -1569,7 +1690,7 @@ describe('Custom', function() {
                   Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
                     assert.equal("save", c1.state);
                     Custom.update(c1._id, answers, true, function(e, custom) {
-                      assert.equal(true, e !== null);
+                      assert.notEqual(null, e);
                       Custom.findOne({ "_id" : c1._id }, function(e, c1) {
                         assert.equal("save", c1.state);
                         done();
@@ -1600,7 +1721,7 @@ describe('Custom', function() {
                   Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
                     assert.equal("save", c1.state);
                     Custom.update(c1._id, answers, true, function(e, custom) {
-                      assert.equal(true, e !== null);
+                      assert.notEqual(null, e);
                       Custom.findOne({ "_id" : c1._id }, function(e, c1) {
                         assert.equal("save", c1.state);
                         done();
@@ -1639,10 +1760,10 @@ describe('Custom', function() {
                       { "_id" : formatted[1]._id, "answer" : "def" }
                     ];   
                     Custom.update(c1._id, answers, true, function(e, custom) {
-                      assert.equal(true, e === null);
+                      assert.equal(null, e)
                       Custom.findOne({ "_id" : c1._id }, function(e, c1) {
                         assert.equal("subm", c1.state);
-                        assert.equal(true, c1.submitTime !== undefined);
+                        assert.notEqual(undefined, c1.submitTime);
                         Application.formatForShow(c1.application, function(e, formatted) {
                           assert.equal("abc", formatted[0].answer);
                           assert.equal("def", formatted[1].answer);
@@ -1683,7 +1804,7 @@ describe('Custom', function() {
                       { "_id" : formatted[1]._id, "answer" : "" }
                     ];             
                     Custom.update(c1._id, answers, false, function(e, custom) {
-                      assert.equal(true, e === null);
+                      assert.equal(null, e);
                       Custom.findOne({ "_id" : c1._id }, function(e, c1) {
                         assert.equal("save", c1.state);
                         Application.formatForShow(c1.application, function(e, formatted) {
@@ -1726,7 +1847,7 @@ describe('Custom', function() {
                       { "_id" : formatted[1]._id, "answer" : "def" }
                     ];             
                     Custom.update(c1._id, answers, false, function(e, custom) {
-                      assert.equal(true, e === null);
+                      assert.equal(null, e);
                       Custom.findOne({ "_id" : c1._id }, function(e, c1) {
                         assert.equal("save", c1.state);
                         assert.equal(undefined, c1.submitTime);
@@ -1770,10 +1891,10 @@ describe('Custom', function() {
                       { "_id" : formatted[1]._id, "answer" : "def" }
                     ];             
                     Custom.update(c1._id, answers, true, function(e, custom) {
-                      assert.equal(true, e === null);
+                      assert.equal(null, e);
                       Custom.findOne({ "_id" : c1._id }, function(e, c1) {
                         assert.equal("subm", c1.state);
-                        assert.equal(true, c1.submitTime !== undefined);
+                        assert.notEqual(undefined, c1.submitTime);
                         Application.formatForShow(c1.application, function(e, formatted) {
                           assert.equal("abc", formatted[0].answer);
                           assert.equal("def", formatted[1].answer);
@@ -1782,7 +1903,7 @@ describe('Custom', function() {
                             { "_id" : formatted[1]._id, "answer" : "defgh" }
                           ];             
                           Custom.update(c1._id, answers2, false, function(e, custom) {
-                            assert.equal(true, e !== null);
+                            assert.notEqual(null, e);
                             Custom.findOne({ "_id" : c1._id }, function(e, c1) {
                               assert.equal("subm", c1.state);
                               Application.formatForShow(c1.application, function(e, formatted) {
@@ -1825,7 +1946,7 @@ describe('Custom', function() {
                   { "_id" : formatted[1]._id, "answer" : "def" }
                 ];             
                 Custom.update(t1._id, answers, true, function(e, custom) {
-                  assert.equal(true, e !== null);      
+                  assert.notEqual(null, e);
                   Application.formatForShow(t1.application, function(e, formatted) {
                     assert.equal("", formatted[0].answer);
                     assert.equal("", formatted[1].answer);
