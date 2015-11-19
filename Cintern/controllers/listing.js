@@ -115,7 +115,7 @@ exports.getEmployerListings = function(req, res) {
 			var content = {
 				"listings" : listings,
 			}
-			utils.sendSuccessResponse(res);
+			utils.sendSuccessResponse(res, content);
 		}
 	});
 }
@@ -143,7 +143,7 @@ exports.getListing = function(req, res) {
 			var content = {
 				"listing" : listing
 			}
-			utils.sendSuccessResponse(res);
+			utils.sendSuccessResponse(res, content);
 		}
 	});
 }
