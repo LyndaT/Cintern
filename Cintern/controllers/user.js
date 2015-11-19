@@ -26,7 +26,7 @@ module.exports.login = function(req, res, next){
 			utils.sendErrResponse(res, 403, errMsg);
 		} else {
 			if (user.isStudent) {
-				Student.findByUserId(user._id, function(errMsg, student)) {
+				Student.findByUserId(user._id, function(errMsg, student) {
 					if (errMsg) {
 						utils.sendErrResponse(res, 403, errMsg);
 					} else {
@@ -39,9 +39,9 @@ module.exports.login = function(req, res, next){
 						req.session.user = currUser;
 						utils.sendSuccessResponse(res);
 					}
-				}
+				});
 			} else {
-				Employer.findByUserId(user._id, function(errMsg, employer)) {
+				Employer.findByUserId(user._id, function(errMsg, employer) {
 					if (errMsg) {
 						utils.sendErrResponse(res, 403, errMsg);
 					} else {
@@ -54,7 +54,7 @@ module.exports.login = function(req, res, next){
 						req.session.user = currUser;
 						utils.sendSuccessResponse(res);
 					}
-				}
+				});
 			}
 		}
 	});
