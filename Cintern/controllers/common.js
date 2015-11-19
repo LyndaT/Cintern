@@ -8,7 +8,7 @@ var Student = require('../models/Student.js');
 var utils = require('../utils/utils');
 
 /**
- * POST /student/applications/common
+ * POST /students/applications/common
  *
  * Submits answers for the common application
  *
