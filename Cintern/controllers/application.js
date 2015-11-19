@@ -13,11 +13,18 @@ var utils = require('../utils/utils');
  * 
  * Request body:
  * 	- userid: userId of the user's whose Common we need
+ *
+ * Response:
+ *  - success: true if succeeded got the common
+ *  - err: on failure (i.e. server failure, invalid user);
  */
 exports.getCommon = function(req, res, next) {
 	var currentUser = req.session.user;
 	if (currentUser) {
 		var userId = req.body.userid
+
+		if (currentUser.isStudent) userId = currentUser.userId;
+		// else check that listingId belongs to the currentUser
 
 		Common.getCommonByOwnerId(userId, function(errMsg, common) {
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
@@ -47,6 +54,10 @@ exports.getCommon = function(req, res, next) {
  * Request body:
  * 	- userid: userId of the user's whose Custom we need
  *	- lstgid: listingId of the listing's whose Custom we need
+ *
+ * Response:
+ *  - success: true if succeeded got the custom
+ *  - err: on failure (i.e. server failure, invalid user);
  */
 exports.getCustom = function(req, res, next) {
 	var currentUser = req.session.user;
@@ -54,6 +65,9 @@ exports.getCustom = function(req, res, next) {
 		var isStudent = currentUser.isStudent;
 		var listingId = req.body.lstgid;
 		var userId = req.body.userid;
+
+		if (currentUser.isStudent) userId = currentUser.userId;
+		// else check that listingId belongs to the currentUser
 
 		Custom.getByOwnerAndListing(userId, listingId, isStudent, function(errMsg, custom) {
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);

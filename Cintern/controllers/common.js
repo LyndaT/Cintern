@@ -27,14 +27,19 @@ exports.submitCommonApplication = function(req, res, next) {
 		if (currentUser.isStudent && !currentUser.submittedCommon) {
 			var currentUserId = currentUser.userId;
 			var answers = req..body.answers;
+			// submit the common
 			Common.submitCommon(currentUserId, answers, function(errMsg, success) {
 				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 				else if (!success) utils.sendErrResponse(res, 403, "Could not submit");
 				else {
+					// student's common is filled
 					Student.setCommonFilled(currentUserId, function(errMsg, student) {
 						if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 						else if (!student) utils.sendErrResponse(res, 403, "Invalid student");
-						else utils.sendSuccessResponse(res);
+						else {
+							req.session.user.submittedCommon = true;
+							utils.sendSuccessResponse(res);
+						}
 					});
 				}
 			});
