@@ -1,4 +1,8 @@
 var express = require('express');
+var user = require('../controllers/user');
+var student = require('../controllers/student');
+var employer = require('../controllers/employer');
+var application = require('../controllers/application');
 var router = express.Router();
 
 /**

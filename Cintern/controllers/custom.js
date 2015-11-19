@@ -4,10 +4,6 @@ exports.getApplicants = function(req, res, next) {
 
 };
 
-exports.createTemplate = function(req, res, next) {
-
-};
-
 //exports.starApplication = function(req, res, next) {};
 
 //exports.unstarApplication = function(req, res, next) {};

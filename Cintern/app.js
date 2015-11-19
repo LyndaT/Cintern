@@ -9,6 +9,8 @@ require('handlebars/runtime');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var students = require('./routes/students');
+var employers = require('./routes/employers');
 
 //Setting up MongoDB
 var mongoose = require('mongoose');
@@ -36,6 +38,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/students', students);
+app.use('/employers', employers);
 
 // Authentication middleware. This function
 // is called on _every_ request and populates

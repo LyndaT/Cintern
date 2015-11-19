@@ -1,4 +1,6 @@
 var express = require('express');
+var listing = require('../controllers/listing');
+var custom = require('../controllers/custom');
 var router = express.Router();
 
 /**
@@ -46,9 +48,6 @@ router.get('/listings', listing.createListing);
 
 /* GET listing applicants */
 router.get('/applications/listings/:lstgid', custom.getApplicants);
-
-/* POST application template */
-router.post('/applications', custom.createTemplate);
 
 /* POST starred application */
 // router.post('/applications/starred/:appid', custom.starApplication);
