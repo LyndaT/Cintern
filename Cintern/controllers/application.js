@@ -24,7 +24,7 @@ exports.getCommon = function(req, res, next) {
 		var userId = req.body.userid
 
 		if (currentUser.isStudent) userId = currentUser.userId;
-		// else check that listingId belongs to the currentUser
+		// FOR LATER: else check that listingId belongs to the currentUser
 
 		Common.getCommonByOwnerId(userId, function(errMsg, common) {
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
@@ -67,7 +67,7 @@ exports.getCustom = function(req, res, next) {
 		var userId = req.body.userid;
 
 		if (currentUser.isStudent) userId = currentUser.userId;
-		// else check that listingId belongs to the currentUser
+		// FOR LATER: else check that listingId belongs to the currentUser
 
 		Custom.getByOwnerAndListing(userId, listingId, isStudent, function(errMsg, custom) {
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
