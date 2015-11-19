@@ -84,13 +84,13 @@ commonSchema.statics.submitCommon = function(commonId, answers, callback) {
 }
 
 /**
- * Runs callback on the Common with the id commonId
+ * Runs callback on the Common with the owner that is ownerId
  *
- * @param{ObjectId} commonId
+ * @param{ObjectId} ownerId
  * @param{Function} callback(err, Common)
  */
-commonSchema.statics.getCommonById = function(commonId, callback) {
-	Common.findOne({ "_id" : commonId }, function(Err, common) {
+commonSchema.statics.getCommonByOwnerId = function(ownerId, callback) {
+	Common.findOne({ "owner" : ownerId }, function(Err, common) {
 		if (err) callback(err.message);
 		else if (!common) callback("Invalid common");
 		else callback(null, common);
