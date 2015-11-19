@@ -5,6 +5,7 @@
 var ObjectID = require('mongodb').ObjectID;
 var Student = require('../models/Student.js');
 var User = require('../models/User.js');
+var utils = require('../utils/utils');
 
 /**
  * POST /users/students
@@ -25,7 +26,11 @@ module.exports.createStudent = function(req, res, next){
 		if (errMsg){
 			utils.sendErrorResponse(res, 403, errMsg);
 		} else {
-			req.session.id = student.user;
+			var currUser = {
+				userId: student.user,
+				isStudent: true,
+			};
+			req.session.user = currUser;
 			utils.sendSuccessResponse(res);
 		}
 	});

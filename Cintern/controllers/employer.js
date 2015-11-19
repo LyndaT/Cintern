@@ -31,7 +31,11 @@ module.exports.createEmployer = function(req, res, next){
 		if (errMsg){
 			utils.sendErrResponse(res, 403, errMsg);
 		} else {
-			req.session.id = employer.user;
+			var currUser = {
+				userId: student.user,
+				isStudent: false,
+			};
+			req.session.user = currUser;
 			utils.sendSuccessResponse(res);
 		}
 	});

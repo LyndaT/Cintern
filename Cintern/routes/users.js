@@ -25,7 +25,6 @@ router.param('userid', function(req, res, next, userId) {
   req.body.userId = userId;
   next();
 });
->>>>>>> 2ae2f4b506a336ba2a7ab7e66bfaf5304016c2f2
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
