@@ -1,3 +1,8 @@
+/**
+ * @author Jennifer Wu
+ *
+ * Application controller
+ */
 var Application = require('../models/application.js');
 var utils = require('../utils/utils');
 
@@ -14,7 +19,7 @@ exports.getCommon = function(req, res, next) {
 	if (currentUser) {
 		var userId = req.body.userid
 
-		Common.getCommonById(userId, function(errMsg, common) {
+		Common.getCommonByOwnerId(userId, function(errMsg, common) {
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 			else if (!custom) utils.sendErrResponse(res, 403, "No custom");
 			else {
