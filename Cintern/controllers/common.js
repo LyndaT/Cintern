@@ -23,23 +23,18 @@ exports.submitCommonApplication = function(req, res, next) {
 	var currentUser = req.session.user);
 	if (currentUser) {
 		console.log("relies on common req.session.submittedCommon");
-		if (currentUser.isStudent && currentUser.submittedCommon) {
+		// check that the current user is a student and has not submitted a common
+		if (currentUser.isStudent && !currentUser.submittedCommon) {
 			var currentUserId = currentUser.userId;
 			var answers = req..body.answers;
-			Common.getCommonByOwnerId(currentUserId, function(errMsg, common) {
+			Common.submitCommon(currentUserId, answers, function(errMsg, success) {
 				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-				else if (!common) utils.sendErrResponse(res, 403, "No common");
+				else if (!success) utils.sendErrResponse(res, 403, "Could not submit");
 				else {
-					Common.submitCommon(common._id, answers, function(errMsg, success) {
+					Student.setCommonFilled(currentUserId, function(errMsg, student) {
 						if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-						else if (!success) utils.sendErrResponse(res, 403, "Could not submit");
-						else {
-							Student.setCommonFilled(currentUserId, function(errMsg, student) {
-								if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-								else if (!student) utils.sendErrResponse(res, 403, "Invalid student");
-								else utils.sendSuccessResponse(res);
-							});
-						}
+						else if (!student) utils.sendErrResponse(res, 403, "Invalid student");
+						else utils.sendSuccessResponse(res);
 					});
 				}
 			});
