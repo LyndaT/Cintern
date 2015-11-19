@@ -7,11 +7,12 @@ var utils = require('../utils/utils');
 var Listing = require('../models/listing.js');
 
 /*
-  Require authentication on ALL access to /listings/*
-  Clients which are not logged in will receive a 403 error code.
-*/
+ * Require authentication on ALL access to /listings/*
+ * Clients which are not logged in will receive a 403 error code.
+ * MAY ALSO NEED TO CHECK WHETHER STUDENT OR EMPLOYER!!!
+ */
 var requireAuthentication = function(req, res, next) {
-  if (!req.currentUser) {
+  if (!req.session.user) {
     utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
   } else {
     next();
@@ -19,9 +20,9 @@ var requireAuthentication = function(req, res, next) {
 };
 
 /**
- * POST users/employers/listings
+ * POST employers/listings
  * 
- * This function creates a new listing with a new template
+ * Creates a new listing with a new template
  * 
  * Request body: 
  *	- employerId: id of the employer
@@ -36,6 +37,7 @@ var requireAuthentication = function(req, res, next) {
  *	- err: on failure (i.e. server fail)
  */
 exports.createListing = function(req, res, next) {
+	
 	var currentUser = req.session.user;
 
 	var employerId = req.body.employerId;
@@ -58,10 +60,89 @@ exports.createListing = function(req, res, next) {
 	});
 };
 
+/**
+ * GET /students/listings
+ *
+ * Retrieves all the listings available on the site, available for students to view and apply to
+ *
+ * Request body:
+ *  None
+ *
+ * Response:
+ *  - success: true if successfully retrieved all listings
+ *  - err: if failed to retrieve
+ */
+exports.getAllListings = function(req, res) {
+	Listing.getAllListings(function(errMsg, listings) {
+		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+		else if (!listings) utils.sendErrResponse(res, 403, "No listings");
+		else utils.sendSuccessResponse(res);
+	});
+}
+
+/**
+ * GET /employers/listings and GET users/students/listings
+ *
+ * Retrieves all of the listings that the employer has created
+ *
+ * Request body:
+ *  - employerId: id of the employer (given only if currentUser is a student; otherwise, use the id of 
+ *				  the currently logged in user)
+ *
+ * Response:
+ *  - success: true if successfully retrieved the employer's listings
+ *  - err: if failed to retrieve
+ */
+exports.getEmployerListings = function(req, res) {
+	var currentUser = req.session.user;
+	if(currentUser.isStudent) {
+		var employerId = req.body.employerId;
+	} 
+	else {
+		var employerId = currentUser.userId;
+	}
+	Listing.getAllEmployerListings(employerId, function(errMsg, listings) {
+		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+		else if (!listings) utils.sendErrResponse(res, 403, "No listings");
+		else utils.sendSuccessResponse(res);
+	});
+}
 
 
+/**
+ * GET /students/listings/:lstgid
+ *
+ * Retrieves the details of the listing with id listgid
+ *
+ * Request body:
+ *  - listingId: the id of the listing to retrieve
+ *
+ * Response:
+ *  - success: true if successfully retrieved some information about that listing
+ *  - err: if failed to retrieve any information, or there was an error with the query
+ */
+exports.getListing = function(req, res) {
+	var listingId = req.listingId;
+
+	Listing.getListingInformation(listingId, function(errMsg, listing) {
+		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+		else if (!listing) utils.sendErrResponse(res, 403, "No listing with that listing id");
+		else utils.sendSuccessResponse(res);
+	});
+}
+
+
+/**
+ * DELETE /employers/listings/:lstgid
+ * 
+ * This function deletes the listing with lstgid as well as its associated template
+ */
+/*
 exports.deleteListing = function(req, res) {
-	listingId = req.body.listingId;
+	//Retrieve template id associated with the listing
+	//Delete template
+
+	listingId = req.body.listing;
 	Listing.deleteListing(listingId, function(err, listing) {
 		if(err) {
 			res.send(err.msg);
@@ -70,10 +151,9 @@ exports.deleteListing = function(req, res) {
 		}
 	});
 }
+*/
 
-exports.getAllListings = function(req, res) {
 
-}
 
 
 
