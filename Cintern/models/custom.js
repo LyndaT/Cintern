@@ -54,8 +54,10 @@ customSchema.statics.createTemplate = function(listingId, questions, ownerId, ca
 
 /**
  * Creates a new copy of the custom template associatd with the listingId,
- * where newOwnerId is the owner and the state is set to save and isTemplate is
- * set as False, then runs callback on the new Custom copy
+ * where newOwnerId is the owner so long as there is not already a Custom with 
+ * listing set as listingId and owner set as newOwnerId; the new custom's
+ * state is set to save and isTemplate is set as False, then runs callback on 
+ * the new Custom copy
  *
  * @param{ObjectId} listingId
  * @param{ObjectId} newOwnerId
