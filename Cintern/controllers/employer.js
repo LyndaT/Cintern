@@ -1,34 +1,42 @@
 /**
  * @author Lynda Tang
  */
+/**
+ * @author: Lynda Tang
+ */
 
 var ObjectID = require('mongodb').ObjectID;
 var Employer = require('../models/Employer.js');
 var User = require('../models/User.js');
+var utils = require('../utils/utils');
 
 /**
+ * POST /users/employers
  * Adds an Employer to the Database
- * @param {Object} req
- * @param {Object} res 
+ * 
+ * Request parameters:
+ * 		-email: the inputed email of the Employer
+ * 		-password: the inputed password of the Employer
+ * 		-company: the inputed company of the Employer
+ * 
+ * Response:
+ * 		-success: true if the server succeeded in adding the Employer
+ * 		-err: on failure (i.e failed in adding Employer), an error message
  */
-module.exports.addEmployer = function(req, res){
-	email = req.body.email;
-	password = req.body.password;
-	//TODO: Change
-	User.addUser(email, password, false, function(errMsg, user){
-		if (errMsg) {
-			res.send({msg: errMsg});
+module.exports.createEmployer = function(req, res, next){
+	var email = req.body.email;
+	var password = req.body.password;
+	var company = req.body.company;
+	Employer.createEmployer(email, password, company, function(errMsg, employer){
+		if (errMsg){
+			utils.sendErrResponse(res, 403, errMsg);
 		} else {
-		    // req.session.email = email;
-			// res.send(result);
-			Employer.createEmployer(user._id, "Google", function(errMsg, employer){
-				if (errMsg){
-					res.send({msg: errMsg});
-				} else {
-					req.session.email = email;
-					res.send(employer);
-				}
-			});
+			var currUser = {
+				userId: student.user,
+				isStudent: false,
+			};
+			req.session.user = currUser;
+			utils.sendSuccessResponse(res);
 		}
 	});
 };
