@@ -5,6 +5,44 @@ var router = express.Router();
  * @author: Maddie Dawson
  */
 
+/**
+ * Require that a user is logged in and that the current user 
+ * is a student, not an employer
+ */
+var requireStudent = function(req, res, next) {
+  if (!req.session.user || req.session.user.isStudent) {
+    utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
+  } else {
+    next();
+  }
+};
+
+router.all('*', requireStudent);
+
+/**
+ * Add a given employer ID to the request body
+ */
+router.param('employerid', function(req, res, next, employerId) {
+  req.body.employerId = employerId;
+  next();
+});
+
+/**
+ * Add a given listing ID to the request body
+ */
+router.param('lstgid', function(req, res, next, listingId) {
+  req.body.listingId = listingId;
+  next();
+});
+
+/**
+ * Add a given application ID to the request body
+ */
+router.param('appid', function(req, res, next, applicationId) {
+  req.body.applicationId = applicationId;
+  next();
+});
+
 /* GET all listings */
 router.get('/listings', listing.getAllListings);
 
