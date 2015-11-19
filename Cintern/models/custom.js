@@ -5,6 +5,8 @@
  */
 var mongoose = require("mongoose");
 var Application = require("../models/application");
+var Listing = require ("../models/listing");
+var User = require("../models/User");
 
 var stateTable = {
 	"save" : "saved",
@@ -131,7 +133,10 @@ customSchema.statics.getIfOwner = function(ownerId, customId, callback) {
 	Custom.findOne({ "_id" : customId, "owner" : ownerId }, function(err, custom) {
 		if (err) callback(err.message);
 		else if (!custom) callback("Invalid request");
-		else callback(null, custom);
+		else {
+			populateCustom(custom, function(){});
+			callback(null, custom);
+		}
 	});
 };
 
@@ -377,6 +382,36 @@ var changeState = function(customId, startStates, endState, callback) {
 		}
 	});
 };
+
+/**
+ * Runs a callback on a Custom Object whose listing, owner, and application
+ * have been populated 
+ *
+ * @param{Object} custom
+ * @param{Function} callback(err, Custom) where Custom has been populated
+ */
+customSchema.methods.populateCustom = function(custom, callback) {
+	Listing.populate(custom, { path : 'listing' }, function(err, custom) {
+		if (err) callback(err.message);
+		else if (!custom) callback("Invalid custom");
+		else {
+			User.populate(custom, { path : 'owner' }, function(err, custom) {
+				console.log(custom);
+				if (err) callback(err.message);
+				else if (!custom) callback("Invalid custom");
+				else {
+					Application.populate(custom, { path : 'application' }, function(err, custom) {
+						if (err) callback(err.message);
+						else if (!custom) callback("Invalid custom");
+						else {
+							callback(null, custom);
+						}
+					});
+				}
+			});
+		}
+	});
+}
 
 var Custom = mongoose.model("Custom", customSchema);
 module.exports = Custom;
