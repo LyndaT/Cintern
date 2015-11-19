@@ -168,8 +168,31 @@ customSchema.statics.getStarOrSubmCustomForListing = function(ownerId, listingId
 customSchema.statics.getListingTemplate = function(listingId, callback) {
 	Custom.findOne({ "listing" : listingId, "isTemplate" : true }, function(err, custom) {
 		if (err) callback(err.message);
+		else if (!custom) callback("Invalid custom");
 		else callback(null, custom);
 	})
+};
+
+/**
+ * Gets the Custom where the owner is ownerId and the listing is listingId and run
+ * the callback on the Custom; if isStudent is not true, however, only run the callback
+ * if the Custom is in state "subm" or "save"
+ *
+ * @param{ObjectId} ownerId
+ * @param{ObjectId} listingId
+ * @param{Boolean} isStudent
+ * @param{Funciton} callback(err, Custom)
+ */
+customSchema.statics.getByOwnerAndListing = function(ownerId, listingId, isStudent, callback) {
+	Custom.findOne({ "listing" : listingId, "owner" : ownerId }, function(err, custom) {
+		if (err) callback(err.message);
+		else if (!custom) callback("Invalid custom");
+		else if (isStudent) callback(null, custom);
+		else {
+			if (custom.state === "subm" || custom.state === "star") callback(null, custom);
+			else callback("Invalid custom");
+		}
+	});
 };
 
 /**
