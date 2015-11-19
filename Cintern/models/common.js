@@ -83,8 +83,32 @@ commonSchema.statics.submitCommon = function(commonId, answers, callback) {
 	})
 }
 
-// TODO: write me
-commonSchema.methods.formatForShow = function(callback) {};
+/**
+ * Runs callback on the Common with the id commonId
+ *
+ * @param{ObjectId} commonId
+ * @param{Function} callback(err, Common)
+ */
+commonSchema.statics.getCommonById = function(commonId, callback) {
+	Common.findOne({ "_id" : commonId }, function(Err, common) {
+		if (err) callback(err.message);
+		else if (!common) callback("Invalid common");
+		else callback(null, common);
+	});
+};
+
+/**
+ * Runs a callback on a Common Object whose application has been populated
+ *
+ * @param{Function} callback(err, Common) where Common has been populated
+ */
+commonSchema.methods.populateCommon = function(callback) {
+	Application.populate(this, { path : 'application' }, function(err, common) {
+		if (err) callback(err.message);
+		else if (!common) callback("Invalid common");
+		else callback(null, common);
+	})
+}
 
 var Common = mongoose.model("Common", commonSchema);
 module.exports = Common;
