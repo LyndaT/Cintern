@@ -54,4 +54,4 @@ module.exports.logout = function(req, res, next){
   	}
 };
 
-module.exports.getCurrent = function(req, res, next){};
+//module.exports.getCurrent = function(req, res, next){};

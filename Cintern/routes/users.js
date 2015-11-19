@@ -9,7 +9,6 @@ var router = express.Router();
  * @author: Maddie Dawson
  */
 
-
 /**
  * Add a given listing ID to the request body
  */
@@ -43,8 +42,8 @@ router.post('/students', student.createStudent);
 /* POST new employer */
 router.post('/employers', employer.createEmployer);
 
-/* GET current user */
-router.get('/current', user.getCurrent);
+// /* GET current user */
+// router.get('/current', user.getCurrent);
 
 /* GET common app */
 // maybe student.getCommon? idk
