@@ -60,7 +60,7 @@ describe('Common', function() {
             formattedQuestions.forEach(function(question) {
               answers.push({ "_id" : question._id, "answer" : "" });
             });
-            Common.submitCommon(common._id, answers, function(e, commonSubmitted) {
+            Common.submitCommon(user._id, answers, function(e, commonSubmitted) {
               assert.equal(false, commonSubmitted);
               Application.formatForShow(common.application, function(e, formattedQuestions) {
                 formattedQuestions.forEach(function(question) {
@@ -83,7 +83,7 @@ describe('Common', function() {
             formattedQuestions.forEach(function(question) {
               answers.push({ "_id" : question._id, "answer" : "abc" });
             });
-            Common.submitCommon(common._id, answers, function(e, commonSubmitted) {
+            Common.submitCommon(user._id, answers, function(e, commonSubmitted) {
               assert.equal(true, commonSubmitted);
               Application.formatForShow(common.application, function(e, formattedQuestions) {
                 formattedQuestions.forEach(function(question) {

@@ -59,17 +59,17 @@ commonSchema.statics.createCommon = function(ownerId, callback){
 };
 
 /**
- * Submits answers for the common application, and runs the callback on
- * a Boolean that is true if the submission was successful, and false if
- * the submission was not successful
+ * Submits answers for the common application with owner userId, and 
+ * runs the callback on a Boolean that is true if the submission was 
+ * successful, and false if the submission was not successful
  *
- * @param{ObjectId} commonId
+ * @param{ObjectId} userId
  * @param{Array} answers is an Array of Objects with keys that is "id" 
  * 			(mapping to an Object id), and "answer" (mapping to a String)
  * @param{Function} callback(err, Boolean)
  */
-commonSchema.statics.submitCommon = function(commonId, answers, callback) {
-	Common.findOne({ "_id" : commonId }, function(err, common) {
+commonSchema.statics.submitCommon = function(userId, answers, callback) {
+	Common.findOne({ "owner" : userId }, function(err, common) {
 		if (err) callback(err.message, false);
 		else if (!common) callback("Invalid common", false);
 		else {
@@ -84,13 +84,13 @@ commonSchema.statics.submitCommon = function(commonId, answers, callback) {
 }
 
 /**
- * Runs callback on the Common with the id commonId
+ * Runs callback on the Common with the owner that is ownerId
  *
- * @param{ObjectId} commonId
+ * @param{ObjectId} ownerId
  * @param{Function} callback(err, Common)
  */
-commonSchema.statics.getCommonById = function(commonId, callback) {
-	Common.findOne({ "_id" : commonId }, function(Err, common) {
+commonSchema.statics.getCommonByOwnerId = function(ownerId, callback) {
+	Common.findOne({ "owner" : ownerId }, function(Err, common) {
 		if (err) callback(err.message);
 		else if (!common) callback("Invalid common");
 		else callback(null, common);
