@@ -22,7 +22,7 @@ var utils = require('../utils/utils');
 exports.getCommon = function(req, res, next) {
 	var currentUser = req.session.user;
 	if (currentUser) {
-		var userId = req.body.userid
+		var userId = req.body.userid;
 
 		if (currentUser.isStudent) userId = currentUser.userId;
 		// FOR LATER: else check that listingId belongs to the currentUser
