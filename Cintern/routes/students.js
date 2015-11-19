@@ -27,12 +27,12 @@ router.post('/applications/common', common.submitCommonApplication);
 router.post('/applications/custom', custom.submitCustomApplication);
 
 /* POST application update */
-router.post('/applications/updates/:appid', custom.updateApplication);
+// router.post('/applications/updates/:appid', custom.updateApplication);
 
 /* POST application withdrawal */
-router.post('/applications/withdrawal/:appid', application.withdrawApplication);
+// router.post('/applications/withdrawal/:appid', custom.withdrawApplication);
 
 /* DELETE application */
-router.delete('/applications/:appid', application.deleteApplication);
+// router.delete('/applications/:appid', custom.deleteApplication);
 
 module.exports = router;
