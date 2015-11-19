@@ -10,14 +10,15 @@ var Listing = require('../models/listing.js');
  * Require authentication on ALL access to /listings/*
  * Clients which are not logged in will receive a 403 error code.
  * MAY ALSO NEED TO CHECK WHETHER STUDENT OR EMPLOYER!!!
+ * CURRENTLY UNUSED
  */
-var requireAuthentication = function(req, res, next) {
+/*var requireAuthentication = function(req, res, next) {
   if (!req.session.user) {
     utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
   } else {
     next();
   }
-};
+};*/
 
 /**
  * POST employers/listings
@@ -37,7 +38,6 @@ var requireAuthentication = function(req, res, next) {
  *	- err: on failure (i.e. server fail)
  */
 exports.createListing = function(req, res, next) {
-	
 	var currentUser = req.session.user;
 
 	var employerId = req.body.employerId;
@@ -76,7 +76,12 @@ exports.getAllListings = function(req, res) {
 	Listing.getAllListings(function(errMsg, listings) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 		else if (!listings) utils.sendErrResponse(res, 403, "No listings");
-		else utils.sendSuccessResponse(res);
+		else {
+			var content = {
+				"listings" : listings,
+			}
+			utils.sendSuccessResponse(res, content);
+		}
 	});
 }
 
@@ -94,17 +99,24 @@ exports.getAllListings = function(req, res) {
  *  - err: if failed to retrieve
  */
 exports.getEmployerListings = function(req, res) {
-	var currentUser = req.session.user;
+	/*var currentUser = req.session.user;
 	if(currentUser.isStudent) {
 		var employerId = req.body.employerId;
 	} 
 	else {
 		var employerId = currentUser.userId;
-	}
+	}*/
+	var currentUser = req.session.user;
+	var employerId = currentUser.userId;
 	Listing.getAllEmployerListings(employerId, function(errMsg, listings) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 		else if (!listings) utils.sendErrResponse(res, 403, "No listings");
-		else utils.sendSuccessResponse(res);
+		else {
+			var content = {
+				"listings" : listings,
+			}
+			utils.sendSuccessResponse(res);
+		}
 	});
 }
 
@@ -122,12 +134,17 @@ exports.getEmployerListings = function(req, res) {
  *  - err: if failed to retrieve any information, or there was an error with the query
  */
 exports.getListing = function(req, res) {
-	var listingId = req.listingId;
+	var listingId = req.body.listingId;
 
 	Listing.getListingInformation(listingId, function(errMsg, listing) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 		else if (!listing) utils.sendErrResponse(res, 403, "No listing with that listing id");
-		else utils.sendSuccessResponse(res);
+		else {
+			var content = {
+				"listing" : listing
+			}
+			utils.sendSuccessResponse(res);
+		}
 	});
 }
 
@@ -152,7 +169,6 @@ exports.deleteListing = function(req, res) {
 	});
 }
 */
-
 
 
 

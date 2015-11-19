@@ -369,6 +369,7 @@ describe('Custom', function() {
    *    listingId is invalid : should not create
    *    newOwnerId is invalid : should not create
    *    listing and ownerId are valid: should create
+   *    already have the template : should not create
    */
   describe('#copyTemplateToSave', function() {
     it('listing invalid, should not create', function(done){
@@ -427,6 +428,37 @@ describe('Custom', function() {
                     assert.equal(1, app.questions.length);
                     done();
                   })
+                });
+              });
+            }); 
+          });
+        });
+      });
+    });
+
+    it('duplicate, should not create', function(done){
+      var questions = [{
+        "question" : "Email",
+        "type" : "text",
+        "required" : true,
+      }];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, custom) {
+                  assert.equal(user2._id, custom.owner);
+                  assert.equal(listings[0]._id, custom.listing);
+                  assert.equal(false, custom.isTemplate);
+                  assert.equal("save", custom.state);
+                  Application.findOne({ "_id" : custom.application }, function(e, app) {
+                    assert.equal(1, app.questions.length);
+                    Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, custom) {
+                      assert.notEqual(null, e);
+                      done();
+                    });
+                  });
                 });
               });
             }); 

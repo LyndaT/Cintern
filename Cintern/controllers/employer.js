@@ -32,7 +32,7 @@ module.exports.createEmployer = function(req, res, next){
 			utils.sendErrResponse(res, 403, errMsg);
 		} else {
 			var currUser = {
-				userId: student.user,
+				userId: employer.user,
 				isStudent: false,
 			};
 			req.session.user = currUser;

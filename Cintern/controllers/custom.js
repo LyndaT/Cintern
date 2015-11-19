@@ -18,23 +18,20 @@ var utils = require('../utils/utils');
  *	- err: on failure (i.e. server fail, invalid listing)
  */ 
 exports.getApplicants = function(req, res, next) {
-	var currentUser = req.session.user;
-	if (currentUser) {
-		if (!currentUser.isStudent) {
-			userId = currentUser.userId;
-			listingId = req.body.listingId;
+	// possibly useful later to check if the userId owns the listingId
+	var userId = currentUser.userId;
+	var listingId = req.body.listingId;
 
-			Custom.getCustomsForListingDash(listingId, function(err, apps) {
-				if (err) utils.sendErrResponse(res, 403, err);
-				else if (!apps) utils.sendErrResponse(res, 403, "Could not get applications");
-				else {
-					utils.sendSuccessResponse(res, apps);
-				}
-			});
+	Custom.getCustomsForListingDash(listingId, function(errMsg, customs) {
+		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+		else if (!apps) utils.sendErrResponse(res, 403, "Could not get applications");
+		else {
+			var content = {
+				applicants : customs.forEach(function(custom) { return custom.owner; })
+			}
+			utils.sendSuccessResponse(res, content);
 		}
-		else utils.sendErrResponse(res, 403, "Must be an employer to view applicants");
-	}
-	else utils.sendErrResponse(res, 403, "No user");
+	});
 };
 
 /**
@@ -93,22 +90,18 @@ exports.getApplicants = function(req, res, next) {
  *	- err: on failure (i.e. server fail)
  */
 exports.getStudentApplications = function(req, res, next) {
-	var currentUser = req.session.user;
-	if (currentUser) {
-		if (currentUser.isStudent) {
-			userId = currentUser.userId;
+	var userId = currentUser.userId;
 
-			Custom.getCustomsForStudentDash(userId, function(err, apps) {
-				if (err) utils.sendErrResponse(res, 403, err);
-				else if (!apps) utils.sendErrResponse(res, 403, "Could not get applications");
-				else {
-					utils.sendSuccessResponse(res, apps);
-				}
-			});
+	Custom.getCustomsForStudentDash(userId, function(errMsg, customs) {
+		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+		else if (!apps) utils.sendErrResponse(res, 403, "Could not get applications");
+		else {
+			var content = {
+				applications = customs,
+			}
+			utils.sendSuccessResponse(res, content);
 		}
-		else utils.sendErrResponse(res, 403, "Must be a student to view student applications");
-	}
-	else utils.sendErrResponse(res, 403, "No user");
+	});
 };
 
 /**
@@ -124,26 +117,23 @@ exports.getStudentApplications = function(req, res, next) {
  *	- err: on failure (i.e. server fail, invalid listing)
  */
 exports.getListingTemplate = function(req, res, next) {
-	var currentUser = req.session.user;
-	if (currentUser) {
-		if (currentUser.isStudent) userId = currentUser.userId;
-		// FOR LATER: else check that listingId belongs to the currentUser
-		listingId = req.body.listingId;
+	// FOR LATER: else check that listingId belongs to the currentUser
+	var listingId = req.body.listingId;
 
-		Custom.getListingTemplate(listingId, function(err, app_template) {
-			if (err) utils.sendErrResponse(res, 403, err);
-			else if (!app_template) utils.sendErrResponse(res, 403, "Could not get template");
-			else {
-				var template = {
-					"listing": app_template.listing,
-					"application": app_template.application,
-					"owner": app_template.owner
+	Custom.getListingTemplate(listingId, function(errMsg, customTemplate) {
+		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+		else if (!app_template) utils.sendErrResponse(res, 403, "Could not get template");
+		else {
+			customTemplate.populateCustom( function(errMsg, customTemplate) {
+				var content = {
+					"listing": customTemplate.listing,
+					"application": customTemplate.application,
+					"owner": customTemplate.owner
 				};
-				utils.sendSuccessResponse(res, template);
+				utils.sendSuccessResponse(res, content);
 			}
 		});
 	}
-	else utils.sendErrResponse(res, 403, "No user");
 };
 
 /**
@@ -159,23 +149,16 @@ exports.getListingTemplate = function(req, res, next) {
  *	- err: on failure (i.e. server fail, invalid submission, invalid application)
  */ 
 exports.saveCustomApplication = function(req, res, next) {
-	var currentUser = req.session.user;
-	if (currentUser) {
-		if (currentUser.isStudent) {
-			userId = currentUser.userId;
-			listingId = req.body.listingId;
+	var userId = currentUser.userId;
+	var listingId = req.body.listingId;
 
-			Custom.copyTemplateToSave(listingId, userId, function(err, custom) {
-				if (err) utils.sendErrResponse(res, 403, err);
-				else if (!custom) utils.sendErrResponse(res, 403, "Could not save application");
-				else {
-					utils.sendSuccessResponse(res);
-				}
-			});
+	Custom.copyTemplateToSave(listingId, userId, function(errMsg, custom) {
+		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+		else if (!custom) utils.sendErrResponse(res, 403, "Could not save application");
+		else {
+			utils.sendSuccessResponse(res);
 		}
-		else utils.sendErrResponse(res, 403, "Must be a student to save applications");
-	}
-	else utils.sendErrResponse(res, 403, "No user");
+	});
 };
 
 /**
@@ -193,24 +176,17 @@ exports.saveCustomApplication = function(req, res, next) {
  *	- err: on failure (i.e. server fail, invalid submission, invalid application)
  */ 
 exports.submitCustomApplication = function(req, res, next) {
-	var currentUser = req.session.user;
-	if (currentUser) {
-		if (currentUser.isStudent) {
-			answers = req.body.answers;
-			userId = currentUser.userId;
-			appId = req.body.applicationId;
+	var answers = req.body.answers;
+	var userId = currentUser.userId;
+	var appId = req.body.applicationId;
 
-			Custom.update(appId, answers, true, function(err, custom) {
-				if (err) utils.sendErrResponse(res, 403, err);
-				else if (!custom) utils.sendErrResponse(res, 403, "Could not submit application");
-				else {
-					utils.sendSuccessResponse(res);
-				}
-			});
+	Custom.update(appId, answers, true, function(errMsg, custom) {
+		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+		else if (!custom) utils.sendErrResponse(res, 403, "Could not submit application");
+		else {
+			utils.sendSuccessResponse(res);
 		}
-		else utils.sendErrResponse(res, 403, "Must be a student to submit applications");
-	}
-	else utils.sendErrResponse(res, 403, "No user");
+	});
 };
 
 // exports.updateApplication = function(req, res, next) {};
