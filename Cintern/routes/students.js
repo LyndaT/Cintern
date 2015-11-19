@@ -61,11 +61,14 @@ router.get('/applications', custom.getStudentApplications);
 /* GET template */
 router.get('/applications/template/:lstgid', custom.getListingTemplate);
 
-/* POST common application */
+/* POST add custom application */
+router.post('/applications/custom/saved/:lstgid', custom.saveCustomApplication);
+
+/* POST submit common application */
 router.post('/applications/common', common.submitCommonApplication);
 
-/* POST custom application */
-router.post('/applications/custom', custom.submitCustomApplication);
+/* POST submit custom application */
+router.post('/applications/custom/:appid', custom.submitCustomApplication);
 
 /* POST application update */
 // router.post('/applications/updates/:appid', custom.updateApplication);
