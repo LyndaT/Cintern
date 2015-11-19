@@ -1,3 +1,8 @@
+/**
+ * @author Jennifer Wu
+ *
+ * Test file for the custom model
+ */
 var assert = require("assert");
 var Custom = require('../models/custom');
 var User = require('../models/User');
