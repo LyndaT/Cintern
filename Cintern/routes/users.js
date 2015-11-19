@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 var express = require('express');
 var user = require('../controllers/user');
 var student = require('../controllers/student');
@@ -7,20 +5,11 @@ var employer = require('../controllers/employer');
 var application = require('../controllers/application');
 var router = express.Router();
 
->>>>>>> 2ae2f4b506a336ba2a7ab7e66bfaf5304016c2f2
 /**
  * @author: Maddie Dawson
  */
 
-<<<<<<< HEAD
-var express = require('express');
-var router = express.Router();
 
-var user = require('../controllers/user');
-var student = require('../controllers/student');
-var employer = require('../controllers/employer');
-var application = require('../controllers/application');
-=======
 /**
  * Add a given listing ID to the request body
  */
