@@ -134,7 +134,6 @@ customSchema.statics.getIfOwner = function(ownerId, customId, callback) {
 		if (err) callback(err.message);
 		else if (!custom) callback("Invalid request");
 		else {
-			populateCustom(custom, function(){});
 			callback(null, custom);
 		}
 	});
@@ -387,16 +386,14 @@ var changeState = function(customId, startStates, endState, callback) {
  * Runs a callback on a Custom Object whose listing, owner, and application
  * have been populated 
  *
- * @param{Object} custom
  * @param{Function} callback(err, Custom) where Custom has been populated
  */
-customSchema.methods.populateCustom = function(custom, callback) {
-	Listing.populate(custom, { path : 'listing' }, function(err, custom) {
+customSchema.methods.populateCustom = function(callback) {
+	Listing.populate(this, { path : 'listing' }, function(err, custom) {
 		if (err) callback(err.message);
 		else if (!custom) callback("Invalid custom");
 		else {
 			User.populate(custom, { path : 'owner' }, function(err, custom) {
-				console.log(custom);
 				if (err) callback(err.message);
 				else if (!custom) callback("Invalid custom");
 				else {
