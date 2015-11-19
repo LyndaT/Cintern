@@ -4,6 +4,7 @@
  * Common controller
  */
 var Common = require('../models/common.js');
+var Student = require('../models/Student.js');
 var utils = require('../utils/utils');
 
 /**

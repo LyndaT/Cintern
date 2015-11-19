@@ -3,7 +3,8 @@
  *
  * Application controller
  */
-var Application = require('../models/application.js');
+var Common = require('../models/common.js');
+var Custom = require('../models/custom.js');
 var utils = require('../utils/utils');
 
 /**
