@@ -97,7 +97,7 @@ exports.getStudentApplications = function(req, res, next) {
 		else if (!apps) utils.sendErrResponse(res, 403, "Could not get applications");
 		else {
 			var content = {
-				applications = customs,
+				applications : customs,
 			}
 			utils.sendSuccessResponse(res, content);
 		}
@@ -131,9 +131,9 @@ exports.getListingTemplate = function(req, res, next) {
 					"owner": customTemplate.owner
 				};
 				utils.sendSuccessResponse(res, content);
-			}
-		});
-	}
+			});
+		}
+	});
 };
 
 /**
