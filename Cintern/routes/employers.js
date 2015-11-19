@@ -15,7 +15,7 @@ router.get('/listings', listing.createListing);
 router.delete('/listings/:lstgid', listing.deleteListing);
 
 /* GET listing applicants */
-router.get('/applications/:lstgid', custom.getApplicants);
+router.get('/applications/listings/:lstgid', custom.getApplicants);
 
 /* POST application template */
 router.post('/applications', custom.createTemplate);

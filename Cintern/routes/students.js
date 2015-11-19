@@ -17,9 +17,6 @@ router.get('/listings/:lstgid', listings.getListing);
 /* GET all applications */
 router.get('/applications', custom.getStudentApplications);
 
-/* GET application */
-router.get('/applications/:appid', application.getApplication);
-
 /* GET template */
 router.get('/applications/template/:lstgid', custom.getListingTemplate);
 
