@@ -1,5 +1,12 @@
+/**
+ * @author Jennifer Wu
+ *
+ * Custom model
+ */
 var mongoose = require("mongoose");
 var Application = require("../models/application");
+var Listing = require ("../models/listing");
+var User = require("../models/User");
 
 var stateTable = {
 	"save" : "saved",
@@ -115,16 +122,20 @@ customSchema.statics.getCustomsForListingDash = function(listingId, callback) {
 };
 
 /**
- * Rusn callback where the Boolean is true if ownerId owns the customId
+ * Runs callback on the Custom that has owner that is ownerId and has
+ * the ID customId
  * 
  * @param{ObjectId} ownerId
  * @param{ObjectId} customId
  * @param{Function} callback(err, Custom)
  */
-customSchema.statics.isOwner = function(ownerId, customId, callback) {
-	Custom.find({ "_id" : customId, "owner" : ownerId }, function(err, customs) {
+customSchema.statics.getIfOwner = function(ownerId, customId, callback) {
+	Custom.findOne({ "_id" : customId, "owner" : ownerId }, function(err, custom) {
 		if (err) callback(err.message);
-		else callback(null, customs.length === 1);
+		else if (!custom) callback("Invalid request");
+		else {
+			callback(null, custom);
+		}
 	});
 };
 
@@ -157,8 +168,31 @@ customSchema.statics.getStarOrSubmCustomForListing = function(ownerId, listingId
 customSchema.statics.getListingTemplate = function(listingId, callback) {
 	Custom.findOne({ "listing" : listingId, "isTemplate" : true }, function(err, custom) {
 		if (err) callback(err.message);
+		else if (!custom) callback("Invalid custom");
 		else callback(null, custom);
 	})
+};
+
+/**
+ * Gets the Custom where the owner is ownerId and the listing is listingId and run
+ * the callback on the Custom; if isStudent is not true, however, only run the callback
+ * if the Custom is in state "subm" or "save"
+ *
+ * @param{ObjectId} ownerId
+ * @param{ObjectId} listingId
+ * @param{Boolean} isStudent
+ * @param{Funciton} callback(err, Custom)
+ */
+customSchema.statics.getByOwnerAndListing = function(ownerId, listingId, isStudent, callback) {
+	Custom.findOne({ "listing" : listingId, "owner" : ownerId }, function(err, custom) {
+		if (err) callback(err.message);
+		else if (!custom) callback("Invalid custom");
+		else if (isStudent) callback(null, custom);
+		else {
+			if (custom.state === "subm" || custom.state === "star") callback(null, custom);
+			else callback("Invalid custom");
+		}
+	});
 };
 
 /**
@@ -370,6 +404,34 @@ var changeState = function(customId, startStates, endState, callback) {
 		}
 	});
 };
+
+/**
+ * Runs a callback on a Custom Object whose listing, owner, and application
+ * have been populated 
+ *
+ * @param{Function} callback(err, Custom) where Custom has been populated
+ */
+customSchema.methods.populateCustom = function(callback) {
+	Listing.populate(this, { path : 'listing' }, function(err, custom) {
+		if (err) callback(err.message);
+		else if (!custom) callback("Invalid custom");
+		else {
+			User.populate(custom, { path : 'owner' }, function(err, custom) {
+				if (err) callback(err.message);
+				else if (!custom) callback("Invalid custom");
+				else {
+					Application.populate(custom, { path : 'application' }, function(err, custom) {
+						if (err) callback(err.message);
+						else if (!custom) callback("Invalid custom");
+						else {
+							callback(null, custom);
+						}
+					});
+				}
+			});
+		}
+	});
+}
 
 var Custom = mongoose.model("Custom", customSchema);
 module.exports = Custom;

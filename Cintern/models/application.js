@@ -1,3 +1,8 @@
+/**
+ * @author Jennifer Wu
+ *
+ * Application model
+ */
 var mongoose = require("mongoose");
 var _ = require("../helpers/lodash");
 

@@ -1,3 +1,8 @@
+/**
+ * @author Jennifer Wu
+ *
+ * Test file for the custom model
+ */
 var assert = require("assert");
 var Custom = require('../models/custom');
 var User = require('../models/User');
@@ -624,7 +629,7 @@ describe('Custom', function() {
    *    customId does not match ownerId : false
    *    customId does match ownerId : true
    */
-  describe('#isOwner', function() {
+  describe('#getIfOwner', function() {
     it('false if customId does not match ownerId', function(done) {
       var questions = [];
       Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
@@ -633,8 +638,8 @@ describe('Custom', function() {
             Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, custom) {
               User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
-                  Custom.isOwner(emp.user, c1._id, function(e, isowner) {
-                    assert.equal(false, isowner)
+                  Custom.getIfOwner(emp.user, c1._id, function(e, c) {
+                    assert.equal(true, e !== null)
                     done();
                   });
                 });
@@ -653,10 +658,10 @@ describe('Custom', function() {
             Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, temp) {
               User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
-                  Custom.isOwner(user2._id, c1._id, function(e, isowner) {
-                    assert.equal(true, isowner);
-                    Custom.isOwner(emp.user, temp._id, function(e, isowner) {
-                      assert.equal(true, isowner);
+                  Custom.getIfOwner(user2._id, c1._id, function(e, c) {
+                    assert.equal(true, e === null);
+                    Custom.getIfOwner(emp.user, temp._id, function(e, c) {
+                      assert.equal(true, e === null);
                       done();
                     });
                   });

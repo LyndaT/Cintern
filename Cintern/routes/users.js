@@ -1,7 +1,18 @@
+<<<<<<< HEAD
+=======
+var express = require('express');
+var user = require('../controllers/user');
+var student = require('../controllers/student');
+var employer = require('../controllers/employer');
+var application = require('../controllers/application');
+var router = express.Router();
+
+>>>>>>> 2ae2f4b506a336ba2a7ab7e66bfaf5304016c2f2
 /**
  * @author: Maddie Dawson
  */
 
+<<<<<<< HEAD
 var express = require('express');
 var router = express.Router();
 
@@ -9,6 +20,23 @@ var user = require('../controllers/user');
 var student = require('../controllers/student');
 var employer = require('../controllers/employer');
 var application = require('../controllers/application');
+=======
+/**
+ * Add a given listing ID to the request body
+ */
+router.param('lstgid', function(req, res, next, listingId) {
+  req.body.listingId = listingId;
+  next();
+});
+
+/**
+ * Add a given user ID to the request body
+ */
+router.param('userid', function(req, res, next, userId) {
+  req.body.userId = userId;
+  next();
+});
+>>>>>>> 2ae2f4b506a336ba2a7ab7e66bfaf5304016c2f2
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
