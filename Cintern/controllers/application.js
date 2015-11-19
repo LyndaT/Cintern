@@ -1,9 +1,5 @@
 var Application = require('../models/application.js');
 
-exports.getApplication = function(req, res, next) {
-
-};
-
 exports.withdrawApplication = function(req, res, next) {
 
 };
