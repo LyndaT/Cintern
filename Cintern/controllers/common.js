@@ -21,13 +21,13 @@ var utils = require('../utils/utils');
  *	- err: on failure (i.e. server fail, invalid submission)
  */ 
 exports.submitCommonApplication = function(req, res, next) {
-	var currentUser = req.session.user);
+	var currentUser = req.session.user;
 	if (currentUser) {
 		console.log("relies on common req.session.submittedCommon");
 		// check that the current user is a student and has not submitted a common
 		if (currentUser.isStudent && !currentUser.submittedCommon) {
 			var currentUserId = currentUser.userId;
-			var answers = req..body.answers;
+			var answers = req.body.answers;
 			// submit the common
 			Common.submitCommon(currentUserId, answers, function(errMsg, success) {
 				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
