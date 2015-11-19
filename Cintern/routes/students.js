@@ -53,7 +53,7 @@ router.get('/listings', listing.getAllListings);
 router.get('/listings/employer/:employerid', listing.getEmployerListings);
 
 /* GET listing */
-router.get('/listings/:lstgid', listings.getListing);
+router.get('/listings/:lstgid', listing.getListing);
 
 /* GET all applications */
 router.get('/applications', custom.getStudentApplications);
