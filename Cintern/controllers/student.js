@@ -28,7 +28,9 @@ module.exports.createStudent = function(req, res, next){
 		} else {
 			var currUser = {
 				userId: student.user,
-				isStudent: true,
+				studentInfo : {
+					commonFilled : student.commonFilled,
+				}
 			};
 			req.session.user = currUser;
 			utils.sendSuccessResponse(res);

@@ -22,8 +22,8 @@ var utils = require('../utils/utils');
  */ 
 exports.submitCommonApplication = function(req, res, next) {
 	var currentUser = req.session.user;
-	console.log("relies on common req.session.submittedCommon");
-	if (!currentUser.submittedCommon) {
+	//console.log("relies on common req.session.submittedCommon");
+	if (!currentUser.studentInfo.commonFilled) {
 		var currentUserId = currentUser.userId;
 		var answers = req.body.answers;
 		// submit the common

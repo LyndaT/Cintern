@@ -100,7 +100,7 @@ exports.getAllListings = function(req, res) {
  */
 exports.getEmployerListings = function(req, res) {
 	/*var currentUser = req.session.user;
-	if(currentUser.isStudent) {
+	if(currentUser.studentInfo) {
 		var employerId = req.body.employerId;
 	} 
 	else {
