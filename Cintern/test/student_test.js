@@ -32,15 +32,15 @@ describe('Student', function() {
    			Student.find({}, function(err, students){
    				assert.equal(1, students.length);
    				assert.equal(false, students[0].commonFilled);
-   			    id = students[0].user;
+ 			    id = students[0].user;
    			    
-   			    User.findOne({email: 'jenn'}, function(err, user){
-   				assert.equal(id, user._id.toString());
-   				assert.equal('jenn', user.email);
-   				assert.equal('jennpw', user.password);
-   				assert.equal(true, user.isStudent);
-   				done();
-   			});
+ 			    User.findOne({email: 'jenn'}, function(err, user){
+     				assert.equal(id, user._id.toString());
+     				assert.equal('jenn', user.email);
+     				assert.equal('jennpw', user.password);
+     				assert.equal(true, user.isStudent);
+     				done();
+     			});
    			});
    		});
    	});
@@ -50,18 +50,18 @@ describe('Student', function() {
    			Student.find({}, function(err, students){
    				assert.equal(1, students.length);
    				assert.equal(false, students[0].commonFilled);
-   			    id = students[0].user;
+ 			    id = students[0].user;
    			    
-   			    User.findOne({email:'hee'}, function(err, user){
-   				assert.equal('hee', user.email);
-   				assert.equal('yoon', user.password);
-   				assert.equal(true, user.isStudent);
-   				
-   				Student.createStudent('hee', 'yoon', function(errMsg, res){
-   				assert(errMsg);
-   				done();
-   			});
-   			});
+ 			    User.findOne({email:'hee'}, function(err, user){
+     				assert.equal('hee', user.email);
+     				assert.equal('yoon', user.password);
+     				assert.equal(true, user.isStudent);
+     				
+     				Student.createStudent('hee', 'yoon', function(errMsg, res){
+       				assert(errMsg);
+       				done();
+       			});
+   			  });
    			});
    		});
    	});

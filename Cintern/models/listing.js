@@ -38,7 +38,7 @@ listingSchema.statics.createListing = function(currEmployerId, title, desc, reqs
 	      if (err) {
 	        callback(err.message);
 	      } else {
-	        callback(null);
+	        callback(null, listing);
 	      }
     });
 };

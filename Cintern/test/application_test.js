@@ -1,4 +1,6 @@
 /**
+ * @author Jennifer Wu
+ *
  * Test file for the application model
  */
 var assert = require("assert");
@@ -451,9 +453,9 @@ describe('Application', function() {
         Application.find({}, function(err, apps) {
           assert.equal(1, apps.length);
           var answers = [{ "_id" : apps[0].questions[0]._id, "answer" : "a" }];
-          Application.updateAnswers(apps[0]._id, answers, false, function(e, app) {
+          Application.updateAnswers(apps[0]._id, answers, false, function(e, app2) {
             assert.equal(true, e === null);
-            assert.equal("a", app.questions[0].answer);
+            assert.equal("a", app2.questions[0].answer);
             done();
           });
         });

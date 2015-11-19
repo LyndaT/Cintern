@@ -29,11 +29,11 @@ describe('User', function() {
       	assert.equal(false, user.isStudent);
       	
       	User.addUser('test2', 'test2pw', true, function(err, user){
-      	assert.equal('test2', user.email);
-      	assert.equal('test2pw', user.password);
-      	assert.equal(true, user.isStudent);
-      	done();
-      });
+        	assert.equal('test2', user.email);
+        	assert.equal('test2pw', user.password);
+        	assert.equal(true, user.isStudent);
+        	done();
+        });
       });     
     });
     
@@ -62,7 +62,7 @@ describe('User', function() {
     });   
   });
   
-  describe('loginUser', function(){
+  describe('#loginUser', function(){
   	it('should login the right user with the correct email/password', function(done){
   		User.addUser('test', 'testpw', false, function(err, user){
   			User.loginUser('test', 'testpw', function(err, res){

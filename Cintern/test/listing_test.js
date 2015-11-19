@@ -26,18 +26,18 @@ var _ = require("../helpers/lodash");
  *   (3) listing ID is not an ObjectId
  */
 
- EMPLOYER = {
+var EMPLOYER = {
   email: "abc@google.com",
   password: "pword",
   companyName: "Google"
 };
 
-LISTING1 = {
+var LISTING1 = {
  	title: "hello",
  	description: "world"
 };
 
-LISTING2 = {
+var LISTING2 = {
  	title: "meow"
 };
 

@@ -1,3 +1,8 @@
+/**
+ * @author Jennifer Wu
+ *
+ * Application model
+ */
 var mongoose = require("mongoose");
 var _ = require("../helpers/lodash");
 
@@ -31,7 +36,7 @@ applicationSchema.pre("save", function(next) {
 	// check that all answers are correctly formatted
 	if(!verifyAnsweredQuestionsCorrectly(this.questions)) next(new Error("answer is wrongly formatted"));
 	
-	next();
+	next(null, this);
 });
 
 /**
@@ -188,12 +193,12 @@ var verifyForUpdate = function(origQuestions, answers) {
 			"required" : question.required,
 			"type" : question.type,
 			"options" : question.options,
-			"answer" : (question2.answer === '') ? undefined : question.answer
+			"answer" : (question2.answer === '') ? undefined : question2.answer
 		});
 	});
 
 	// if format matches for origQuestions and answers, check that each question is answered correctly
-	if (verified) return verifyAnsweredQuestionsCorrectly(answers)
+	if (verified) return verifyAnsweredQuestionsCorrectly(verifyAnswers)
 	else return verified;	
 };
 
