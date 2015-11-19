@@ -34,11 +34,11 @@ listingSchema.statics.createListing = function(currEmployerId, title, desc, reqs
 		description: desc,
 		requirements: reqs,
 		deadline: deadline
-	}, function(err, user) {
+	}, function(err, listing) {
 	      if (err) {
 	        callback(err.message);
 	      } else {
-	        callback(null);
+	        callback(null, listing);
 	      }
     });
 };
@@ -50,7 +50,7 @@ listingSchema.statics.createListing = function(currEmployerId, title, desc, reqs
  * @param {Function} callback(err, listing) 
  */
 listingSchema.statics.deleteListing = function(listingId, callback) {
-	Listing.remove({_id: listingId}, function(err, user) {
+	Listing.remove({_id: listingId}, function(err, listing) {
       if (err) {
         callback(err.message);
       } else {
