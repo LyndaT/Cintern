@@ -1,7 +1,7 @@
 /**
  * @author Jennifer Wu
  *
- * Model file for the custom model
+ * Application model
  */
 var mongoose = require("mongoose");
 var _ = require("../helpers/lodash");
