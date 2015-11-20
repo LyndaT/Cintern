@@ -43,8 +43,8 @@ router.param('lstgid', function(req, res, next, listingId) {
 /**
  * Add a given application ID to the request body
  */
-router.param('appid', function(req, res, next, applicationId) {
-  req.body.applicationId = applicationId;
+router.param('customid', function(req, res, next, customId) {
+  req.body.customId = customId;
   next();
 });
 
@@ -82,15 +82,15 @@ router.post('/applications/common', common.submitCommonApplication);
 //router.get('/applications/common', common.submitCommonApplication);
 
 /* POST submit custom application */
-router.post('/applications/custom/:appid', custom.submitCustomApplication);
+router.post('/applications/custom/:customid', custom.submitCustomApplication);
 
 /* POST application update */
-// router.post('/applications/updates/:appid', custom.updateApplication);
+// router.post('/applications/updates/:customid', custom.updateApplication);
 
 /* POST application withdrawal */
-// router.post('/applications/withdrawal/:appid', custom.withdrawApplication);
+// router.post('/applications/withdrawal/:customid', custom.withdrawApplication);
 
 /* DELETE application */
-// router.delete('/applications/:appid', custom.deleteApplication);
+// router.delete('/applications/:customid', custom.deleteApplication);
 
 module.exports = router;
