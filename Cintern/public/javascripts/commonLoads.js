@@ -21,7 +21,7 @@ var loadHomePage = function() {
 			questions : response.content.application.questions, 
 			appId : response.content._id, 
 			isCommon : true,
-			isSubmitted : true,
+			isSubmitted : false,
 		});
 	});
 };

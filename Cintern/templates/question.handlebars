@@ -5,6 +5,10 @@
 			disabled 
 		{{else}}
 		{{/if}}
+		{{#if required}}
+			required
+		{{else}}
+		{{/if}}
 		class="form-control" type="text" value="{{answer}}" name="{{_id}}" 
 	/>
 </div>
