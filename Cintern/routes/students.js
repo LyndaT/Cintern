@@ -46,6 +46,7 @@ router.param('appid', function(req, res, next, applicationId) {
   next();
 });
 
+
 /* GET all listings */
 router.get('/listings', listing.getAllListings);
 
