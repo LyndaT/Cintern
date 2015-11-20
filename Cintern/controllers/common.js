@@ -25,7 +25,7 @@ exports.submitCommonApplication = function(req, res, next) {
 	//console.log("relies on common req.session.submittedCommon");
 	if (!currentUser.studentInfo.commonFilled) {
 		var currentUserId = currentUser.userId;
-		var answers = req.body;
+		var answers = req.body.answers;
 
 		// format answers for model call
 		var answerArray = [];

@@ -176,7 +176,10 @@ exports.saveCustomApplication = function(req, res, next) {
  *	- err: on failure (i.e. server fail, invalid submission, invalid custom)
  */ 
 exports.submitCustomApplication = function(req, res, next) {
-	var answers = req.body;
+	var userId = req.session.user.userId;
+	var customId = req.body.customId;
+
+	var answers = req.body.answers;
 	// format answers for model call
 	var answerArray = [];
 	Object.keys(answers).forEach(function(id) {
@@ -185,9 +188,6 @@ exports.submitCustomApplication = function(req, res, next) {
           "answer" : answers[id]
         });
     });
-
-	var userId = req.session.user.userId;
-	var customId = req.body.customId;
 
 	Custom.update(customId, answerArray, true, function(errMsg, custom) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
