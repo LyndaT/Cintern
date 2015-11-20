@@ -1,0 +1,16 @@
+<form id="submit-app-form" data-app-id="{{appId}}" data-is-common="{{isCommon}}">
+	{{#each questions}}
+		<div class="form-group">
+			{{> question this}}
+		</div>
+	{{else}}
+		<p>No Questions!</p>
+	{{/each}}
+	<div class="form-group">
+        {{#if isCommon}}
+        {{else}}
+        	<button type="submit" id="save-app-btn" class="btn btn-primary" id="saveButton">Save</button>
+        {{/if}}
+        <button type="submit" id="submit-app-btn" class="btn btn-primary" id="submitButton">Submit</button>
+    </div>
+</form>

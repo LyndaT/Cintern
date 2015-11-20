@@ -33,8 +33,8 @@ router.param('lstgid', function(req, res, next, listingId) {
 /**
  * Add a given application ID to the request body
  */
-router.param('appid', function(req, res, next, applicationId) {
-  req.body.applicationId = applicationId;
+router.param('customid', function(req, res, next, customId) {
+  req.body.customId = customId;
   next();
 });
 
@@ -51,12 +51,12 @@ router.get('/listings', listing.createListing);
 router.get('/applications/listings/:lstgid', custom.getApplicants);
 
 /* POST starred application */
-// router.post('/applications/starred/:appid', custom.starApplication);
+// router.post('/applications/starred/:customid', custom.starApplication);
 
 /* POST unstarred application */
-// router.post('/applications/unstarred/:appid', custom.unstarApplication);
+// router.post('/applications/unstarred/:customid', custom.unstarApplication);
 
 /* POST rejected application */
-// router.post('/applications/rejected/:appid', custom.rejectApplication);
+// router.post('/applications/rejected/:customid', custom.rejectApplication);
 
 module.exports = router;

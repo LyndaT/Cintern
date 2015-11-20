@@ -25,9 +25,19 @@ exports.submitCommonApplication = function(req, res, next) {
 	//console.log("relies on common req.session.submittedCommon");
 	if (!currentUser.studentInfo.commonFilled) {
 		var currentUserId = currentUser.userId;
-		var answers = req.body.answers;
+		var answers = req.body;
+
+		// format answers for model call
+		var answerArray = [];
+		Object.keys(answers).forEach(function(id) {
+	        answerArray.push({
+	          "_id" : id,
+	          "answer" : answers[id]
+	        });
+	    });
+
 		// submit the common
-		Common.submitCommon(currentUserId, answers, function(errMsg, success) {
+		Common.submitCommon(currentUserId, answerArray, function(errMsg, success) {
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 			else if (!success) utils.sendErrResponse(res, 403, "Could not submit");
 			else {
@@ -36,7 +46,7 @@ exports.submitCommonApplication = function(req, res, next) {
 					if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 					else if (!student) utils.sendErrResponse(res, 403, "Invalid student");
 					else {
-						req.session.user.submittedCommon = true;
+						req.session.user.studentInfo.commonFilled = true;
 						utils.sendSuccessResponse(res);
 					}
 				});
