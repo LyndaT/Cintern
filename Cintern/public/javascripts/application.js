@@ -4,7 +4,6 @@
 
   $(document).on('submit', '#submit-app-form', function(evt) {
       console.log("submitted application");
-      console.log()
       evt.preventDefault();
       var formData = helpers.getFormData('#submit-app-form');
       var appId = $('#submit-app-form').data('app-id');

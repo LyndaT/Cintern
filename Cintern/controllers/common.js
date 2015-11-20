@@ -36,6 +36,8 @@ exports.submitCommonApplication = function(req, res, next) {
 	        });
 	    });
 
+	    console.log(answers);
+
 		// submit the common
 		Common.submitCommon(currentUserId, answerArray, function(errMsg, success) {
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
