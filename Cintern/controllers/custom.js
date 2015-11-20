@@ -176,11 +176,20 @@ exports.saveCustomApplication = function(req, res, next) {
  *	- err: on failure (i.e. server fail, invalid submission, invalid application)
  */ 
 exports.submitCustomApplication = function(req, res, next) {
-	var answers = req.body.answers;
+	var answers = req.body;
+	// format answers for model call
+	var answerArray = [];
+	Object.keys(answers).forEach(function(id) {
+        answerArray.push({
+          "_id" : id,
+          "answer" : answers[id]
+        });
+    });
+
 	var userId = currentUser.userId;
 	var appId = req.body.applicationId;
 
-	Custom.update(appId, answers, true, function(errMsg, custom) {
+	Custom.update(appId, answerArray, true, function(errMsg, custom) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 		else if (!custom) utils.sendErrResponse(res, 403, "Could not submit application");
 		else {

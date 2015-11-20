@@ -48,7 +48,12 @@ router.param('appid', function(req, res, next, applicationId) {
 });
 
 router.get('/', function(req, res) {
-  res.render('s-dash', { title: 'Cintern' });
+  console.log("redirecting /students");
+  if (req.session.user.studentInfo.commonFilled) {
+    res.render('s-dash', { title: 'Cintern' });    
+  } else {
+    res.render('common', { user : req.session.user.userId });
+  }
 })
 
 /* GET all listings */
@@ -71,6 +76,9 @@ router.post('/applications/custom/saved/:lstgid', custom.saveCustomApplication);
 
 /* POST submit common application */
 router.post('/applications/common', common.submitCommonApplication);
+
+/* GET submit common application */
+//router.get('/applications/common', common.submitCommonApplication);
 
 /* POST submit custom application */
 router.post('/applications/custom/:appid', custom.submitCustomApplication);

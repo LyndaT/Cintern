@@ -1,0 +1,12 @@
+<form id="submit-app-form" data-app-id={{appId}}>
+	{{#each questions}}
+		<div class="form-group">
+			{{> question this}}
+		</div>
+	{{else}}
+		<p>No Questions!</p>
+	{{/each}}
+	<div class="form-group">
+	 	<input class="btn btn-primary" type="submit" />
+	</div>
+</form>
