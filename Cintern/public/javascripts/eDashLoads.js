@@ -17,7 +17,8 @@ var loadPage = function(template, data) {
  * This function loads the home page Handlebar template
  */
 var loadHomePage = function() {
-	loadListings();
+	createFakeListings();
+	//loadListings();
 };
 
 /**
@@ -26,6 +27,28 @@ var loadHomePage = function() {
 var loadListings = function() {
 	$.get('/employers/listings', function(response) {
 		loadPage('e_dash_page', { listings: response.content.listings });
+	});
+};
+
+/**
+ * FOR UI TESTING PURPOSES ONLY
+ * DELETE THIS LATER
+ * FOR UI TESTING PURPOSES ONLY
+ * DELETE THIS LATER
+ */
+var createFakeListings = function() {
+	$.post(
+		'/employers/listings',
+		{ 
+			title: "Hello",
+			description: "world",
+			requirements: "",
+			questions: []
+		}
+	).done(function(response) {
+		loadListings();
+	}).fail(function(response) {
+		console.log("ERROR :(");
 	});
 };
 

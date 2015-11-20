@@ -30,6 +30,39 @@ var loadApps = function() {
 	});
 };
 
+/**
+ * FOR UI TESTING PURPOSES ONLY
+ * DELETE THIS LATER
+ * FOR UI TESTING PURPOSES ONLY
+ * DELETE THIS LATER
+ */
+var createFakeApps = function() {
+	$.get('/students/listings', function(response) {
+		listingId = response.content.listings[0]._id;
+
+		$.post(
+			'/students/applications/custom/saved/' + listingId
+		).done(function(response) {
+			$.get('/students/applications', function(response) {
+				customId = response.content.applications[0]._id;
+
+				$.post(
+					'/students/applications/custom/' + customId,
+					{
+						answers: []
+					}
+				).done(function(response) {
+					loadApps();
+				}).fail(function(response) {
+					console.log("ERROR :(");
+				});
+			});
+		}).fail(function(response) {
+			console.log("ERROR :(");
+		});
+	});
+};
+
 // load the home page
 $(document).ready(function() {
 	loadHomePage();

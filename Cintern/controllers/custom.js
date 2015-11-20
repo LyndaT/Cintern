@@ -176,7 +176,7 @@ exports.saveCustomApplication = function(req, res, next) {
  *	- err: on failure (i.e. server fail, invalid submission, invalid custom)
  */ 
 exports.submitCustomApplication = function(req, res, next) {
-	var answers = req.body;
+	var answers = req.body.answers;
 	// format answers for model call
 	var answerArray = [];
 	Object.keys(answers).forEach(function(id) {

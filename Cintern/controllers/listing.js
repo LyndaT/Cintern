@@ -40,7 +40,7 @@ var Listing = require('../models/listing.js');
 exports.createListing = function(req, res, next) {
 	var currentUser = req.session.user;
 
-	var employerId = req.body.employerId;
+	var employerId = req.session.user.userId;
 	var title = req.body.title;
 	var desc = req.body.description;
 	var reqs = req.body.requirements;
