@@ -1,32 +1,5 @@
 (function() {
   var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};
-<<<<<<< HEAD
-templates['e_applicants'] = template({"1":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return ((stack1 = container.invokePartial(partials.applicant,depth0,{"name":"applicant","data":data,"indent":"      ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
-},"3":function(container,depth0,helpers,partials,data) {
-    return "      <p><em>No applicants have applied yet.</em></p>\n";
-},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1, helper, alias1=container.escapeExpression, alias2=depth0 != null ? depth0 : {};
-
-  return "<div id=\"e_applicants\">\n  <h1>Applicants</h1>\n    <p>Currently "
-    + alias1(container.lambda(((stack1 = (depth0 != null ? depth0.applicants : depth0)) != null ? stack1.length : stack1), depth0))
-    + " students have applied to this listing</p>\n  <br>\n\n\n  <table style=\"width:90%\">\n  "
-    + alias1(((helper = (helper = helpers.applicants || (depth0 != null ? depth0.applicants : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias2,{"name":"applicants","hash":{},"data":data}) : helper)))
-    + "\n    <tr>\n      <th>Email</th>\n      <th>Status</th>\n    </tr>\n\n"
-    + ((stack1 = helpers.each.call(alias2,(depth0 != null ? depth0.applicants : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
-    + "\n  </table>\n</div>\n";
-},"usePartial":true,"useData":true});
-templates['e_applicants_row'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
-
-  return "<div id=\"e_applicants_row\">\n  <table style=\"width:90%\">\n    <tr>\n      <td>"
-    + alias4(((helper = (helper = helpers.owner || (depth0 != null ? depth0.owner : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"owner","hash":{},"data":data}) : helper)))
-    + "</td>\n      <td>"
-    + alias4(((helper = (helper = helpers.state || (depth0 != null ? depth0.state : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"state","hash":{},"data":data}) : helper)))
-    + "</td>\n    </tr>\n</div>\n";
-=======
 templates['application'] = template({"1":function(container,depth0,helpers,partials,data) {
     var stack1;
 
@@ -52,6 +25,32 @@ templates['application'] = template({"1":function(container,depth0,helpers,parti
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isCommon : depth0),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + "        <button type=\"submit\" id=\"submit-app-btn\" class=\"btn btn-primary\" id=\"submitButton\">Submit</button>\n    </div>\n</form>";
 },"usePartial":true,"useData":true});
+templates['e_applicants'] = template({"1":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = container.invokePartial(partials.applicant,depth0,{"name":"applicant","data":data,"indent":"      ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
+},"3":function(container,depth0,helpers,partials,data) {
+    return "      <p><em>No applicants have applied yet.</em></p>\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=container.escapeExpression, alias2=depth0 != null ? depth0 : {};
+
+  return "<div id=\"e_applicants\">\n  <h1>Applicants</h1>\n    <p>Currently "
+    + alias1(container.lambda(((stack1 = (depth0 != null ? depth0.applicants : depth0)) != null ? stack1.length : stack1), depth0))
+    + " students have applied to this listing</p>\n  <br>\n\n\n  <table style=\"width:90%\">\n  "
+    + alias1(((helper = (helper = helpers.applicants || (depth0 != null ? depth0.applicants : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias2,{"name":"applicants","hash":{},"data":data}) : helper)))
+    + "\n    <tr>\n      <th>Email</th>\n      <th>Status</th>\n    </tr>\n\n"
+    + ((stack1 = helpers.each.call(alias2,(depth0 != null ? depth0.applicants : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
+    + "\n  </table>\n</div>\n";
+},"usePartial":true,"useData":true});
+templates['e_applicants_row'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "<div id=\"e_applicants_row\">\n  <table style=\"width:90%\">\n    <tr>\n      <td>"
+    + alias4(((helper = (helper = helpers.owner || (depth0 != null ? depth0.owner : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"owner","hash":{},"data":data}) : helper)))
+    + "</td>\n      <td>"
+    + alias4(((helper = (helper = helpers.state || (depth0 != null ? depth0.state : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"state","hash":{},"data":data}) : helper)))
+    + "</td>\n    </tr>\n</div>\n";
+},"useData":true});
 templates['e_dash_page'] = template({"1":function(container,depth0,helpers,partials,data,blockParams) {
     var stack1;
 
@@ -88,7 +87,6 @@ templates['e_signup'] = template({"1":function(container,depth0,helpers,partials
   return "<div id=\"e-signup\">\n  <a href=\"#\" id=\"home-link\">Back to Home</a>\n  <h1>Employer Sign Up</h1>\n  <br>\n  <div class=\"error\">\n"
     + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.error : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + "  </div>\n  <form id=\"e-signup-form\" class=\"form-horizontal\">\n    <div class=\"form-group\">\n      <label class=\"control-label col-xs-2\">Email:</label>\n      <div class=\"col-xs-6\">\n        <input class=\"form-control\" type=\"text\" name=\"email\" required placeholder=\"Email\"/>\n      </div>\n    </div>\n    <div class = \"form-group\">\n      <label class=\"control-label col-xs-2\">Company:</label>\n      <div class=\"col-xs-6\">\n        <input class=\"form-control\" type=\"text\" name=\"company\" required placeholder=\"Company\"/>\n      </div>\n    </div>\n    <div class = \"form-group\">\n      <label class=\"control-label col-xs-2\">Password:</label>\n      <div class=\"col-xs-6\">\n        <input class=\"form-control\" type=\"password\" name=\"password\" required placeholder=\"Password\"/>\n      </div>\n    </div>\n    <div class = \"form-group\">\n      <label class=\"control-label col-xs-2\">Confirm Password:</label>\n      <div class=\"col-xs-6\">\n        <input class=\"form-control\" type=\"password\" name=\"confirm\" required placeholder=\"Password\"/>\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <div class=\"col-xs-offset-2 col-xs-6\">\n        <input class=\"btn btn-primary\" type=\"submit\" />\n      </div>\n    </div> \n  </form>\n</div>\n";
->>>>>>> b6f78026054d8c59997a2291dc7266755ed2a6f8
 },"useData":true});
 templates['index'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     return "<div id=\"homepage\">\n  <h1>Cintern!</h1>\n  <p>You must be signed in to continue.</p>\n  <br>\n  <button class=\"btn btn-primary\" id=\"login-btn\">Login</button>\n  <button class=\"btn btn-primary\" id=\"s-signup-btn\">Sign Up as Student</button>\n  <button class=\"btn btn-primary\" id=\"e-signup-btn\">Sign Up as Employer</button>\n</div>\n";
@@ -143,21 +141,6 @@ templates['s_dash_page_app'] = template({"compiler":[7,">= 4.0.0"],"main":functi
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.app : depth0)) != null ? stack1.status : stack1), depth0))
     + "</td>\n  </tr>\n</div>";
 },"useData":true});
-templates['s_signup'] = template({"1":function(container,depth0,helpers,partials,data) {
-    var helper;
-
-  return "      "
-    + container.escapeExpression(((helper = (helper = helpers.error || (depth0 != null ? depth0.error : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"error","hash":{},"data":data}) : helper)))
-    + "\n";
-},"3":function(container,depth0,helpers,partials,data) {
-    return "      <br>\n";
-},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return "<div id=\"s-signup\">\n  <a href=\"#\" id=\"home-link\">Back to Home</a>\n  <h1>Student Sign Up</h1>\n  <br>\n  <div class=\"error\">\n"
-    + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.error : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
-    + "  </div>\n  <form id=\"s-signup-form\" class=\"form-horizontal\">\n    <div class=\"form-group\">\n      <label class=\"control-label col-xs-2\">Email:</label>\n      <div class=\"col-xs-6\">\n        <input class=\"form-control\" type=\"text\" name=\"email\" required placeholder=\"Email\"/>\n      </div>\n    </div>\n    <div class = \"form-group\">\n      <label class=\"control-label col-xs-2\">Password:</label>\n      <div class=\"col-xs-6\">\n        <input class=\"form-control\" type=\"password\" name=\"password\" required placeholder=\"Password\"/>\n      </div>\n    </div>\n    <div class = \"form-group\">\n      <label class=\"control-label col-xs-2\">Confirm Password:</label>\n      <div class=\"col-xs-6\">\n        <input class=\"form-control\" type=\"password\" name=\"confirm\" required placeholder=\"Password\"/>\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <div class=\"col-xs-offset-2 col-xs-6\">\n        <input class=\"btn btn-primary\" type=\"submit\" />\n      </div>\n    </div> \n  </form>\n</div>\n";
-},"useData":true});
 templates['s_listing_row'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=container.escapeExpression, alias2=depth0 != null ? depth0 : {}, alias3=helpers.helperMissing, alias4="function";
 
@@ -182,4 +165,19 @@ templates['s_listings'] = template({"1":function(container,depth0,helpers,partia
     + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.listings : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + "\n  </table>\n</div>\n";
 },"usePartial":true,"useData":true});
+templates['s_signup'] = template({"1":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return "      "
+    + container.escapeExpression(((helper = (helper = helpers.error || (depth0 != null ? depth0.error : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"error","hash":{},"data":data}) : helper)))
+    + "\n";
+},"3":function(container,depth0,helpers,partials,data) {
+    return "      <br>\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "<div id=\"s-signup\">\n  <a href=\"#\" id=\"home-link\">Back to Home</a>\n  <h1>Student Sign Up</h1>\n  <br>\n  <div class=\"error\">\n"
+    + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.error : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
+    + "  </div>\n  <form id=\"s-signup-form\" class=\"form-horizontal\">\n    <div class=\"form-group\">\n      <label class=\"control-label col-xs-2\">Email:</label>\n      <div class=\"col-xs-6\">\n        <input class=\"form-control\" type=\"text\" name=\"email\" required placeholder=\"Email\"/>\n      </div>\n    </div>\n    <div class = \"form-group\">\n      <label class=\"control-label col-xs-2\">Password:</label>\n      <div class=\"col-xs-6\">\n        <input class=\"form-control\" type=\"password\" name=\"password\" required placeholder=\"Password\"/>\n      </div>\n    </div>\n    <div class = \"form-group\">\n      <label class=\"control-label col-xs-2\">Confirm Password:</label>\n      <div class=\"col-xs-6\">\n        <input class=\"form-control\" type=\"password\" name=\"confirm\" required placeholder=\"Password\"/>\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <div class=\"col-xs-offset-2 col-xs-6\">\n        <input class=\"btn btn-primary\" type=\"submit\" />\n      </div>\n    </div> \n  </form>\n</div>\n";
+},"useData":true});
 })();
