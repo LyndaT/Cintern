@@ -1,0 +1,18 @@
+<div id="employer-dash">
+  <h1>Welcome {{currentUser}}!</h1>
+  Here are your listings:
+
+  <table>
+    <tr>
+  	  <td><b>Title</b></td>
+  	</tr>
+  	
+    {{#each listings as |l|}}
+      {{> e_dash_page_listing listing=l}}
+    {{else}}
+      <tr>
+      	<td>No listings yet!</td>
+      </tr>
+    {{/each}}
+  </table>
+</div>
