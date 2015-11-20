@@ -26,7 +26,7 @@ var loadHomePage = function() {
  */
 var loadApps = function() {
 	$.get('/students/applications', function(response) {
-		loadPage('s_dash_page', { apps: response.content.applications, currentUser: currentUser });
+		loadPage('s_dash_page', { apps: response.content.applications });
 	});
 };
 

@@ -25,7 +25,7 @@ var loadHomePage = function() {
  */
 var loadListings = function() {
 	$.get('/employers/listings', function(response) {
-		loadPage('e_dash_page', { listings: response.content.listings, currentUser: currentUser });
+		loadPage('e_dash_page', { listings: response.content.listings });
 	});
 };
 
