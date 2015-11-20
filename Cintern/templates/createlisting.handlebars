@@ -1,3 +1,21 @@
-<div id="create-listing">
+<form id="create-listing">
+	Create a listing here!
 	
-</div>
+	<br>
+	Position Title: <input type="text" name="listingposition">
+	
+	<div id = "add-description">
+		Description
+		<br>
+		<textarea rows="8" cols="50" name="description" form="listingform">
+Enter description here...</textarea>
+	</div>
+	<br>
+	<div id = "questions">
+		Questions:
+		<div id = "question-list"></div>
+		<button class="btn btn-primary" id="add-question">Add Question</button>
+	</div>
+	<br>
+	<button type="submit" id="submit-listing-btn" class="btn btn-primary" id="submitButton">Submit</button>
+</form>

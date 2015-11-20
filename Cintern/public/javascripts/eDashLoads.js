@@ -9,7 +9,6 @@ Handlebars.registerPartial('e_dash_page_listing', Handlebars.templates['e_dash_p
  */
 var loadPage = function(template, data) {
 	data = data || {};
-	console.log(Handlebars.templates[template](data));
 	$('#e-dash-main-container').html(Handlebars.templates[template](data));
 };
 
@@ -32,4 +31,8 @@ var loadListings = function() {
 // load the home page
 $(document).ready(function() {
 	loadHomePage();
+});
+
+$(document).on('click', '#new-listing-btn', function(evt) {
+	loadPage('createlisting');
 });

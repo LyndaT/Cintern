@@ -7,6 +7,11 @@
   	  <td><b>Title</b></td>
   	</tr>
   	
+  	<br>
+  	<button class="btn btn-primary" id="new-listing-btn">Create New Listing</button>
+  
+  	<br>
+  	<br>
     {{#each listings as |l|}}
       {{> e_dash_page_listing listing=l}}
     {{else}}
