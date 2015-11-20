@@ -19,7 +19,7 @@ var utils = require('../utils/utils');
  */ 
 exports.getApplicants = function(req, res, next) {
 	// possibly useful later to check if the userId owns the listingId
-	var userId = currentUser.userId;
+	var userId = req.session.user.userId;
 	var listingId = req.body.listingId;
 
 	Custom.getCustomsForListingDash(listingId, function(errMsg, customs) {
@@ -90,11 +90,11 @@ exports.getApplicants = function(req, res, next) {
  *	- err: on failure (i.e. server fail)
  */
 exports.getStudentApplications = function(req, res, next) {
-	var userId = currentUser.userId;
+	var userId = req.session.user.userId;
 
 	Custom.getCustomsForStudentDash(userId, function(errMsg, customs) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!apps) utils.sendErrResponse(res, 403, "Could not get applications");
+		else if (!customs) utils.sendErrResponse(res, 403, "Could not get applications");
 		else {
 			var content = {
 				applications : customs,
@@ -149,7 +149,7 @@ exports.getListingTemplate = function(req, res, next) {
  *	- err: on failure (i.e. server fail, invalid submission, invalid application)
  */ 
 exports.saveCustomApplication = function(req, res, next) {
-	var userId = currentUser.userId;
+	var userId = req.session.user.userId;
 	var listingId = req.body.listingId;
 
 	Custom.copyTemplateToSave(listingId, userId, function(errMsg, custom) {
@@ -176,20 +176,11 @@ exports.saveCustomApplication = function(req, res, next) {
  *	- err: on failure (i.e. server fail, invalid submission, invalid application)
  */ 
 exports.submitCustomApplication = function(req, res, next) {
-	var answers = req.body;
-	// format answers for model call
-	var answerArray = [];
-	Object.keys(answers).forEach(function(id) {
-        answerArray.push({
-          "_id" : id,
-          "answer" : answers[id]
-        });
-    });
-
-	var userId = currentUser.userId;
+	var answers = req.body.answers;
+	var userId = req.session.user.userId;
 	var appId = req.body.applicationId;
 
-	Custom.update(appId, answerArray, true, function(errMsg, custom) {
+	Custom.update(appId, answers, true, function(errMsg, custom) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 		else if (!custom) utils.sendErrResponse(res, 403, "Could not submit application");
 		else {

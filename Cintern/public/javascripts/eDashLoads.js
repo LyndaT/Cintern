@@ -1,5 +1,4 @@
-Handlebars.registerPartial('s_dash_page_app', Handlebars.templates['s_dash_page_app']);
-
+Handlebars.registerPartial('e_dash_page_listing', Handlebars.templates['e_dash_page_listing']);
 
 /**
  * This function loads the Handlebar template called template initialized
@@ -11,22 +10,22 @@ Handlebars.registerPartial('s_dash_page_app', Handlebars.templates['s_dash_page_
 var loadPage = function(template, data) {
 	data = data || {};
 	console.log(Handlebars.templates[template](data));
-	$('#s-dash-main-container').html(Handlebars.templates[template](data));
+	$('#e-dash-main-container').html(Handlebars.templates[template](data));
 };
 
 /**
  * This function loads the home page Handlebar template
  */
 var loadHomePage = function() {
-	loadApps();
+	loadListings();
 };
 
 /**
- * Load the user's apps to show on their dash
+ * Load the employer's listings to show on their dash
  */
-var loadApps = function() {
-	$.get('/students/applications', function(response) {
-		loadPage('s_dash_page', { apps: response.content.applications });
+var loadListings = function() {
+	$.get('/employers/listings', function(response) {
+		loadPage('e_dash_page', { listings: response.content.listings });
 	});
 };
 
