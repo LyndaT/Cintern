@@ -1,4 +1,10 @@
 <div class="question">
 	<label class="control-label">{{question}}</label>
-	<input class="form-control" type="text" value="{{answer}}" name="{{_id}}" />
+	<input 
+		{{#if isSubmitted}}
+			disabled 
+		{{else}}
+		{{/if}}
+		class="form-control" type="text" value="{{answer}}" name="{{_id}}" 
+	/>
 </div>

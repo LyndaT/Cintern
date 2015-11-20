@@ -1,7 +1,7 @@
 <form id="submit-app-form" data-app-id="{{appId}}" data-is-common="{{isCommon}}">
 	{{#each questions}}
 		<div class="form-group">
-			{{> question this}}
+			{{> question this isSubmitted=../isSubmitted}}
 		</div>
 	{{else}}
 		<p>No Questions!</p>
