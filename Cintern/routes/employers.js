@@ -38,6 +38,11 @@ router.param('customid', function(req, res, next, customId) {
   next();
 });
 
+router.get('/', function(req, res) {
+  console.log("redirecting /employers");
+  res.render('e-dash', { title: 'Cintern' });    
+})
+
 /* GET listings */
 router.get('/listings', listing.getEmployerListings);
 

@@ -32,12 +32,10 @@ templates['e_dash_page'] = template({"1":function(container,depth0,helpers,parti
 },"3":function(container,depth0,helpers,partials,data) {
     return "      <tr>\n      	<td>No listings yet!</td>\n      </tr>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams) {
-    var stack1, helper, alias1=depth0 != null ? depth0 : {};
+    var stack1;
 
-  return "<div id=\"employer-dash\">\n  <h1>Welcome "
-    + container.escapeExpression(((helper = (helper = helpers.currentUser || (depth0 != null ? depth0.currentUser : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"currentUser","hash":{},"data":data,"blockParams":blockParams}) : helper)))
-    + "!</h1>\n  Here are your listings:\n\n  <table>\n    <tr>\n  	  <td><b>Title</b></td>\n  	</tr>\n  	\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.listings : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 1, blockParams),"inverse":container.program(3, data, 0, blockParams),"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+  return "<div id=\"employer-dash\">\n  <h1>Welcome!</h1>\n  Here are your listings:\n\n  <table>\n    <tr>\n  	  <td><b>Title</b></td>\n  	</tr>\n  	\n"
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.listings : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 1, blockParams),"inverse":container.program(3, data, 0, blockParams),"data":data,"blockParams":blockParams})) != null ? stack1 : "")
     + "  </table>\n</div>";
 },"usePartial":true,"useData":true,"useBlockParams":true});
 templates['e_dash_page_listing'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
@@ -98,12 +96,10 @@ templates['s_dash_page'] = template({"1":function(container,depth0,helpers,parti
 },"3":function(container,depth0,helpers,partials,data) {
     return "      <tr>\n      	<td>No applications yet!</td>\n      </tr>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams) {
-    var stack1, helper, alias1=depth0 != null ? depth0 : {};
+    var stack1;
 
-  return "<div id=\"student-dash\">\n  <h1>Welcome "
-    + container.escapeExpression(((helper = (helper = helpers.currentUser || (depth0 != null ? depth0.currentUser : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"currentUser","hash":{},"data":data,"blockParams":blockParams}) : helper)))
-    + "!</h1>\n  Here are your applications:\n  \n  <table>\n  	<tr>\n  	  <td><b>Company</b></td>\n  	  <td><b>Title</b></td>\n  	  <td><b>Status</b></td>\n  	</tr>\n\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.apps : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 1, blockParams),"inverse":container.program(3, data, 0, blockParams),"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+  return "<div id=\"student-dash\">\n  <h1>Welcome!</h1>\n  Here are your applications:\n  \n  <table>\n  	<tr>\n  	  <td><b>Company</b></td>\n  	  <td><b>Title</b></td>\n  	  <td><b>Status</b></td>\n  	</tr>\n\n"
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.apps : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 1, blockParams),"inverse":container.program(3, data, 0, blockParams),"data":data,"blockParams":blockParams})) != null ? stack1 : "")
     + "  </table>\n</div>";
 },"usePartial":true,"useData":true,"useBlockParams":true});
 templates['s_dash_page_app'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
