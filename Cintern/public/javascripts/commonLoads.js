@@ -17,7 +17,11 @@ var loadHomePage = function() {
 	var userId = $('#user-id').data('user');
 	$.get('/users/applications/common/' + userId, function(response) {
 		console.log(response);
-		loadPage('application', {questions : response.content.application.questions});
+		loadPage('application', {
+			questions : response.content.application.questions, 
+			appId : response.content.application._id, 
+			isCommon : true
+		});
 	});
 };
 
