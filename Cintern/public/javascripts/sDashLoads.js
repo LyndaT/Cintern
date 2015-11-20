@@ -7,14 +7,15 @@
  */
 var loadPage = function(template, data) {
 	data = data || {};
-	$('#main-container').html(Handlebars.templates[template](data));
+	console.log(Handlebars.templates[template](data));
+	$('#s-dash-main-container').html(Handlebars.templates[template](data));
 };
 
 /**
  * This function loads the home page Handlebar template
  */
 var loadHomePage = function() {
-	loadPage('index');
+	loadPage('s_dash_page');
 };
 
 // load the home page
@@ -23,7 +24,7 @@ $(document).ready(function() {
 });
 
 // load the sign in page when the signin button is clicked
-$(document).on('click', '#login-btn', function(evt) {
+/*$(document).on('click', '#login-btn', function(evt) {
 	loadPage('login');
 });
 
@@ -39,15 +40,4 @@ $(document).on('click', '#s-signup-btn', function(evt) {
 $(document).on('click', '#home-link', function(evt) {
 	evt.preventDefault();
 	loadHomePage();
-});
-
-// load the sign in page when the signin button is clicked
-/*$(document).on('click', '#signin-btn', function(evt) {
-	loadPage('signin');
-});
-
-// load the registration page when the register button is clicked
-$(document).on('click', '#register-btn', function(evt) {
-	loadPage('register');
 });*/
-

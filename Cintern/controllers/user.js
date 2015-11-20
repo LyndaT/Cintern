@@ -4,6 +4,8 @@
 
 var ObjectID = require('mongodb').ObjectID;
 var User = require('../models/User.js');
+var Student = require('../models/Student.js');
+var Employer = require('../models/Employer.js');
 var utils = require('../utils/utils');
 
 /**

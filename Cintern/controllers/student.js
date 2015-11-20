@@ -24,7 +24,7 @@ module.exports.createStudent = function(req, res, next){
 	var password = req.body.password;
 	Student.createStudent(email, password, function(errMsg, student){
 		if (errMsg){
-			utils.sendErrorResponse(res, 403, errMsg);
+			utils.sendErrResponse(res, 403, errMsg);
 		} else {
 			var currUser = {
 				userId: student.user,

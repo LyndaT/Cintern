@@ -23,6 +23,7 @@ var requireStudent = function(req, res, next) {
 
 router.all('*', requireStudent);
 
+
 /**
  * Add a given employer ID to the request body
  */
@@ -46,6 +47,10 @@ router.param('appid', function(req, res, next, applicationId) {
   req.body.applicationId = applicationId;
   next();
 });
+
+router.get('/', function(req, res) {
+  res.render('s-dash', { title: 'Cintern' });
+})
 
 /* GET all listings */
 router.get('/listings', listing.getAllListings);
