@@ -40,14 +40,3 @@ $(document).on('click', '#home-link', function(evt) {
 	evt.preventDefault();
 	loadHomePage();
 });
-
-// load the sign in page when the signin button is clicked
-/*$(document).on('click', '#signin-btn', function(evt) {
-	loadPage('signin');
-});
-
-// load the registration page when the register button is clicked
-$(document).on('click', '#register-btn', function(evt) {
-	loadPage('register');
-});*/
-

@@ -5,8 +5,9 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
 	if (req.session.user) {
 		if (req.session.user.studentInfo) {
-			console.log("redirecting");
-			res.redirect('/students')
+			res.redirect('/students');
+		} else {
+			res.redirect('/employers');
 		}
 	}
 	else {
