@@ -64,6 +64,20 @@ StudentSchema.statics.setCommonFilled = function(userId, callback){
 	});
 };
 
+/**
+ * Finds the Student associaed with the userId
+ * @param{ObjectId} userId
+ * @param{Function} callback(err, Student)
+ */
+StudentSchema.statics.findByUserId = function(userId, callback) {
+	Student.findOne({ "user" : userId }, function(err, student) {
+		if (err) {
+			callback(err.message);
+		} else {
+			callback(null, student);
+		}
+	});
+}
 
 var Student = mongoose.model('Student', StudentSchema);
 module.exports = mongoose.model("Student", StudentSchema);

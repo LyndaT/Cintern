@@ -54,35 +54,44 @@ customSchema.statics.createTemplate = function(listingId, questions, ownerId, ca
 
 /**
  * Creates a new copy of the custom template associatd with the listingId,
- * where newOwnerId is the owner and the state is set to save and isTemplate is
- * set as False, then runs callback on the new Custom copy
+ * where newOwnerId is the owner so long as there is not already a Custom with 
+ * listing set as listingId and owner set as newOwnerId; the new custom's
+ * state is set to save and isTemplate is set as False, then runs callback on 
+ * the new Custom copy
  *
  * @param{ObjectId} listingId
  * @param{ObjectId} newOwnerId
  * @param{Function} callback(err, Custom)
  */
 customSchema.statics.copyTemplateToSave = function(listingId, newOwnerId, callback) {
-	// get the template Custom associated with the listing
-	Custom.getListingTemplate(listingId, function(errMsg, custom) {
-
-		if (errMsg) callback(errMsg);
-		else if (!custom) callback("No template");
-		// create copy
+	// check that the newOwner does not already have a custom with the associated listing
+	Custom.find({ "owner" : newOwnerId, "listing" : listingId }, function(err, customs) {
+		if (err) callback(err.message);
+		else if (customs.length > 0) callback("Already have a this listing");
 		else {
-			// get questions in the proper format to run createCustom
-			Application.formatForShow(custom.application, function(errMsg, formattedQuestions) {
+			// get the template Custom associated with the listing
+			Custom.getListingTemplate(listingId, function(errMsg, custom) {
+
 				if (errMsg) callback(errMsg);
+				else if (!custom) callback("No template");
+				// create copy
 				else {
-					var formatForCreate = [];
-					formattedQuestions.forEach(function(question) {
-						formatForCreate.push({
-							"question" : question.question,
-							"options" : question.options,
-							"type" : question.type,
-							"required" : question.required,
-						});
-					});
-					createCustom(listingId, formatForCreate, newOwnerId, false, "save", callback);
+					// get questions in the proper format to run createCustom
+					Application.formatForShow(custom.application, function(errMsg, formattedQuestions) {
+						if (errMsg) callback(errMsg);
+						else {
+							var formatForCreate = [];
+							formattedQuestions.forEach(function(question) {
+								formatForCreate.push({
+									"question" : question.question,
+									"options" : question.options,
+									"type" : question.type,
+									"required" : question.required,
+								});
+							});
+							createCustom(listingId, formatForCreate, newOwnerId, false, "save", callback);
+						}
+					})
 				}
 			})
 		}

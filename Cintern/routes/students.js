@@ -13,7 +13,7 @@ var router = express.Router();
  * is a student, not an employer
  */
 var requireStudent = function(req, res, next) {
-  if (!req.session.user || !req.session.user.isStudent) {
+  if (!req.session.user || !req.session.user.studentInfo) {
     utils.sendErrResponse(res, 403, 'Must be logged in and a student to use this feature.');
   } else {
     next();
@@ -61,11 +61,14 @@ router.get('/applications', custom.getStudentApplications);
 /* GET template */
 router.get('/applications/template/:lstgid', custom.getListingTemplate);
 
-/* POST common application */
+/* POST add custom application */
+router.post('/applications/custom/saved/:lstgid', custom.saveCustomApplication);
+
+/* POST submit common application */
 router.post('/applications/common', common.submitCommonApplication);
 
-/* POST custom application */
-router.post('/applications/custom', custom.submitCustomApplication);
+/* POST submit custom application */
+router.post('/applications/custom/:appid', custom.submitCustomApplication);
 
 /* POST application update */
 // router.post('/applications/updates/:appid', custom.updateApplication);

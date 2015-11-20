@@ -36,7 +36,6 @@ describe('Common', function() {
   describe('#createCommon', function() {
     it('should create a common', function(done) {
       User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        assert.equal(true, e === null);
         Common.createCommon(user._id, function(e, common) {
           assert.equal(user._id, common.owner);
           done();
@@ -53,7 +52,6 @@ describe('Common', function() {
   describe('#submitCommon', function() {
     it('should not submit common', function(done) {
       User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        assert.equal(true, e === null);
         Common.createCommon(user._id, function(e, common) {
           var answers = [];
           Application.formatForShow(common.application, function(e, formattedQuestions) {
@@ -76,7 +74,6 @@ describe('Common', function() {
 
     it('should submit common', function(done) {
       User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
-        assert.equal(true, e === null);
         Common.createCommon(user._id, function(e, common) {
           var answers = [];
           Application.formatForShow(common.application, function(e, formattedQuestions) {
@@ -90,6 +87,58 @@ describe('Common', function() {
                   assert.equal('abc',question.answer);
                 });
                 done();
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+
+  /**
+   * Input: ownerId
+   *    ownerId is valid : should get
+   *    ownerId is invalid : should not get
+   *    multiple owners : should get right common
+   */
+  describe('#getCommonByOwnerId', function() {
+    it('should get, valid ownerId', function(done) {
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
+        Common.createCommon(user._id, function(e, common) {
+          Common.getCommonByOwnerId(user._id, function(e, c) {
+            assert.equal(null, e);
+            assert.equal(user._id.toString(), c.owner.toString());
+            done();
+          });
+        });
+      });
+    });
+
+    it('should not get, invalid ownerId', function(done) {
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
+        Common.createCommon(user._id, function(e, common) {
+          assert.notEqual("1", user._id.toString());
+          Common.getCommonByOwnerId("1", function(e, c) {
+            assert.notEqual(null, e);
+            done();
+          });
+        });
+      });
+    });
+
+    it('should get, multiple ownerId', function(done) {
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
+        Common.createCommon(user._id, function(e, common) {
+          User.addUser("jennwu2@mit.edu", "asdf1232gh", true, function(e, user2) {
+            Common.createCommon(user2._id, function(e, common2) {
+              Common.getCommonByOwnerId(user._id, function(e, c) {
+                assert.equal(null, e);
+                assert.equal(user._id.toString(), c.owner.toString());
+                Common.getCommonByOwnerId(user2._id, function(e, c2) {
+                  assert.equal(null, e);
+                  assert.equal(user2._id.toString(), c2.owner.toString());
+                  done();
+                });
               });
             });
           });

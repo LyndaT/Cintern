@@ -13,7 +13,7 @@ var utils = require('../utils/utils');
  * Gets the common application associated with the userId
  * 
  * Request body:
- * 	- userid: userId of the user's whose Common we need
+ * 	- userId: userId of the user's whose Common we need
  *
  * Response:
  *  - success: true if succeeded got the common
@@ -22,9 +22,9 @@ var utils = require('../utils/utils');
 exports.getCommon = function(req, res, next) {
 	var currentUser = req.session.user;
 	if (currentUser) {
-		var userId = req.body.userid;
+		var userId = req.body.userId;
 
-		if (currentUser.isStudent) userId = currentUser.userId;
+		if (currentUser.studentInfo) userId = currentUser.userId;
 		// FOR LATER: else check that listingId belongs to the currentUser
 
 		Common.getCommonByOwnerId(userId, function(errMsg, common) {
@@ -63,11 +63,11 @@ exports.getCommon = function(req, res, next) {
 exports.getCustom = function(req, res, next) {
 	var currentUser = req.session.user;
 	if (currentUser) {
-		var isStudent = currentUser.isStudent;
+		var isStudent = currentUser.studentInfo !== undefined;
 		var listingId = req.body.lstgid;
 		var userId = req.body.userid;
 
-		if (currentUser.isStudent) userId = currentUser.userId;
+		if (currentUser.studentInfo) userId = currentUser.userId;
 		// FOR LATER: else check that listingId belongs to the currentUser
 
 		Custom.getByOwnerAndListing(userId, listingId, isStudent, function(errMsg, custom) {

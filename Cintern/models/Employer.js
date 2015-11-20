@@ -36,5 +36,20 @@ EmployerSchema.statics.createEmployer = function(email, password, companyName, c
 	});
 };
 
+/**
+ * Finds the Employer associaed with the userId
+ * @param{ObjectId} userId
+ * @param{Function} callback(err, Employer)
+ */
+EmployerSchema.statics.findByUserId = function(userId, callback) {
+	Employer.findOne({ "user" : userId }, function(err, employer) {
+		if (err) {
+			callback(err.message);
+		} else {
+			callback(null, employer);
+		}
+	});
+}
+
 var Employer = mongoose.model('Employer', EmployerSchema);
 module.exports = mongoose.model("Employer", EmployerSchema);

@@ -454,7 +454,7 @@ describe('Application', function() {
           assert.equal(1, apps.length);
           var answers = [{ "_id" : apps[0].questions[0]._id, "answer" : "a" }];
           Application.updateAnswers(apps[0]._id, answers, false, function(e, app2) {
-            assert.equal(true, e === null);
+            assert.equal(null, e);
             assert.equal("a", app2.questions[0].answer);
             done();
           });
@@ -473,7 +473,7 @@ describe('Application', function() {
           assert.equal(1, apps.length);
           var answers = [{ "_id" : apps[0].questions[0]._id, "answer" : "yum" }];
           Application.updateAnswers(apps[0]._id, answers, false, function(e, app) {
-            assert.equal(true, e !== null);
+            assert.notEqual(null, e);
             Application.find({}, function(err, apps) {
               var app = apps[0];
               assert.equal('', app.questions[0].answer);
@@ -495,7 +495,7 @@ describe('Application', function() {
           assert.equal(1, apps.length);
           var answers = [{ "_id" : apps[0].questions[0]._id, "answer" : "yes" }];
           Application.updateAnswers(apps[0]._id, answers, false, function(e, app) {
-            assert.equal(true, e === null);
+            assert.equal(null, e);
             assert.equal("yes", app.questions[0].answer);
             done();
           });
@@ -516,7 +516,7 @@ describe('Application', function() {
           var answers = [{ "_id" : apps[0].questions[0]._id, "answer" : "yum" }];
           console.log("about to update");
           Application.updateAnswers(apps[0]._id, answers, false, function(e, app) {
-            assert.equal(true, e === null);
+            assert.equal(null, e);
             assert.equal("yum", app.questions[0].answer);
             done();
           });
@@ -542,7 +542,7 @@ describe('Application', function() {
             { "_id" : apps[0].questions[1]._id, "answer" : "" }
           ];
           Application.updateAnswers(apps[0]._id, answers, false, function(e, app) {
-            assert.equal(true, e === null);
+            assert.equal(null, e);
             assert.equal("yum", app.questions[0].answer);
             assert.equal('', app.questions[1].answer);
             done();
