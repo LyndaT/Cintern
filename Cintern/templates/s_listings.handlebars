@@ -1,0 +1,23 @@
+<div id="s_listings">
+
+
+  <h1>Current available listings</h1>
+  <p>Click on a listing for more detailed information.</p>
+  <br>
+
+  <table style="width:90%">
+
+    <tr>
+      <th>Company</th>
+      <th>Position</th>
+      <th>Description</th>
+    </tr>
+
+    {{#each listings}}
+      {{> listing}}
+    {{else}}
+      <p><em>No listings available</em></p>
+    {{/each}}
+
+  </table>
+</div>

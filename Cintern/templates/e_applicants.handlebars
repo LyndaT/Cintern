@@ -1,0 +1,21 @@
+<div id="e_applicants">
+  <h1>Applicants</h1>
+    <p>Currently {{applicants.length}} students have applied to this listing</p>
+  <br>
+
+
+  <table style="width:90%">
+  {{applicants}}
+    <tr>
+      <th>Email</th>
+      <th>Status</th>
+    </tr>
+
+    {{#each applicants}}
+      {{> applicant}}
+    {{else}}
+      <p><em>No applicants have applied yet.</em></p>
+    {{/each}}
+
+  </table>
+</div>

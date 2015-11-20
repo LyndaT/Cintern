@@ -12,11 +12,12 @@ var router = express.Router();
  * is an employer, not a student
  */
 var requireEmployer = function(req, res, next) {
-  if (!req.session.user || req.session.user.studentInfo) {
-    utils.sendErrResponse(res, 403, 'Must be logged in and an employer to use this feature.');
-  } else {
-    next();
-  }
+	 next();
+  // if (!req.session.user || req.session.user.studentInfo) {
+  //   utils.sendErrResponse(res, 403, 'Must be logged in and an employer to use this feature.');
+  // } else {
+  //   next();
+  // }
 };
 
 router.all('*', requireEmployer);

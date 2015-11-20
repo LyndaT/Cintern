@@ -2,6 +2,7 @@ var express = require('express');
 var listing = require('../controllers/listing');
 var common = require('../controllers/common');
 var custom = require('../controllers/custom');
+var utils = require('../utils/utils');
 var router = express.Router();
 
 /**
@@ -13,11 +14,12 @@ var router = express.Router();
  * is a student, not an employer
  */
 var requireStudent = function(req, res, next) {
-  if (!req.session.user || !req.session.user.studentInfo) {
-    utils.sendErrResponse(res, 403, 'Must be logged in and a student to use this feature.');
-  } else {
-    next();
-  }
+  next();
+  // if (!req.session.user || !req.session.user.studentInfo) {
+  //   utils.sendErrResponse(res, 403, 'Must be logged in and a student to use this feature.');
+  // } else {
+  //   next();
+  // }
 };
 
 router.all('*', requireStudent);
