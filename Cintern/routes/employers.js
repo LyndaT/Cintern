@@ -47,7 +47,7 @@ router.get('/', function(req, res) {
 router.get('/listings', listing.getEmployerListings);
 
 /* POST listing */
-router.get('/listings', listing.createListing);
+router.post('/listings', listing.createListing);
 
 /* DELETE listing */
 // router.delete('/listings/:lstgid', listing.deleteListing);
