@@ -1,4 +1,20 @@
 <div class="question">
 	<label class="control-label">{{question}}</label>
-	<input class="form-control" type="text" value="{{answer}}" name="{{_id}}" />
+	<textarea 
+		{{#if isCommon}}
+			rows="1"
+		{{else}}
+		{{/if}}
+		
+		{{#if isSubmitted}}
+			disabled 
+		{{else}}
+		{{/if}}
+		
+		{{#if required}}
+			required
+		{{else}}
+		{{/if}}
+		
+		class="form-control" name="{{_id}}">{{answer}}</textarea>
 </div>

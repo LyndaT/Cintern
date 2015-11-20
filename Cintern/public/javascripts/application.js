@@ -2,7 +2,7 @@
   Handlebars.registerPartial('question', Handlebars.templates['question']);
   Handlebars.registerPartial('application', Handlebars.templates['application']);
 
-  $(document).on('click', '#submit-app-btn', function(evt) {
+  $(document).on('submit', '#submit-app-form', function(evt) {
       console.log("submitted application");
       evt.preventDefault();
       var formData = helpers.getFormData('#submit-app-form');
@@ -24,4 +24,11 @@
           $('.error').text(response.err);
       });
   });
+
+  // TODO: after MVP
+  /*$(document).on('submit', '#save-app-btn', function(evt) {
+    console.log("saved application");
+    var formData = helpers.getFormData('#submit-app-form');
+    var appId = $('#submit-app-form').data('app-id');
+  });*/
 })();
