@@ -29,7 +29,7 @@ var loadStudentViewListingsPage = function() {
 
 var loadEmployerViewApplicantsPage = function() {
 	$.get('/employers/applications/listings/564e920d0dc0a354f80f8692', function(response) {
-		console.log("applicants: " + response.content.applicants[0].own er.email)
+		console.log("applicants: " + response.content.applicants[0].owner.email)
 		loadPage('e_applicants', {applicants: response.content.applicants});
 	});
 };
@@ -38,8 +38,8 @@ var loadEmployerViewApplicantsPage = function() {
 // load the home page
 $(document).ready(function() {
 	loadHomePage();
-	loadStudentViewListingsPage();
-	//loadEmployerViewApplicantsPage();
+	//loadStudentViewListingsPage();
+	loadEmployerViewApplicantsPage();
 });
 
 // load the sign in page when the signin button is clicked
