@@ -10,7 +10,6 @@ Handlebars.registerPartial('applicant', Handlebars.templates['e_applicants_row']
 
 var loadPage = function(template, data) {
 	data = data || {};
-	console.log(Handlebars.templates[template]);
 	$('#main-container').html(Handlebars.templates[template](data));
 };
 
@@ -43,19 +42,21 @@ $(document).ready(function() {
 	//loadEmployerViewApplicantsPage();
 });
 
+// load the sign in page when the signin button is clicked
+$(document).on('click', '#login-btn', function(evt) {
+	loadPage('login');
+});
+
+$(document).on('click', '#e-signup-btn', function(evt) {
+	loadPage('e_signup');
+});
+
+$(document).on('click', '#s-signup-btn', function(evt) {
+	loadPage('s_signup');
+});
+
 // load the home page when the home link is clicked
-/*$(document).on('click', '#home-link', function(evt) {
+$(document).on('click', '#home-link', function(evt) {
 	evt.preventDefault();
 	loadHomePage();
 });
-
-// load the sign in page when the signin button is clicked
-$(document).on('click', '#signin-btn', function(evt) {
-	loadPage('signin');
-});
-
-// load the registration page when the register button is clicked
-$(document).on('click', '#register-btn', function(evt) {
-	loadPage('register');
-});*/
-

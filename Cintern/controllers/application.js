@@ -29,11 +29,11 @@ exports.getCommon = function(req, res, next) {
 
 		Common.getCommonByOwnerId(userId, function(errMsg, common) {
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-			else if (!custom) utils.sendErrResponse(res, 403, "No custom");
+			else if (!common) utils.sendErrResponse(res, 403, "No common");
 			else {
 				common.populateCommon(function(errMsg, common) {
 					if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-					else if (!common) utils.sendErrResponse(res, 403, "No custom");
+					else if (!common) utils.sendErrResponse(res, 403, "No common");
 					else {
 						var content = {
 							"application" : common.application,

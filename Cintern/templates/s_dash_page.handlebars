@@ -1,0 +1,20 @@
+<div id="student-dash">
+  <h1>Welcome!</h1>
+  Here are your applications:
+  
+  <table>
+  	<tr>
+  	  <td><b>Company</b></td>
+  	  <td><b>Title</b></td>
+  	  <td><b>Status</b></td>
+  	</tr>
+
+    {{#each apps as |a|}}
+      {{> s_dash_page_app app=a}}
+    {{else}}
+      <tr>
+      	<td>No applications yet!</td>
+      </tr>
+    {{/each}}
+  </table>
+</div>

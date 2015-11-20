@@ -18,8 +18,8 @@ var utils = require('../utils/utils');
  *	- err: on failure (i.e. server fail, invalid listing)
  */ 
 exports.getApplicants = function(req, res, next) {
-	// possibly useful later to check if the userId owns the listingId.  commented out by heeyoon since it throws an error while not logged in i think.
-	//var userId = currentUser.userId;
+	// possibly useful later to check if the userId owns the listingId
+	var userId = req.session.user.userId;
 	var listingId = req.body.listingId;
 	Custom.getCustomsForListingDash(listingId, function(errMsg, customs) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
@@ -34,44 +34,44 @@ exports.getApplicants = function(req, res, next) {
 };
 
 /**
- * POST /employers/applications/starred/:appid
+ * POST /employers/applications/starred/:customid
  *
  * Marks an application as starred
  *
  * Request body:
- *  - applicationId: application ID for to-be-starred application
+ *  - customId: custom ID for to-be-starred custom
  *
  * Response:
- *	- success: true if succeeded in changing application state
- *	- err: on failure (i.e. server fail, invalid application)
+ *	- success: true if succeeded in changing custom state
+ *	- err: on failure (i.e. server fail, invalid custom)
  */
 //exports.starApplication = function(req, res, next) {};
 
 /**
- * POST /employers/applications/unstarred/:appid
+ * POST /employers/applications/unstarred/:customid
  *
  * Marks an application as unstarred
  *
  * Request body:
- *  - applicationId: application ID for to-be-unstarred application
+ *  - customId: custom ID for to-be-unstarred custom
  *
  * Response:
- *	- success: true if succeeded in changing application state
- *	- err: on failure (i.e. server fail, invalid application)
+ *	- success: true if succeeded in changing custom state
+ *	- err: on failure (i.e. server fail, invalid custom)
  */
 //exports.unstarApplication = function(req, res, next) {};
 
 /**
- * POST /employers/applications/rejected/:appid
+ * POST /employers/applications/rejected/:customid
  *
  * Marks an application as rejected
  *
  * Request body:
- *  - applicationId: application ID for to-be-rejected application
+ *  - customId: custom ID for to-be-rejected application
  *
  * Response:
- *	- success: true if succeeded in changing application state
- *	- err: on failure (i.e. server fail, invalid application)
+ *	- success: true if succeeded in changing custom state
+ *	- err: on failure (i.e. server fail, invalid custom)
  */
 //exports.rejectApplication = function(req, res, next) {};
 
@@ -89,11 +89,11 @@ exports.getApplicants = function(req, res, next) {
  *	- err: on failure (i.e. server fail)
  */
 exports.getStudentApplications = function(req, res, next) {
-	var userId = currentUser.userId;
+	var userId = req.session.user.userId;
 
 	Custom.getCustomsForStudentDash(userId, function(errMsg, customs) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!apps) utils.sendErrResponse(res, 403, "Could not get applications");
+		else if (!customs) utils.sendErrResponse(res, 403, "Could not get applications");
 		else {
 			var content = {
 				applications : customs,
@@ -112,7 +112,7 @@ exports.getStudentApplications = function(req, res, next) {
  *  - listingId: the listing ID of the relevant listing
  *
  * Response:
- *  - success: true if succeeded in changing application state
+ *  - success: true if succeeded in changing custom state
  *	- err: on failure (i.e. server fail, invalid listing)
  */
 exports.getListingTemplate = function(req, res, next) {
@@ -138,17 +138,17 @@ exports.getListingTemplate = function(req, res, next) {
 /**
  * POST /students/applications/custom/saved/:lstgid
  *
- * Save an empty custom application
+ * Save an empty custom
  *
  * Request body:
  *  - listingId: the listing ID of the relevant listing
  *
  * Response:
  *	- success: true if succeeded in submitting
- *	- err: on failure (i.e. server fail, invalid submission, invalid application)
+ *	- err: on failure (i.e. server fail, invalid submission, invalid custom)
  */ 
 exports.saveCustomApplication = function(req, res, next) {
-	var userId = currentUser.userId;
+	var userId = req.session.user.userId;
 	var listingId = req.body.listingId;
 
 	Custom.copyTemplateToSave(listingId, userId, function(errMsg, custom) {
@@ -161,27 +161,36 @@ exports.saveCustomApplication = function(req, res, next) {
 };
 
 /**
- * POST /students/applications/custom/:appid
+ * POST /students/applications/custom/:customid
  *
- * Submits answers for a custom application
+ * Submits answers for a custom
  *
  * Request body:
  *	- answers: Object with keys that are "_id" (mapping to questionId)
  *			and "answer" (mapping to a string)
- *  - applicationId: the application ID of the relevant application
+ *  - customId: the custom ID of the relevant custom
  *
  * Response:
  *	- success: true if succeeded in submitting
- *	- err: on failure (i.e. server fail, invalid submission, invalid application)
+ *	- err: on failure (i.e. server fail, invalid submission, invalid custom)
  */ 
 exports.submitCustomApplication = function(req, res, next) {
-	var answers = req.body.answers;
-	var userId = currentUser.userId;
-	var appId = req.body.applicationId;
+	var answers = req.body;
+	// format answers for model call
+	var answerArray = [];
+	Object.keys(answers).forEach(function(id) {
+        answerArray.push({
+          "_id" : id,
+          "answer" : answers[id]
+        });
+    });
 
-	Custom.update(appId, answers, true, function(errMsg, custom) {
+	var userId = req.session.user.userId;
+	var customId = req.body.customId;
+
+	Custom.update(customId, answerArray, true, function(errMsg, custom) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!custom) utils.sendErrResponse(res, 403, "Could not submit application");
+		else if (!custom) utils.sendErrResponse(res, 403, "Could not submit custom application");
 		else {
 			utils.sendSuccessResponse(res);
 		}
