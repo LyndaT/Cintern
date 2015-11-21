@@ -8,12 +8,13 @@
   <br>
   
   <table class="table table-hover table-condensed">
-  	<tr>
+  	<thead>
   	  <th>Company</th>
   	  <th>Title</th>
   	  <th>Status</th>
-  	</tr>
+  	</thead>
 
+    <tbody>
     {{#each apps as |a|}}
       {{> s_dash_page_app company=a.listing.employerId.company title=a.listing.title state=a.state}}
     {{else}}
@@ -21,5 +22,6 @@
       	<td>No applications yet!</td>
       </tr>
     {{/each}}
+    </tbody>
   </table>
 </div>
