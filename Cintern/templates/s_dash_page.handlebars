@@ -1,18 +1,21 @@
 <div id="student-dash">
-  <button id="s_view_listings">View Listings</button>
+  <a href='/students/listingspage'><button class="btn btn-primary" id="s_view_listings">View Listings</button></a>
   
   <h1>Welcome!</h1>
   Here are your applications:
+
+  <br>
+  <br>
   
-  <table>
+  <table class="table table-hover table-condensed">
   	<tr>
-  	  <td><b>Company</b></td>
-  	  <td><b>Title</b></td>
-  	  <td><b>Status</b></td>
+  	  <th>Company</th>
+  	  <th>Title</th>
+  	  <th>Status</th>
   	</tr>
 
     {{#each apps as |a|}}
-      {{> s_dash_page_app app=a}}
+      {{> s_dash_page_app company=a.listing.employerId.company title=a.listing.title state=a.state}}
     {{else}}
       <tr>
       	<td>No applications yet!</td>

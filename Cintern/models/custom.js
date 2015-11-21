@@ -7,6 +7,7 @@ var mongoose = require("mongoose");
 var Application = require("../models/application");
 var Listing = require ("../models/listing");
 var User = require("../models/User");
+var Employer = require("../models/Employer");
 
 var stateTable = {
 	"save" : "saved",
@@ -66,6 +67,7 @@ customSchema.statics.createTemplate = function(listingId, questions, ownerId, ca
 customSchema.statics.copyTemplateToSave = function(listingId, newOwnerId, callback) {
 	// check that the newOwner does not already have a custom with the associated listing
 	Custom.find({ "owner" : newOwnerId, "listing" : listingId }, function(err, customs) {
+
 		if (err) callback(err.message);
 		else if (customs.length > 0) callback("Already have a this listing");
 		else {
@@ -78,6 +80,7 @@ customSchema.statics.copyTemplateToSave = function(listingId, newOwnerId, callba
 				else {
 					// get questions in the proper format to run createCustom
 					Application.formatForShow(custom.application, function(errMsg, formattedQuestions) {
+
 						if (errMsg) callback(errMsg);
 						else {
 							var formatForCreate = [];
@@ -106,10 +109,25 @@ customSchema.statics.copyTemplateToSave = function(listingId, newOwnerId, callba
  * @param{Function} callback(err, [Custom])
  */
 customSchema.statics.getCustomsForStudentDash = function(ownerId, callback) {
-	console.log("123123hello")
-	Custom.find({ "owner" : ownerId }).populate("owner").exec(function(err, customs) {
+	Custom.find({ "owner" : ownerId }).populate("owner").populate("listing").exec(function(err, customs) {
+		//console.log(customs);
+	});
+
+	Custom.find({ "owner" : ownerId })
+		.populate("owner")
+		.populate("listing")
+		.exec(function(err, customs) {
 		if (err) callback(err.message);
-		else callback(null, customs);
+		else {
+			Custom.populate(customs, {
+				path: "listing.employerId",
+				model: "Employer"
+			},
+			function(err, populated_customs) {
+				if (err) callback(err.message);
+				else callback(null, customs);
+			});
+		}
 	});
 };
 

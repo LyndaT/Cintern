@@ -14,12 +14,11 @@ var router = express.Router();
  * is a student, not an employer
  */
 var requireStudent = function(req, res, next) {
-  next();
-  // if (!req.session.user || !req.session.user.studentInfo) {
-  //   utils.sendErrResponse(res, 403, 'Must be logged in and a student to use this feature.');
-  // } else {
-  //   next();
-  // }
+  if (!req.session.user || !req.session.user.studentInfo) {
+    utils.sendErrResponse(res, 403, 'Must be logged in and a student to use this feature.');
+  } else {
+    next();
+  }
 };
 
 router.all('*', requireStudent);
@@ -50,7 +49,6 @@ router.param('customid', function(req, res, next, customId) {
 });
 
 router.get('/', function(req, res) {
-  console.log("redirecting /students");
   if (req.session.user.studentInfo.commonFilled) {
     res.render('s-dash', { title: 'Cintern' });    
   } else {
@@ -58,14 +56,14 @@ router.get('/', function(req, res) {
   }
 })
 
-/* GET all listings */
-router.get('/listings', function(req, res) {
+/* GET the listings page */
+router.get('/listingspage', function(req, res) {
   console.log("redirecting to /listings");
-  res.render('s_listings');
+  res.render('s-listings');
 });
 
-
-//listing.getAllListings);
+/* GET all listings */
+router.get('/listings',listing.getAllListings);
 
 /* GET employer listings */
 router.get('/listings/employer/:employerid', listing.getEmployerListings);

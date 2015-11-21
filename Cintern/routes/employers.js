@@ -13,12 +13,11 @@ var router = express.Router();
  * is an employer, not a student
  */
 var requireEmployer = function(req, res, next) {
-	 next();
-  // if (!req.session.user || req.session.user.studentInfo) {
-  //   utils.sendErrResponse(res, 403, 'Must be logged in and an employer to use this feature.');
-  // } else {
-  //   next();
-  // }
+  if (!req.session.user || req.session.user.studentInfo) {
+    utils.sendErrResponse(res, 403, 'Must be logged in and an employer to use this feature.');
+  } else {
+    next();
+  }
 };
 
 router.all('*', requireEmployer);
@@ -40,18 +39,14 @@ router.param('customid', function(req, res, next, customId) {
 });
 
 router.get('/', function(req, res) {
-  console.log("redirecting /employers");
   res.render('e-dash', { title: 'Cintern' });    
 });
 
 /* GET listings */
-router.get('/listings', function(req, res) {
-  console.log("redirecting /employers/listings");
-  res.render('s_listings');
-}); //listing.getEmployerListings);
+router.get('/listings', listing.getEmployerListings);
 
 /* POST listing */
-router.get('/listings', listing.createListing);
+router.post('/listings', listing.createListing);
 
 /* DELETE listing */
 // router.delete('/listings/:lstgid', listing.deleteListing);

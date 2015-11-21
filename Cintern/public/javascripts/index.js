@@ -6,7 +6,6 @@
           helpers.getFormData(this)
       ).done(function(response) {
           console.log("logged in");
-          // REDIRECT
           location.reload();
       }).fail(function(responseObject) {
           var response = $.parseJSON(responseObject.responseText);

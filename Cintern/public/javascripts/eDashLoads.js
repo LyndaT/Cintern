@@ -9,7 +9,6 @@ Handlebars.registerPartial('e_dash_page_listing', Handlebars.templates['e_dash_p
  */
 var loadPage = function(template, data) {
 	data = data || {};
-	console.log(Handlebars.templates[template](data));
 	$('#e-dash-main-container').html(Handlebars.templates[template](data));
 };
 
@@ -17,6 +16,7 @@ var loadPage = function(template, data) {
  * This function loads the home page Handlebar template
  */
 var loadHomePage = function() {
+	//createFakeListings();
 	loadListings();
 };
 
@@ -25,11 +25,40 @@ var loadHomePage = function() {
  */
 var loadListings = function() {
 	$.get('/employers/listings', function(response) {
+		console.log(response);
 		loadPage('e_dash_page', { listings: response.content.listings });
+	});
+};
+
+/**
+ * FOR UI TESTING PURPOSES ONLY
+ * DELETE THIS LATER
+ * FOR UI TESTING PURPOSES ONLY
+ * DELETE THIS LATER
+ */
+var createFakeListings = function() {
+	$.ajax({
+		type: 'POST',
+		url: '/employers/listings',
+		contentType: 'application/json',
+		data: JSON.stringify({ 
+			title: "Hello",
+			description: "world",
+			requirements: "",
+			questions: []
+		})
+	}).done(function(response) {
+		loadListings();
+	}).fail(function(response) {
+		console.log("ERROR :(");
 	});
 };
 
 // load the home page
 $(document).ready(function() {
 	loadHomePage();
+});
+
+$(document).on('click', '#new-listing-btn', function(evt) {
+	loadPage('createlisting');
 });
