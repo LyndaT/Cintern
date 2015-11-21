@@ -13,11 +13,13 @@ templates['application'] = template({"1":function(container,depth0,helpers,parti
 },"7":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "		<div class=\"form-group\">\n"
-    + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.isCommon : depth0),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.program(8, data, 0),"data":data})) != null ? stack1 : "")
-    + "	        <input type=\"submit\" id=\"submit-app-btn\" class=\"btn btn-primary\" id=\"submitButton\"/>\n	    </div>\n";
+  return "		<div class=\"form-group\">\n	        <!--"
+    + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.isCommon : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.program(10, data, 0),"data":data})) != null ? stack1 : "")
+    + "-->\n	        <input type=\"submit\" id=\"submit-app-btn\" class=\"btn btn-primary\" id=\"submitButton\"/>\n	    </div>\n";
 },"8":function(container,depth0,helpers,partials,data) {
-    return "	        	<button type=\"submit\" id=\"save-app-btn\" class=\"btn btn-primary\" id=\"saveButton\">Save</button>\n";
+    return "\n";
+},"10":function(container,depth0,helpers,partials,data) {
+    return "	        	<button type=\"submit\" id=\"save-app-btn\" class=\"btn btn-primary\" id=\"saveButton\">Save</button>\n	        ";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
@@ -133,6 +135,15 @@ templates['question'] = template({"1":function(container,depth0,helpers,partials
     + alias4(((helper = (helper = helpers.answer || (depth0 != null ? depth0.answer : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"answer","hash":{},"data":data}) : helper)))
     + "</textarea>\n</div>";
 },"useData":true});
+templates['s_custom'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, helper;
+
+  return "<div>\n<a href='/students'>Back to Dash</a>\n<h1>Custom Application</h1>\n<br>\n<label>Position Title: </label> "
+    + container.escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"title","hash":{},"data":data}) : helper)))
+    + "\n<br>\n<br>\n<h3>Application</h3>\n"
+    + ((stack1 = container.invokePartial(partials.application,depth0,{"name":"application","data":data,"helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
+    + "</div>";
+},"usePartial":true,"useData":true});
 templates['s_dash_page'] = template({"1":function(container,depth0,helpers,partials,data,blockParams) {
     var stack1;
 

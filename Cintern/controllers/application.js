@@ -84,7 +84,8 @@ exports.getCustom = function(req, res, next) {
 							"application" : custom.application,
 							"owner" : custom.owner,
 							"isTemplate" : custom.isTemplate,
-							"submitTime" : custom.submitTime
+							"submitTime" : custom.submitTime,
+							"_id" : custom._id
 						};
 						utils.sendSuccessResponse(res, content);
 					}
