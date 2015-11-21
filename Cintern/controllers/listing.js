@@ -50,12 +50,21 @@ exports.createListing = function(req, res, next) {
 		var deadline = undefined;
 		var questions = req.body.questions;
 		
+		var questionList = [];
+		questions.forEach(function(question) {
+			questionList.push({
+				"question" : question,
+				"type" : "text",
+				"required" : true
+			})
+		});
+
 		Listing.createListing(employerId, title, desc, reqs, deadline, function(errMsg, listing) {
 			
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 			else if (!listing) utils.sendErrResponse(res, 403, "No listing");
 			else {
-				Custom.createTemplate(listing._id, questions, currentUser.userId, function(errMsg, template) {
+				Custom.createTemplate(listing._id, questionList, currentUser.userId, function(errMsg, template) {
 					console.log(errMsg);
 					if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 					else if (!template) utils.sendErrResponse(res, 403, "No template");
