@@ -4,6 +4,8 @@
  *
  * @param{String} template
  * @param{Object} data
+ *
+ * @author Heeyoon
  */
 Handlebars.registerPartial('listing', Handlebars.templates['s_listing_row']);
 

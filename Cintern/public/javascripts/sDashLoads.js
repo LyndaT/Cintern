@@ -30,14 +30,6 @@ var loadApps = function() {
 	});
 };
 
-/*var loadStudentViewListingsPage = function() {
-	$.get('/students/listings', function(response) {
-		console.log(response.content.listings[0]);
-		loadPage('s_listings', {listings: response.content.listings});
-	});
-};*/
-
-
 /**
  * FOR UI TESTING PURPOSES ONLY
  * DELETE THIS LATER
@@ -78,5 +70,4 @@ var createFakeApps = function() {
 // load the home page
 $(document).ready(function() {
 	loadHomePage();
-
 });

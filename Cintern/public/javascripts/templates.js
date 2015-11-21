@@ -42,7 +42,7 @@ templates['e_applicants'] = template({"1":function(container,depth0,helpers,part
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "<div id=\"e_applicants\">\n  <h1>Applicants</h1>\n    <p>Currently "
+  return "<div class=\"e_applicants\">\n  <h1>Applicants</h1>\n    <p>Currently "
     + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.applicants : depth0)) != null ? stack1.length : stack1), depth0))
     + " students have applied to this listing</p>\n\n  <table style=\"width:90%\">\n    <tr>\n      <th>Email</th>\n    </tr>\n\n"
     + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.applicants : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
@@ -71,11 +71,11 @@ templates['e_dash_page'] = template({"1":function(container,depth0,helpers,parti
 templates['e_dash_page_listing'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=container.lambda, alias2=container.escapeExpression;
 
-  return "<div id=\"employer-dash-listing\" data-listing-id="
+  return "<div id=\"employer-dash-listing\">\n    <tr id=\"listing-row\" data-listing-id="
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1._id : stack1), depth0))
-    + ">\n  <tr>\n  	<td>"
+    + ">\n  	  <td>"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1.title : stack1), depth0))
-    + "</td>\n  </tr>\n</div>";
+    + "</td>\n    </tr>\n</div>";
 },"useData":true});
 templates['e_signup'] = template({"1":function(container,depth0,helpers,partials,data) {
     var helper;
@@ -182,7 +182,7 @@ templates['s_listings'] = template({"1":function(container,depth0,helpers,partia
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "<div class=\"s_listings\">\n\n\n  <h1>Current available listings</h1>\n  <p>Click on a listing for more detailed information.</p>\n  <br>\n\n  <table style=\"width:90%\">\n\n    <tr>\n      <th>Company</th>\n      <th>Position</th>\n      <th>Description</th>\n    </tr>\n\n"
+  return "<div class=\"s_listings\">\n  <h1>Current available listings</h1>\n  <p>Click on a listing for more detailed information.</p>\n  <br>\n\n  <table style=\"width:90%\">\n\n    <tr>\n      <th>Company</th>\n      <th>Position</th>\n      <th>Description</th>\n    </tr>\n\n"
     + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.listings : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + "\n  </table>\n</div>\n";
 },"usePartial":true,"useData":true});

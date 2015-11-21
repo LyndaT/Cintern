@@ -58,7 +58,6 @@ router.get('/', function(req, res) {
 
 /* GET the listings page */
 router.get('/listingspage', function(req, res) {
-  console.log("redirecting to /listings");
   res.render('s-listings');
 });
 
