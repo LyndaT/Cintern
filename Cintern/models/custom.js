@@ -109,10 +109,6 @@ customSchema.statics.copyTemplateToSave = function(listingId, newOwnerId, callba
  * @param{Function} callback(err, [Custom])
  */
 customSchema.statics.getCustomsForStudentDash = function(ownerId, callback) {
-	Custom.find({ "owner" : ownerId }).populate("owner").populate("listing").exec(function(err, customs) {
-		//console.log(customs);
-	});
-
 	Custom.find({ "owner" : ownerId })
 		.populate("owner")
 		.populate("listing")
