@@ -22,7 +22,7 @@ var utils = require('../utils/utils');
 module.exports.createStudent = function(req, res, next){
 	var email = req.body.email;
 	var password = req.body.password;
-	Student.createStudent(email, password, function(errMsg, student){
+	Student.createStudent(email, password, function(errMsg, student) {
 		if (errMsg){
 			utils.sendErrResponse(res, 403, errMsg);
 		} else {

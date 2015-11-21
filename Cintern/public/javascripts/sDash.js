@@ -1,10 +1,19 @@
 (function() {
-  
+  /**
+   * When a student clicks on an application on their dash, load the custom app
+   */	
+  $(document).on('click', '#student-app', function(evt) {
+  	var item = $(this);
+  	var listingId = item.data('listing-id');
+  	var userId = item.data('user-id');
 
-  // TODO: after MVP
-  /*$(document).on('submit', '#save-app-btn', function(evt) {
-    console.log("saved application");
-    var formData = helpers.getFormData('#submit-app-form');
-    var appId = $('#submit-app-form').data('app-id');
-  });*/
+  	$.ajax({
+  		type: "GET",
+  		url: "/users/applications/custom/" + userId + "/" + listingId
+  	}).done(function(response) {
+  		console.log(response);
+  	}).fail(function(response) {
+  		console.log("ERROR :(");
+  	});
+  });
 })();
