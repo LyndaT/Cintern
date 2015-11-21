@@ -61,20 +61,16 @@ exports.getCommon = function(req, res, next) {
  *  - err: on failure (i.e. server failure, invalid user);
  */
 exports.getCustom = function(req, res, next) {
-	console.log("GET CUSTOM");
-
 	var currentUser = req.session.user;
 	if (currentUser) {
 		var isStudent = currentUser.studentInfo !== undefined;
-		var listingId = req.body.lstgid;
-		var userId = req.body.userid;
+		var listingId = req.body.listingId;
+		var userId = req.body.userId;
 
 		if (currentUser.studentInfo) userId = currentUser.userId;
 		// FOR LATER: else check that listingId belongs to the currentUser
 
 		Custom.getByOwnerAndListing(userId, listingId, isStudent, function(errMsg, custom) {
-			console.log("GET BY OWNER", errMsg, custom);
-
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 			else if (!custom) utils.sendErrResponse(res, 403, "No custom");
 			else {

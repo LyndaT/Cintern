@@ -208,22 +208,14 @@ customSchema.statics.getListingTemplate = function(listingId, callback) {
  * @param{Funciton} callback(err, Custom)
  */
 customSchema.statics.getByOwnerAndListing = function(ownerId, listingId, isStudent, callback) {
-	Custom.find({ "listing" : listingId }, function(err, custom1) {
-		console.log("LISTING", listingId, custom1);
-
-		Custom.find({ "owner" : ownerId }, function(err, custom2) {
-			console.log("OWNER", ownerId, custom2)
-
-			Custom.findOne({ "listing" : listingId, "owner" : ownerId }, function(err, custom) {
-				if (err) callback(err.message);
-				else if (!custom) callback("Invalid custom");
-				else if (isStudent) callback(null, custom);
-				else {
-					if (custom.state === "subm" || custom.state === "star") callback(null, custom);
-					else callback("Invalid custom");
-				}
-			});
-		});
+	Custom.findOne({ "listing" : listingId, "owner" : ownerId }, function(err, custom) {
+		if (err) callback(err.message);
+		else if (!custom) callback("Invalid custom");
+		else if (isStudent) callback(null, custom);
+		else {
+			if (custom.state === "subm" || custom.state === "star") callback(null, custom);
+			else callback("Invalid custom");
+		}
 	});
 };
 

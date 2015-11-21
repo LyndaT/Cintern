@@ -11,7 +11,7 @@
   		type: "GET",
   		url: "/users/applications/custom/" + userId + "/" + listingId
   	}).done(function(response) {
-  		console.log(response);
+  		
   	}).fail(function(response) {
   		console.log("ERROR :(");
   	});

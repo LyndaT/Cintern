@@ -38,7 +38,6 @@ var loadApps = function() {
  */
 var loadAllListings = function() {
 	$.get('/students/listings', function(response) {
-		console.log(response);
 		loadPage('s_listings', {listings: response.content.listings});
 	});
 }
