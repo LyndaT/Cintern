@@ -20,8 +20,6 @@ var loadHomePage = function() {
 // load the home page
 $(document).ready(function() {
 	loadHomePage();
-	//loadStudentViewListingsPage();
-	//loadEmployerViewApplicantsPage();
 });
 
 // load the sign in page when the signin button is clicked
