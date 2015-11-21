@@ -88,7 +88,6 @@ exports.createListing = function(req, res, next) {
  */
 exports.getAllListings = function(req, res) {
 	Listing.getAllListings(function(errMsg, listings) {
-
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 		else if (!listings) utils.sendErrResponse(res, 403, "No listings");
 		else {

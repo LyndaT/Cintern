@@ -64,8 +64,8 @@ exports.getCustom = function(req, res, next) {
 	var currentUser = req.session.user;
 	if (currentUser) {
 		var isStudent = currentUser.studentInfo !== undefined;
-		var listingId = req.body.lstgid;
-		var userId = req.body.userid;
+		var listingId = req.body.listingId;
+		var userId = req.body.userId;
 
 		if (currentUser.studentInfo) userId = currentUser.userId;
 		// FOR LATER: else check that listingId belongs to the currentUser
@@ -84,7 +84,8 @@ exports.getCustom = function(req, res, next) {
 							"application" : custom.application,
 							"owner" : custom.owner,
 							"isTemplate" : custom.isTemplate,
-							"submitTime" : custom.submitTime
+							"submitTime" : custom.submitTime,
+							"_id" : custom._id
 						};
 						utils.sendSuccessResponse(res, content);
 					}
@@ -114,9 +115,10 @@ exports.getCustom = function(req, res, next) {
  */
 exports.getFullApplication = function(req, res) {
 	//var currentUser = req.session.user;
+	var isStudent = req.session.user.studentInfo !== undefined
 
-	var listingId = req.body.lstgid;
-	var userId = req.body.userid;
+	var listingId = req.body.listingId;
+	var userId = req.body.userId;
 
 	Common.getCommonByOwnerId(userId, function(errMsg, common) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
@@ -136,10 +138,10 @@ exports.getFullApplication = function(req, res) {
 								else if (!custom) utils.sendErrResponse(res, 403, "No custom");
 								else {
 									var content = {
-										"application": common.application,
+										"commonApp": common.application,
 										"listing" : custom.listing,
 										"state" : custom.state,
-										"application" : custom.application,
+										"customApp" : custom.application,
 										"owner" : custom.owner,
 										"isTemplate" : custom.isTemplate,
 										"submitTime" : custom.submitTime
