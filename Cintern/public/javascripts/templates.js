@@ -142,16 +142,16 @@ templates['s_dash_page'] = template({"1":function(container,depth0,helpers,parti
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams) {
     var stack1;
 
-  return "<div id=\"student-dash\">\n  <button class=\"btn btn-primary\" id=\"s_view_listings\">View Listings</button>\n  \n  <h1>Welcome!</h1>\n  Here are your applications:\n\n  <br>\n  <br>\n  \n  <table class=\"table table-hover table-condensed\">\n  	<tr>\n  	  <th>Company</th>\n  	  <th>Title</th>\n  	  <th>Status</th>\n  	</tr>\n\n"
+  return "<div id=\"student-dash\">\n  <button class=\"btn btn-primary\" id=\"s_view_listings\">View Listings</button>\n  \n  <h1>Welcome!</h1>\n  Here are your applications:\n\n  <br>\n  <br>\n  \n  <table class=\"table table-hover table-condensed\">\n  	<thead>\n  	  <th>Company</th>\n  	  <th>Title</th>\n  	  <th>Status</th>\n  	</thead>\n\n    <tbody>\n"
     + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.apps : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 1, blockParams),"inverse":container.program(3, data, 0, blockParams),"data":data,"blockParams":blockParams})) != null ? stack1 : "")
-    + "  </table>\n</div>";
+    + "    </tbody>\n  </table>\n</div>";
 },"usePartial":true,"useData":true,"useBlockParams":true});
 templates['s_dash_page_app'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=container.escapeExpression, alias2=depth0 != null ? depth0 : {}, alias3=helpers.helperMissing, alias4="function";
 
   return "<div class=\"student-dash-app\" data-app-id="
     + alias1(container.lambda(((stack1 = (depth0 != null ? depth0.app : depth0)) != null ? stack1._id : stack1), depth0))
-    + ">\n  <tr>\n  	<td>"
+    + ">\n  <tr class='clickable-row'>\n  	<td>"
     + alias1(((helper = (helper = helpers.company || (depth0 != null ? depth0.company : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(alias2,{"name":"company","hash":{},"data":data}) : helper)))
     + "</td>\n  	<td>"
     + alias1(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(alias2,{"name":"title","hash":{},"data":data}) : helper)))
