@@ -46,43 +46,6 @@ $(document).on('click', '#s_view_listings', function(evt) {
 	loadAllListings();
 });
 
-/**
- * FOR UI TESTING PURPOSES ONLY
- * DELETE THIS LATER
- * FOR UI TESTING PURPOSES ONLY
- * DELETE THIS LATER
- */
-var createFakeApps = function() {
-	$.get('/students/listings', function(response) {
-		listingId = response.content.listings[response.content.listings.length-1]._id;
-
-		$.ajax({
-			type: 'POST',
-			url: '/students/applications/custom/saved/' + listingId,
-			contentType: 'application/json'
-		}).done(function(response) {
-			$.get('/students/applications', function(response) {
-				customId = response.content.applications[response.content.applications.length-1]._id;
-
-				$.ajax({
-					type: 'POST',
-					url: '/students/applications/custom/' + customId,
-					contentType: 'application/json',
-					data: JSON.stringify({
-						answers: []
-					})
-				}).done(function(response) {
-					loadApps();
-				}).fail(function(response) {
-					console.log("ERROR :(");
-				});
-			});
-		}).fail(function(response) {
-			console.log("ERROR :(");
-		});
-	});
-};
-
 // loads an individual listing's description
 $(document).on('click', '.s_listing', function(evt) {
 	var listingId = $(this).data('listing-id');
