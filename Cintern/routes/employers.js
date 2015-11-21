@@ -40,7 +40,7 @@ router.param('customid', function(req, res, next, customId) {
 
 router.get('/', function(req, res) {
   res.render('e-dash', { title: 'Cintern' });    
-})
+});
 
 /* GET listings */
 router.get('/listings', listing.getEmployerListings);

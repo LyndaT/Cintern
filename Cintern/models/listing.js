@@ -81,8 +81,7 @@ listingSchema.statics.getAllListings = function(callback) {
 var getFormattedListings = function(query, callback) {
 	// SAVE THIS FOR LATER
 	// SAVE THIS FOR LATER
-
-	Listing.find(query, { employerId: 1, title: 1, deadline: 1 }).populate("employerId").exec(function(err, listing_data){
+	Listing.find(query, { employerId: 1, title: 1, description: 1 }).populate("employerId").exec(function(err, listing_data){
 		if (err) {
 			callback(err.message);
 		} else {

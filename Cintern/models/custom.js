@@ -143,7 +143,7 @@ customSchema.statics.getCustomsForListingDash = function(listingId, callback) {
 	Custom.find({
 		"listing" : listingId, 
 		"state" : { $in : ["subm", "star"]} 
-	}, function(err, customs) {
+	}).populate("owner").exec(function(err, customs) {
 		if (err) callback(err.message);
 		else callback(null, customs);
 	});

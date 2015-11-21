@@ -54,10 +54,10 @@ router.get('/', function(req, res) {
   } else {
     res.render('common', { user : req.session.user.userId });
   }
-})
+});
 
 /* GET all listings */
-router.get('/listings', listing.getAllListings);
+router.get('/listings',listing.getAllListings);
 
 /* GET employer listings */
 router.get('/listings/employer/:employerid', listing.getEmployerListings);

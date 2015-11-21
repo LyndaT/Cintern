@@ -18,16 +18,15 @@ var utils = require('../utils/utils');
  *	- err: on failure (i.e. server fail, invalid listing)
  */ 
 exports.getApplicants = function(req, res, next) {
-	// possibly useful later to check if the userId owns the listingId
-	var userId = req.session.user.userId;
+	// possibly useful later to check if the userId owns the listingId, commented by Heeyoon
+	//var userId = req.session.user.userId;
 	var listingId = req.body.listingId;
-
 	Custom.getCustomsForListingDash(listingId, function(errMsg, customs) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!apps) utils.sendErrResponse(res, 403, "Could not get applications");
+		else if (!customs) utils.sendErrResponse(res, 403, "Could not get applications");
 		else {
 			var content = {
-				applicants : customs.forEach(function(custom) { return custom.owner; })
+				applicants : customs
 			}
 			utils.sendSuccessResponse(res, content);
 		}
