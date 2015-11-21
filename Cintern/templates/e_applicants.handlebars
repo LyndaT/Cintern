@@ -3,15 +3,16 @@
     <p>Currently {{applicants.length}} students have applied to this listing</p>
 
   <table style="width:90%">
-    <tr>
+    <thead>
       <th>Email</th>
-    </tr>
-
-    {{#each applicants}}
-      {{> applicant}}
-    {{else}}
-      <p><em>No applicants have applied yet.</em></p>
-    {{/each}}
+    </thead>
+    <tbody>
+      {{#each applicants}}
+        {{> applicant}}
+      {{else}}
+        <p><em>No applicants have applied yet.</em></p>
+      {{/each}}
+    </tbody>
 
   </table>
 </div>

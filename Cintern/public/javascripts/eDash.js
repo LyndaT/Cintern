@@ -9,6 +9,9 @@ Handlebars.registerPartial('applicant', Handlebars.templates['e_applicants_row']
 	    var id = item.data('listing-id');
 	    $.get('/employers/applications/listings/'+id, function(response) {
 			loadPage('e_applicants', {applicants: response.content.applicants});
+			console.log(response.content.applicants);
 		});
+
+
 	});
 })();

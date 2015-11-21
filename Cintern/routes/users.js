@@ -55,4 +55,8 @@ router.get('/applications/common/:userid', application.getCommon);
 // maybe student.getCustom? idk
 router.get('/applications/custom/:userid/:lstgid', application.getCustom);
 
+/* GET full app (heeyoon; hopefully this works)*/  
+router.get('/applications/fullapp/:userid/:lstgid', application.getFullApplication);
+
+
 module.exports = router;
