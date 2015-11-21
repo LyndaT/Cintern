@@ -33,27 +33,27 @@ var loadSignupStudentModal = function(template, data) {
 var loadHomePage = function() {
 	loadPage('index');
 	loadModal('login-modal', 'login');
+	loadModal('employer-signup-modal', 'e_signup');
+	loadModal('student-signup-modal', 's_signup');
 };
 
 // load the home page
 $(document).ready(function() {
 	loadHomePage();
-	//loadStudentViewListingsPage();
-	//loadEmployerViewApplicantsPage();
 });
 
-// load the sign in page when the signin button is clicked
-$(document).on('click', '#login-btn', function(evt) {
-	loadPage('login');
-});
-
-$(document).on('click', '#e-signup-btn', function(evt) {
-	loadPage('e_signup');
-});
-
-$(document).on('click', '#s-signup-btn', function(evt) {
-	loadPage('s_signup');
-});
+// // load the sign in page when the signin button is clicked
+// $(document).on('click', '#login-btn', function(evt) {
+	// loadPage('login');
+// });
+// 
+// $(document).on('click', '#e-signup-btn', function(evt) {
+	// loadPage('e_signup');
+// });
+// 
+// $(document).on('click', '#s-signup-btn', function(evt) {
+	// loadPage('s_signup');
+// });
 
 // load the home page when the home link is clicked
 $(document).on('click', '#home-link', function(evt) {
