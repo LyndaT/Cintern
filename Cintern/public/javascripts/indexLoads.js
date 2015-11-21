@@ -43,9 +43,7 @@ var loadEmployerViewApplicantsPage = function() {
 // load the home page
 $(document).ready(function() {
 	loadHomePage();
-<<<<<<< HEAD
 	loadLoginModal('login');
-=======
 	//loadStudentViewListingsPage();
 	//loadEmployerViewApplicantsPage();
 });
@@ -53,7 +51,6 @@ $(document).ready(function() {
 // load the sign in page when the signin button is clicked
 $(document).on('click', '#login-btn', function(evt) {
 	loadPage('login');
->>>>>>> c3913dabced2c0bf250acf3478374276c1d14979
 });
 
 $(document).on('click', '#e-signup-btn', function(evt) {
