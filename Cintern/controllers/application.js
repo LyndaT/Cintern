@@ -29,11 +29,11 @@ exports.getCommon = function(req, res, next) {
 
 		Common.getCommonByOwnerId(userId, function(errMsg, common) {
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-			else if (!custom) utils.sendErrResponse(res, 403, "No custom");
+			else if (!common) utils.sendErrResponse(res, 403, "No common");
 			else {
 				common.populateCommon(function(errMsg, common) {
 					if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-					else if (!common) utils.sendErrResponse(res, 403, "No custom");
+					else if (!common) utils.sendErrResponse(res, 403, "No common");
 					else {
 						var content = {
 							"application" : common.application,
@@ -64,8 +64,8 @@ exports.getCustom = function(req, res, next) {
 	var currentUser = req.session.user;
 	if (currentUser) {
 		var isStudent = currentUser.studentInfo !== undefined;
-		var listingId = req.body.lstgid;
-		var userId = req.body.userid;
+		var listingId = req.body.listingId;
+		var userId = req.body.userId;
 
 		if (currentUser.studentInfo) userId = currentUser.userId;
 		// FOR LATER: else check that listingId belongs to the currentUser
@@ -84,7 +84,8 @@ exports.getCustom = function(req, res, next) {
 							"application" : custom.application,
 							"owner" : custom.owner,
 							"isTemplate" : custom.isTemplate,
-							"submitTime" : custom.submitTime
+							"submitTime" : custom.submitTime,
+							"_id" : custom._id
 						};
 						utils.sendSuccessResponse(res, content);
 					}
@@ -94,3 +95,67 @@ exports.getCustom = function(req, res, next) {
 	} 
 	else utils.sendErrResponse(res, 403, "No current user");
 };
+
+
+/** NEED TO FIX, THIS IS COPY AND PASTED..*/
+
+/**
+ * GET /users/applications/fullApp/:userid/:lstgid
+ *
+ * Gets the application (both the common and custom) submitted to listing lstgid by user with userid 
+ *
+ * Request body:
+ *  - userid: the user id of the student who applied to the listing
+ *  - lstgid: the id of the listing that the student applied to
+ * 
+ * Response:
+ *  - success: true if succeeded in getting the common and custom
+ *  - err: if had errors getting one or more of these
+ *
+ */
+exports.getFullApplication = function(req, res) {
+	//var currentUser = req.session.user;
+	var isStudent = req.session.user.studentInfo !== undefined
+
+	var listingId = req.body.listingId;
+	var userId = req.body.userId;
+
+	Common.getCommonByOwnerId(userId, function(errMsg, common) {
+		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+		else if (!common) utils.sendErrResponse(res, 403, "No common");
+		else {
+			common.populateCommon(function(errMsg, common) {
+				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+				else if (!common) utils.sendErrResponse(res, 403, "No common");
+				else {
+
+					Custom.getByOwnerAndListing(userId, listingId, isStudent, function(errMsg, custom) {
+						if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+						else if (!custom) utils.sendErrResponse(res, 403, "No custom");
+						else {
+							custom.populateCustom(function(errMsg, custom) {
+								if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+								else if (!custom) utils.sendErrResponse(res, 403, "No custom");
+								else {
+									var content = {
+										"commonApp": common.application,
+										"listing" : custom.listing,
+										"state" : custom.state,
+										"customApp" : custom.application,
+										"owner" : custom.owner,
+										"isTemplate" : custom.isTemplate,
+										"submitTime" : custom.submitTime
+									};
+									utils.sendSuccessResponse(res, content);
+								}
+							});
+						}
+					});
+				}
+			});
+		}
+	});
+
+};
+
+

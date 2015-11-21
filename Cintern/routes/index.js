@@ -3,7 +3,16 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Cintern' });
+	if (req.session.user) {
+		if (req.session.user.studentInfo) {
+			res.redirect('/students');
+		} else {
+			res.redirect('/employers');
+		}
+	}
+	else {
+		res.render('index', { title: 'Cintern' });
+	}
 });
 
 module.exports = router;

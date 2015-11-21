@@ -23,6 +23,7 @@ var requireStudent = function(req, res, next) {
 
 router.all('*', requireStudent);
 
+
 /**
  * Add a given employer ID to the request body
  */
@@ -42,13 +43,21 @@ router.param('lstgid', function(req, res, next, listingId) {
 /**
  * Add a given application ID to the request body
  */
-router.param('appid', function(req, res, next, applicationId) {
-  req.body.applicationId = applicationId;
+router.param('customid', function(req, res, next, customId) {
+  req.body.customId = customId;
   next();
 });
 
+router.get('/', function(req, res) {
+  if (req.session.user.studentInfo.commonFilled) {
+    res.render('s-dash', { title: 'Cintern' });    
+  } else {
+    res.render('common', { user : req.session.user.userId });
+  }
+});
+
 /* GET all listings */
-router.get('/listings', listing.getAllListings);
+router.get('/listings',listing.getAllListings);
 
 /* GET employer listings */
 router.get('/listings/employer/:employerid', listing.getEmployerListings);
@@ -68,16 +77,19 @@ router.post('/applications/custom/saved/:lstgid', custom.saveCustomApplication);
 /* POST submit common application */
 router.post('/applications/common', common.submitCommonApplication);
 
+/* GET submit common application */
+//router.get('/applications/common', common.submitCommonApplication);
+
 /* POST submit custom application */
-router.post('/applications/custom/:appid', custom.submitCustomApplication);
+router.post('/applications/custom/:customid', custom.submitCustomApplication);
 
 /* POST application update */
-// router.post('/applications/updates/:appid', custom.updateApplication);
+// router.post('/applications/updates/:customid', custom.updateApplication);
 
 /* POST application withdrawal */
-// router.post('/applications/withdrawal/:appid', custom.withdrawApplication);
+// router.post('/applications/withdrawal/:customid', custom.withdrawApplication);
 
 /* DELETE application */
-// router.delete('/applications/:appid', custom.deleteApplication);
+// router.delete('/applications/:customid', custom.deleteApplication);
 
 module.exports = router;
