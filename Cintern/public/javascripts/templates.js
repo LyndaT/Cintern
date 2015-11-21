@@ -42,7 +42,7 @@ templates['e_applicants'] = template({"1":function(container,depth0,helpers,part
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "<div id=\"e_applicants\">\n  <h1>Applicants</h1>\n    <p>Currently "
+  return "<div class=\"e_applicants\">\n  <h1>Applicants</h1>\n    <p>Currently "
     + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.applicants : depth0)) != null ? stack1.length : stack1), depth0))
     + " students have applied to this listing</p>\n\n  <table style=\"width:90%\">\n    <tr>\n      <th>Email</th>\n    </tr>\n\n"
     + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.applicants : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
@@ -71,11 +71,11 @@ templates['e_dash_page'] = template({"1":function(container,depth0,helpers,parti
 templates['e_dash_page_listing'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=container.lambda, alias2=container.escapeExpression;
 
-  return "<div id=\"employer-dash-listing\" data-listing-id="
+  return "<div id=\"employer-dash-listing\">\n    <tr id=\"listing-row\" data-listing-id="
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1._id : stack1), depth0))
-    + ">\n  <tr>\n  	<td>"
+    + ">\n  	  <td>"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1.title : stack1), depth0))
-    + "</td>\n  </tr>\n</div>";
+    + "</td>\n    </tr>\n</div>";
 },"useData":true});
 templates['e_signup'] = template({"1":function(container,depth0,helpers,partials,data) {
     var helper;
@@ -159,32 +159,51 @@ templates['s_dash_page_app'] = template({"compiler":[7,">= 4.0.0"],"main":functi
     + alias1(((helper = (helper = helpers.state || (depth0 != null ? depth0.state : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(alias2,{"name":"state","hash":{},"data":data}) : helper)))
     + "</td>\n  </tr>\n</div>";
 },"useData":true});
+templates['s_listing'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "<div>\n	<a href=\"/students\"</a> Back to Dash</a>\n</div>\n\n<div class=\"listing\">\n	<label>Company: </label> "
+    + alias4(((helper = (helper = helpers.company || (depth0 != null ? depth0.company : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"company","hash":{},"data":data}) : helper)))
+    + "\n	<br>\n	<label>Position Title: </label> "
+    + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
+    + "\n	\n	<br>\n	<br>\n\n	<label>Description:</label>\n	<p>"
+    + alias4(((helper = (helper = helpers.description || (depth0 != null ? depth0.description : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"description","hash":{},"data":data}) : helper)))
+    + "</p>\n\n	<br>\n	<br>\n\n	<label>Requirements:</label>\n	<p>"
+    + alias4(((helper = (helper = helpers.requirements || (depth0 != null ? depth0.requirements : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"requirements","hash":{},"data":data}) : helper)))
+    + "</p>\n\n	<br>\n	<br>\n\n	<button class=\"btn btn-primary\" id=\"add_app\" data-listing-id="
+    + alias4(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"_id","hash":{},"data":data}) : helper)))
+    + ">Add to my list</button>	\n</div>";
+},"useData":true});
 templates['s_listing_description'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     return "<div id=\"s_listing_description\">\n\nReminder: populate listing title, description and requirements later.\n</div>\n";
 },"useData":true});
 templates['s_listing_row'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1, helper, alias1=container.escapeExpression, alias2=depth0 != null ? depth0 : {}, alias3=helpers.helperMissing, alias4="function";
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 
-  return "<div id=\"s_listing_row\">\n    <tr>\n      <td>"
-    + alias1(container.lambda(((stack1 = (depth0 != null ? depth0.employerId : depth0)) != null ? stack1.company : stack1), depth0))
+  return "<div>\n    <tr class=\"s_listing\" data-listing-id="
+    + alias4(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"_id","hash":{},"data":data}) : helper)))
+    + " data-listing-company="
+    + alias4(alias5(((stack1 = (depth0 != null ? depth0.employerId : depth0)) != null ? stack1.company : stack1), depth0))
+    + ">\n      <td>"
+    + alias4(alias5(((stack1 = (depth0 != null ? depth0.employerId : depth0)) != null ? stack1.company : stack1), depth0))
     + "</td>\n      <td>"
-    + alias1(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(alias2,{"name":"title","hash":{},"data":data}) : helper)))
+    + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
     + "</td>\n      <td>"
-    + alias1(((helper = (helper = helpers.description || (depth0 != null ? depth0.description : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(alias2,{"name":"description","hash":{},"data":data}) : helper)))
+    + alias4(((helper = (helper = helpers.description || (depth0 != null ? depth0.description : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"description","hash":{},"data":data}) : helper)))
     + "</td>\n    </tr>\n</div>\n";
 },"useData":true});
 templates['s_listings'] = template({"1":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return ((stack1 = container.invokePartial(partials.listing,depth0,{"name":"listing","data":data,"indent":"      ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
+  return ((stack1 = container.invokePartial(partials.listing,depth0,{"name":"listing","data":data,"indent":"        ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
 },"3":function(container,depth0,helpers,partials,data) {
-    return "      <p><em>No listings available</em></p>\n";
+    return "        <p><em>No listings available</em></p>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "<div class=\"s_listings\">\n\n  <a href=\"/students\">Back to Dash</a>\n\n  <h1>Current available listings</h1>\n  <p>Click on a listing for more detailed information.</p>\n  <br>\n\n  <table class=\"table table-hover table-condensed\">\n\n    <tr>\n      <th>Company</th>\n      <th>Position</th>\n      <th>Description</th>\n    </tr>\n\n"
+  return "<div class=\"s_listings\">\n  <a href=\"/students\">Back to Dash</a>\n\n  <h1>Current available listings</h1>\n  <p>Click on a listing for more detailed information.</p>\n  <br>\n\n  <table class=\"table table-hover table-condensed row-clickable\">\n\n    <thead>\n      <th>Company</th>\n      <th>Position</th>\n      <th>Description</th>\n    </thead>\n\n    <tbody>\n"
     + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.listings : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
-    + "\n  </table>\n</div>\n";
+    + "    </tbody>\n\n  </table>\n</div>\n";
 },"usePartial":true,"useData":true});
 templates['s_signup'] = template({"1":function(container,depth0,helpers,partials,data) {
     var helper;
