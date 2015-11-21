@@ -64,14 +64,14 @@ templates['e_dash_page'] = template({"1":function(container,depth0,helpers,parti
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams) {
     var stack1;
 
-  return "<div id=\"employer-dash\">\n  <h1>Welcome!</h1>\n  <button class=\"btn btn-primary right-align\" id=\"new-listing-btn\">Create New Listing</button>\n  \n  Here are your listings:\n\n  <br>\n  <br>\n\n  <table class=\"table table-hover table-condensed\">\n    <tr>\n  	  <th>Title</th>\n  	</tr>\n"
+  return "<!-- author: Maddie Dawson -->\n\n<div id=\"employer-dash\">\n  <h1>Welcome!</h1>\n  <button class=\"btn btn-primary right-align\" id=\"new-listing-btn\">Create New Listing</button>\n  \n  Here are your listings:\n\n  <br>\n  <br>\n\n  <table class=\"table table-hover table-condensed\">\n    <tr>\n  	  <th>Title</th>\n  	</tr>\n"
     + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.listings : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 1, blockParams),"inverse":container.program(3, data, 0, blockParams),"data":data,"blockParams":blockParams})) != null ? stack1 : "")
     + "  </table>\n</div>";
 },"usePartial":true,"useData":true,"useBlockParams":true});
 templates['e_dash_page_listing'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=container.lambda, alias2=container.escapeExpression;
 
-  return "<div id=\"employer-dash-listing\">\n    <tr id=\"listing-row\" data-listing-id="
+  return "<!-- author: Maddie Dawson -->\n\n<div id=\"employer-dash-listing\">\n    <tr class=\"listing-row\" data-listing-id="
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1._id : stack1), depth0))
     + ">\n  	  <td>"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1.title : stack1), depth0))
@@ -149,7 +149,7 @@ templates['s_dash_page'] = template({"1":function(container,depth0,helpers,parti
 templates['s_dash_page_app'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
-  return "<!-- author: Maddie Dawson -->\n\n<div class=\"student-dash-app\">\n  <tr id=\"student-app\" data-listing-id="
+  return "<!-- author: Maddie Dawson -->\n\n<div class=\"student-dash-app\">\n  <tr class=\"student-app\" data-listing-id="
     + alias4(((helper = (helper = helpers.listingid || (depth0 != null ? depth0.listingid : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"listingid","hash":{},"data":data}) : helper)))
     + " data-user-id="
     + alias4(((helper = (helper = helpers.userid || (depth0 != null ? depth0.userid : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"userid","hash":{},"data":data}) : helper)))

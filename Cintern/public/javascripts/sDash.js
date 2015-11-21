@@ -1,8 +1,12 @@
+/**
+ * @author: Maddie dawson
+ */
+
 (function() {
   /**
    * When a student clicks on an application on their dash, load the custom app
    */	
-  $(document).on('click', '#student-app', function(evt) {
+  $(document).on('click', '.student-app', function(evt) {
   	var item = $(this);
   	var listingId = item.data('listing-id');
   	var userId = item.data('user-id');
