@@ -13,16 +13,29 @@ var loadPage = function(template, data) {
 	$('#main-container').html(Handlebars.templates[template](data));
 };
 
-var loadLoginModal = function(template, data) {
+var loadModal = function(modalId, template, data){
 	data = data || {};
-	$('#login-modal').html(Handlebars.templates[template](data));
+	var id = "#"+ modalId;
+	$(id).html(Handlebars.templates[template](data));
 };
+
+var loadSignupEmployerModal = function(template, data) {
+	data = data || {};
+	$('#employer-signup-modal').html(Handlebars.templates[template](data));
+};
+
+var loadSignupStudentModal = function(template, data) {
+	data = data || {};
+	$('#student-signup-modal').html(Handlebars.templates[template](data));
+};
+
 
 /**
  * This function loads the home page Handlebar template
  */
 var loadHomePage = function() {
 	loadPage('index');
+	loadModal('login-modal', 'login');
 };
 
 var loadStudentViewListingsPage = function() {
@@ -43,7 +56,6 @@ var loadEmployerViewApplicantsPage = function() {
 // load the home page
 $(document).ready(function() {
 	loadHomePage();
-	loadLoginModal('login');
 	//loadStudentViewListingsPage();
 	//loadEmployerViewApplicantsPage();
 });
