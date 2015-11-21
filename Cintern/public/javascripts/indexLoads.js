@@ -10,6 +10,11 @@ var loadPage = function(template, data) {
 	$('#main-container').html(Handlebars.templates[template](data));
 };
 
+var loadLoginModal = function(template, data) {
+	data = data || {};
+	$('#login-modal').html(Handlebars.templates[template](data));
+};
+
 /**
  * This function loads the home page Handlebar template
  */
@@ -20,11 +25,7 @@ var loadHomePage = function() {
 // load the home page
 $(document).ready(function() {
 	loadHomePage();
-});
-
-// load the sign in page when the signin button is clicked
-$(document).on('click', '#login-btn', function(evt) {
-	loadPage('login');
+	loadLoginModal('login');
 });
 
 $(document).on('click', '#e-signup-btn', function(evt) {
