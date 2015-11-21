@@ -2,7 +2,7 @@
   <h1>Applicants</h1>
     <p>Currently {{applicants.length}} students have applied to this listing</p>
 
-  <table style="width:90%">
+  <table class="table table-hover table-condensed">
     <thead>
       <th>Email</th>
     </thead>
@@ -10,7 +10,9 @@
       {{#each applicants}}
         {{> applicant}}
       {{else}}
-        <p><em>No applicants have applied yet.</em></p>
+        <tr>
+          <td>No applicants have applied yet.</td>
+        </tr>
       {{/each}}
     </tbody>
 
