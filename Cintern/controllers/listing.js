@@ -65,7 +65,6 @@ exports.createListing = function(req, res, next) {
 			else if (!listing) utils.sendErrResponse(res, 403, "No listing");
 			else {
 				Custom.createTemplate(listing._id, questionList, currentUser.userId, function(errMsg, template) {
-					console.log(errMsg);
 					if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 					else if (!template) utils.sendErrResponse(res, 403, "No template");
 					else utils.sendSuccessResponse(res);
@@ -89,6 +88,8 @@ exports.createListing = function(req, res, next) {
  */
 exports.getAllListings = function(req, res) {
 	Listing.getAllListings(function(errMsg, listings) {
+		console.log("STUDENT SEES LISTINGS", listings);
+
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 		else if (!listings) utils.sendErrResponse(res, 403, "No listings");
 		else {
@@ -122,16 +123,19 @@ exports.getEmployerListings = function(req, res) {
 		var employerId = currentUser.userId;
 	}*/
 	var currentUser = req.session.user;
-	var employerId = currentUser.userId;
-	Listing.getAllEmployerListings(employerId, function(errMsg, listings) {
-		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!listings) utils.sendErrResponse(res, 403, "No listings");
-		else {
-			var content = {
-				"listings" : listings,
+	Employer.findOne({user: currentUser.userId}, function(err, employer){
+		var employerId = employer._id;
+		
+		Listing.getAllEmployerListings(employerId, function(errMsg, listings) {
+			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+			else if (!listings) utils.sendErrResponse(res, 403, "No listings");
+			else {
+				var content = {
+					"listings" : listings,
+				}
+				utils.sendSuccessResponse(res, content);
 			}
-			utils.sendSuccessResponse(res, content);
-		}
+		});
 	});
 }
 

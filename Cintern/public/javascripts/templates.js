@@ -114,7 +114,7 @@ templates['question'] = template({"1":function(container,depth0,helpers,partials
 templates['s_dash_page'] = template({"1":function(container,depth0,helpers,partials,data,blockParams) {
     var stack1;
 
-  return ((stack1 = container.invokePartial(partials.s_dash_page_app,depth0,{"name":"s_dash_page_app","hash":{"app":blockParams[0][0]},"data":data,"blockParams":blockParams,"indent":"      ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
+  return ((stack1 = container.invokePartial(partials.s_dash_page_app,depth0,{"name":"s_dash_page_app","hash":{"state":((stack1 = blockParams[0][0]) != null ? stack1.state : stack1),"title":((stack1 = ((stack1 = blockParams[0][0]) != null ? stack1.listing : stack1)) != null ? stack1.title : stack1),"company":((stack1 = ((stack1 = ((stack1 = blockParams[0][0]) != null ? stack1.listing : stack1)) != null ? stack1.employerId : stack1)) != null ? stack1.company : stack1)},"data":data,"blockParams":blockParams,"indent":"      ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
 },"3":function(container,depth0,helpers,partials,data) {
     return "      <tr>\n      	<td>No applications yet!</td>\n      </tr>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams) {
@@ -125,16 +125,16 @@ templates['s_dash_page'] = template({"1":function(container,depth0,helpers,parti
     + "  </table>\n</div>";
 },"usePartial":true,"useData":true,"useBlockParams":true});
 templates['s_dash_page_app'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+    var stack1, helper, alias1=container.escapeExpression, alias2=depth0 != null ? depth0 : {}, alias3=helpers.helperMissing, alias4="function";
 
   return "<div class=\"student-dash-app\" data-app-id="
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.app : depth0)) != null ? stack1._id : stack1), depth0))
+    + alias1(container.lambda(((stack1 = (depth0 != null ? depth0.app : depth0)) != null ? stack1._id : stack1), depth0))
     + ">\n  <tr>\n  	<td>"
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.app : depth0)) != null ? stack1.companyName : stack1), depth0))
+    + alias1(((helper = (helper = helpers.company || (depth0 != null ? depth0.company : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(alias2,{"name":"company","hash":{},"data":data}) : helper)))
     + "</td>\n  	<td>"
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.app : depth0)) != null ? stack1.title : stack1), depth0))
+    + alias1(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(alias2,{"name":"title","hash":{},"data":data}) : helper)))
     + "</td>\n  	<td>"
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.app : depth0)) != null ? stack1.status : stack1), depth0))
+    + alias1(((helper = (helper = helpers.state || (depth0 != null ? depth0.state : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(alias2,{"name":"state","hash":{},"data":data}) : helper)))
     + "</td>\n  </tr>\n</div>";
 },"useData":true});
 templates['s_signup'] = template({"1":function(container,depth0,helpers,partials,data) {

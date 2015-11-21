@@ -91,13 +91,13 @@ exports.getApplicants = function(req, res, next) {
  */
 exports.getStudentApplications = function(req, res, next) {
 	var userId = req.session.user.userId;
-
+	
 	Custom.getCustomsForStudentDash(userId, function(errMsg, customs) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 		else if (!customs) utils.sendErrResponse(res, 403, "Could not get applications");
 		else {
 			var content = {
-				applications : customs,
+				applications : customs
 			}
 			utils.sendSuccessResponse(res, content);
 		}
@@ -178,7 +178,6 @@ exports.saveCustomApplication = function(req, res, next) {
 exports.submitCustomApplication = function(req, res, next) {
 	var userId = req.session.user.userId;
 	var customId = req.body.customId;
-
 	var answers = req.body.answers;
 	// format answers for model call
 	var answerArray = [];

@@ -49,7 +49,6 @@ router.param('customid', function(req, res, next, customId) {
 });
 
 router.get('/', function(req, res) {
-  console.log("redirecting /students");
   if (req.session.user.studentInfo.commonFilled) {
     res.render('s-dash', { title: 'Cintern' });    
   } else {

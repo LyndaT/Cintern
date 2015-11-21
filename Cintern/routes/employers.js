@@ -39,7 +39,6 @@ router.param('customid', function(req, res, next, customId) {
 });
 
 router.get('/', function(req, res) {
-  console.log("redirecting /employers");
   res.render('e-dash', { title: 'Cintern' });    
 })
 
