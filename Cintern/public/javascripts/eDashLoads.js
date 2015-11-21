@@ -16,8 +16,8 @@ var loadPage = function(template, data) {
  * This function loads the home page Handlebar template
  */
 var loadHomePage = function() {
-	createFakeListings();
-	//loadListings();
+	//createFakeListings();
+	loadListings();
 };
 
 /**
@@ -56,4 +56,8 @@ var createFakeListings = function() {
 // load the home page
 $(document).ready(function() {
 	loadHomePage();
+});
+
+$(document).on('click', '#new-listing-btn', function(evt) {
+	loadPage('createlisting');
 });

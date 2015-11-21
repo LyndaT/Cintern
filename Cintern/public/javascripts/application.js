@@ -9,6 +9,10 @@
       var appId = $('#submit-app-form').data('app-id');
       var isCommon = $('#submit-app-form').data('is-common');
 
+      var content = {
+        "answers" : formData
+      };
+
       var postUrl;
       if (isCommon) postUrl = '/students/applications/common';
       else postUrl = '/students/applications/custom/' + appId;
@@ -16,7 +20,8 @@
       $.ajax({
           type: 'POST', 
           url: postUrl,
-          data: formData
+          contentType: 'application/json',
+          data: JSON.stringify(content)
       }).done(function(response) {
           location.reload();
       }).fail(function(responseObject) {

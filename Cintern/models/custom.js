@@ -7,6 +7,7 @@ var mongoose = require("mongoose");
 var Application = require("../models/application");
 var Listing = require ("../models/listing");
 var User = require("../models/User");
+var Employer = require("../models/Employer");
 
 var stateTable = {
 	"save" : "saved",
@@ -109,17 +110,24 @@ customSchema.statics.copyTemplateToSave = function(listingId, newOwnerId, callba
  */
 customSchema.statics.getCustomsForStudentDash = function(ownerId, callback) {
 	Custom.find({ "owner" : ownerId }).populate("owner").populate("listing").exec(function(err, customs) {
-		console.log(customs);
+		//console.log(customs);
 	});
 
 	Custom.find({ "owner" : ownerId })
 		.populate("owner")
-		.populate({ 
-			path: "listing",
-			populate: { path: "employerId" }
-		}).exec(function(err, customs) {
+		.populate("listing")
+		.exec(function(err, customs) {
 		if (err) callback(err.message);
-		else callback(null, customs);
+		else {
+			Custom.populate(customs, {
+				path: "listing.employerId",
+				model: "Employer"
+			},
+			function(err, populated_customs) {
+				if (err) callback(err.message);
+				else callback(null, customs);
+			});
+		}
 	});
 };
 

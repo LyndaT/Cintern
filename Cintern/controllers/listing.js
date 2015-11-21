@@ -5,8 +5,8 @@
 
 var utils = require('../utils/utils');
 var Listing = require('../models/listing.js');
-var Custom = require('../models/custom.js');
 var Employer = require('../models/Employer.js');
+var Custom = require('../models/custom.js');
 
 /*
  * Require authentication on ALL access to /listings/*
@@ -41,26 +41,37 @@ var Employer = require('../models/Employer.js');
  */
 exports.createListing = function(req, res, next) {
 	var currentUser = req.session.user;
+	var body = req.body;
+	Employer.findOne({user: currentUser.userId}, function(err, employer){
+		var employerId = employer._id;
+		var title = req.body.title;
+		var desc = req.body.description;
+		var reqs = req.body.requirements;
+		var deadline = undefined;
+		var questions = req.body.questions;
+		
+		var questionList = [];
+		questions.forEach(function(question) {
+			questionList.push({
+				"question" : question,
+				"type" : "text",
+				"required" : true
+			})
+		});
 
-	var title = req.body.title;
-	var desc = req.body.description;
-	var reqs = req.body.requirements;
-	var deadline = undefined;
-	var questions = req.body.questions;
-
-	Employer.findByUserId(req.session.user.userId, function(err, employer) {
 		Listing.createListing(employerId, title, desc, reqs, deadline, function(errMsg, listing) {
+			
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 			else if (!listing) utils.sendErrResponse(res, 403, "No listing");
 			else {
-				Custom.createTemplate(listing._id, questions, currentUser.userId, function(errMsg, template) {
+				Custom.createTemplate(listing._id, questionList, currentUser.userId, function(errMsg, template) {
 					if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 					else if (!template) utils.sendErrResponse(res, 403, "No template");
 					else utils.sendSuccessResponse(res);
 				});
 			}
 		});
-	});
+	});	
 };
 
 /**
@@ -77,6 +88,8 @@ exports.createListing = function(req, res, next) {
  */
 exports.getAllListings = function(req, res) {
 	Listing.getAllListings(function(errMsg, listings) {
+		console.log("STUDENT SEES LISTINGS", listings);
+
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 		else if (!listings) utils.sendErrResponse(res, 403, "No listings");
 		else {
@@ -110,16 +123,19 @@ exports.getEmployerListings = function(req, res) {
 		var employerId = currentUser.userId;
 	}*/
 	var currentUser = req.session.user;
-	var employerId = currentUser.userId;
-	Listing.getAllEmployerListings(employerId, function(errMsg, listings) {
-		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!listings) utils.sendErrResponse(res, 403, "No listings");
-		else {
-			var content = {
-				"listings" : listings,
+	Employer.findOne({user: currentUser.userId}, function(err, employer){
+		var employerId = employer._id;
+		
+		Listing.getAllEmployerListings(employerId, function(errMsg, listings) {
+			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+			else if (!listings) utils.sendErrResponse(res, 403, "No listings");
+			else {
+				var content = {
+					"listings" : listings,
+				}
+				utils.sendSuccessResponse(res, content);
 			}
-			utils.sendSuccessResponse(res, content);
-		}
+		});
 	});
 }
 

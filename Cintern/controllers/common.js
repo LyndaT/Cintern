@@ -22,10 +22,9 @@ var utils = require('../utils/utils');
  */ 
 exports.submitCommonApplication = function(req, res, next) {
 	var currentUser = req.session.user;
-	//console.log("relies on common req.session.submittedCommon");
 	if (!currentUser.studentInfo.commonFilled) {
 		var currentUserId = currentUser.userId;
-		var answers = req.body;
+		var answers = req.body.answers;
 
 		// format answers for model call
 		var answerArray = [];
@@ -35,8 +34,6 @@ exports.submitCommonApplication = function(req, res, next) {
 	          "answer" : answers[id]
 	        });
 	    });
-
-	    console.log(answers);
 
 		// submit the common
 		Common.submitCommon(currentUserId, answerArray, function(errMsg, success) {

@@ -17,8 +17,8 @@ var loadPage = function(template, data) {
  * This function loads the home page Handlebar template
  */
 var loadHomePage = function() {
-	createFakeApps();
-	//loadApps();
+	//createFakeApps();
+	loadApps();
 };
 
 /**
@@ -26,7 +26,6 @@ var loadHomePage = function() {
  */
 var loadApps = function() {
 	$.get('/students/applications', function(response) {
-		console.log(response.content.applications);
 		loadPage('s_dash_page', { apps: response.content.applications });
 	});
 };

@@ -10,7 +10,7 @@
   	</tr>
 
     {{#each apps as |a|}}
-      {{> s_dash_page_app app=a}}
+      {{> s_dash_page_app company=a.listing.employerId.company title=a.listing.title state=a.state}}
     {{else}}
       <tr>
       	<td>No applications yet!</td>
