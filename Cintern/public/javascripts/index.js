@@ -9,7 +9,7 @@
           location.reload();
       }).fail(function(responseObject) {
           var response = $.parseJSON(responseObject.responseText);
-          $('.error').text(response.err);
+          $('#login-error').text(response.err);
       });
   });
 
@@ -17,7 +17,7 @@
       evt.preventDefault();
       var formData = helpers.getFormData(this);
       if (formData.password !== formData.confirm) {
-          $('.error').text('Password and confirmation do not match!');
+          $('#s-signup-error').text('Password and confirmation do not match!');
           return;
       }
       console.log(formData);
@@ -30,7 +30,7 @@
           location.reload();
       }).fail(function(responseObject) {
           var response = $.parseJSON(responseObject.responseText);
-          $('.error').text(response.err);
+          $('#s-signup-error').text(response.err);
       });
   });
 
@@ -38,7 +38,7 @@
       evt.preventDefault();
       var formData = helpers.getFormData(this);
       if (formData.password !== formData.confirm) {
-          $('.error').text('Password and confirmation do not match!');
+          $('#e-signup-error').text('Password and confirmation do not match!');
           return;
       }
       delete formData['confirm'];
@@ -51,7 +51,7 @@
           location.reload();
       }).fail(function(responseObject) {
           var response = $.parseJSON(responseObject.responseText);
-          $('.error').text(response.err);
+          $('#e-signup-error').text(response.err);
       });
   });
 
