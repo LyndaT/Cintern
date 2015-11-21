@@ -59,7 +59,13 @@ router.get('/', function(req, res) {
 })
 
 /* GET all listings */
-router.get('/listings', listing.getAllListings);
+router.get('/listings', function(req, res) {
+  console.log("redirecting to /listings");
+  res.render('s_listings');
+});
+
+
+//listing.getAllListings);
 
 /* GET employer listings */
 router.get('/listings/employer/:employerid', listing.getEmployerListings);

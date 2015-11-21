@@ -2,12 +2,16 @@
   Handlebars.registerPartial('question', Handlebars.templates['question']);
   Handlebars.registerPartial('application', Handlebars.templates['application']);
 
-  $(document).on('click', '#submit-app-btn', function(evt) {
+  $(document).on('submit', '#submit-app-form', function(evt) {
       console.log("submitted application");
       evt.preventDefault();
       var formData = helpers.getFormData('#submit-app-form');
       var appId = $('#submit-app-form').data('app-id');
       var isCommon = $('#submit-app-form').data('is-common');
+
+      var content = {
+        "answers" : formData
+      };
 
       var postUrl;
       if (isCommon) postUrl = '/students/applications/common';
@@ -16,7 +20,8 @@
       $.ajax({
           type: 'POST', 
           url: postUrl,
-          data: formData
+          contentType: 'application/json',
+          data: JSON.stringify(content)
       }).done(function(response) {
           location.reload();
       }).fail(function(responseObject) {
@@ -24,4 +29,11 @@
           $('.error').text(response.err);
       });
   });
+
+  // TODO: after MVP
+  /*$(document).on('submit', '#save-app-btn', function(evt) {
+    console.log("saved application");
+    var formData = helpers.getFormData('#submit-app-form');
+    var appId = $('#submit-app-form').data('app-id');
+  });*/
 })();

@@ -20,7 +20,8 @@ var loadHomePage = function() {
 		loadPage('application', {
 			questions : response.content.application.questions, 
 			appId : response.content._id, 
-			isCommon : true
+			isCommon : true,
+			isSubmitted : false,
 		});
 	});
 };
