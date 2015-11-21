@@ -10,7 +10,6 @@ Handlebars.registerPartial('s_dash_page_app', Handlebars.templates['s_dash_page_
  */
 var loadPage = function(template, data) {
 	data = data || {};
-	console.log(Handlebars.templates[template](data));
 	$('#s-dash-main-container').html(Handlebars.templates[template](data));
 };
 
@@ -18,7 +17,8 @@ var loadPage = function(template, data) {
  * This function loads the home page Handlebar template
  */
 var loadHomePage = function() {
-	loadApps();
+	createFakeApps();
+	//loadApps();
 };
 
 /**
@@ -26,6 +26,7 @@ var loadHomePage = function() {
  */
 var loadApps = function() {
 	$.get('/students/applications', function(response) {
+		console.log(response.content.applications);
 		loadPage('s_dash_page', { apps: response.content.applications });
 	});
 };
@@ -38,20 +39,24 @@ var loadApps = function() {
  */
 var createFakeApps = function() {
 	$.get('/students/listings', function(response) {
-		listingId = response.content.listings[0]._id;
+		listingId = response.content.listings[response.content.listings.length-1]._id;
 
-		$.post(
-			'/students/applications/custom/saved/' + listingId
-		).done(function(response) {
+		$.ajax({
+			type: 'POST',
+			url: '/students/applications/custom/saved/' + listingId,
+			contentType: 'application/json'
+		}).done(function(response) {
 			$.get('/students/applications', function(response) {
-				customId = response.content.applications[0]._id;
+				customId = response.content.applications[response.content.applications.length-1]._id;
 
-				$.post(
-					'/students/applications/custom/' + customId,
-					{
+				$.ajax({
+					type: 'POST',
+					url: '/students/applications/custom/' + customId,
+					contentType: 'application/json',
+					data: JSON.stringify({
 						answers: []
-					}
-				).done(function(response) {
+					})
+				}).done(function(response) {
 					loadApps();
 				}).fail(function(response) {
 					console.log("ERROR :(");

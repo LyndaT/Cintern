@@ -9,7 +9,6 @@ Handlebars.registerPartial('e_dash_page_listing', Handlebars.templates['e_dash_p
  */
 var loadPage = function(template, data) {
 	data = data || {};
-	console.log(Handlebars.templates[template](data));
 	$('#e-dash-main-container').html(Handlebars.templates[template](data));
 };
 
@@ -37,15 +36,17 @@ var loadListings = function() {
  * DELETE THIS LATER
  */
 var createFakeListings = function() {
-	$.post(
-		'/employers/listings',
-		{ 
+	$.ajax({
+		type: 'POST',
+		url: '/employers/listings',
+		contentType: 'application/json',
+		data: JSON.stringify({ 
 			title: "Hello",
 			description: "world",
 			requirements: "",
 			questions: []
-		}
-	).done(function(response) {
+		})
+	}).done(function(response) {
 		loadListings();
 	}).fail(function(response) {
 		console.log("ERROR :(");

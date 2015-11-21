@@ -5,6 +5,8 @@
 
 var utils = require('../utils/utils');
 var Listing = require('../models/listing.js');
+var Custom = require('../models/custom.js');
+var Employer = require('../models/Employer.js');
 
 /*
  * Require authentication on ALL access to /listings/*
@@ -40,23 +42,24 @@ var Listing = require('../models/listing.js');
 exports.createListing = function(req, res, next) {
 	var currentUser = req.session.user;
 
-	var employerId = req.session.user.userId;
 	var title = req.body.title;
 	var desc = req.body.description;
 	var reqs = req.body.requirements;
 	var deadline = undefined;
 	var questions = req.body.questions;
 
-	Listing.createListing(employerId, title, desc, reqs, deadline, function(errMsg, listing) {
-		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!listing) utils.sendErrResponse(res, 403, "No listing");
-		else {
-			Custom.createTemplate(listing._id, questions, currentUser.userId, function(errMsg, template) {
-				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-				else if (!template) utils.sendErrResponse(res, 403, "No template");
-				else utils.sendSuccessResponse(res);
-			});
-		}
+	Employer.findByUserId(req.session.user.userId, function(err, employer) {
+		Listing.createListing(employerId, title, desc, reqs, deadline, function(errMsg, listing) {
+			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+			else if (!listing) utils.sendErrResponse(res, 403, "No listing");
+			else {
+				Custom.createTemplate(listing._id, questions, currentUser.userId, function(errMsg, template) {
+					if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+					else if (!template) utils.sendErrResponse(res, 403, "No template");
+					else utils.sendSuccessResponse(res);
+				});
+			}
+		});
 	});
 };
 

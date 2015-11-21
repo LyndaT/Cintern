@@ -92,12 +92,16 @@ exports.getApplicants = function(req, res, next) {
 exports.getStudentApplications = function(req, res, next) {
 	var userId = req.session.user.userId;
 
+	console.log("HELLO");
+
 	Custom.getCustomsForStudentDash(userId, function(errMsg, customs) {
+		console.log("hello");
+
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 		else if (!customs) utils.sendErrResponse(res, 403, "Could not get applications");
 		else {
 			var content = {
-				applications : customs,
+				applications : customs
 			}
 			utils.sendSuccessResponse(res, content);
 		}
