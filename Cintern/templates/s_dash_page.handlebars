@@ -1,12 +1,15 @@
 <div id="student-dash">
   <h1>Welcome!</h1>
   Here are your applications:
+
+  <br>
+  <br>
   
-  <table>
+  <table class="table table-hover table-condensed">
   	<tr>
-  	  <td><b>Company</b></td>
-  	  <td><b>Title</b></td>
-  	  <td><b>Status</b></td>
+  	  <th>Company</th>
+  	  <th>Title</th>
+  	  <th>Status</th>
   	</tr>
 
     {{#each apps as |a|}}
