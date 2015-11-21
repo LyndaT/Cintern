@@ -54,12 +54,6 @@ router.get('/', function(req, res) {
   } else {
     res.render('common', { user : req.session.user.userId });
   }
-})
-
-/* GET the listings page */
-router.get('/listingspage', function(req, res) {
-  console.log("redirecting to /listings");
-  res.render('s-listings');
 });
 
 /* GET all listings */

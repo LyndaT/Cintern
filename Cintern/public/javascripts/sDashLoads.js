@@ -1,4 +1,6 @@
 Handlebars.registerPartial('s_dash_page_app', Handlebars.templates['s_dash_page_app']);
+Handlebars.registerPartial('listing', Handlebars.templates['s_listing_row']);
+
 
 /**
  * This function loads the Handlebar template called template initialized
@@ -30,13 +32,18 @@ var loadApps = function() {
 	});
 };
 
-/*var loadStudentViewListingsPage = function() {
+/**
+ * Loads all the listings
+ */
+var loadAllListings = function() {
 	$.get('/students/listings', function(response) {
-		console.log(response.content.listings[0]);
 		loadPage('s_listings', {listings: response.content.listings});
 	});
-};*/
+}
 
+$(document).on('click', '#s_view_listings', function(evt) {
+	loadAllListings();
+});
 
 /**
  * FOR UI TESTING PURPOSES ONLY
@@ -78,5 +85,4 @@ var createFakeApps = function() {
 // load the home page
 $(document).ready(function() {
 	loadHomePage();
-
 });
