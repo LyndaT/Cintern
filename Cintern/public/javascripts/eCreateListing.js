@@ -19,9 +19,9 @@ $(document).on('click', '#submit-listing-btn', function(evt) {
 	
 	var questionList = [];
 	Object.keys(data).forEach(function(id) {
-			if (id.indexOf("newq")==0){
-		        questionList.push(data[id]);
-	       }
+		if (id.indexOf("newq")==0){
+	        questionList.push(data[id]);
+        }
 	});
 	
 	var content = {
@@ -37,10 +37,9 @@ $(document).on('click', '#submit-listing-btn', function(evt) {
    		contentType: 'application/json',
    		data: JSON.stringify(content)
    	}).done(function(response) {
-          console.log("listing posted");
-          location.reload();
-      }).fail(function(responseObject) {
-          var response = $.parseJSON(responseObject.responseText);
-          $('.error').text(response.err);
-      });;
+        loadDashPage();
+ 	}).fail(function(responseObject) {
+    	var response = $.parseJSON(responseObject.responseText);
+      	$('.error').text(response.err);
+  	});;
 });

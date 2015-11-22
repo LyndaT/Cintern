@@ -46,7 +46,6 @@ $(document).on('click', '#add-app', function(evt) {
 
 // Loads the dash page
 var loadDashPage = function() {
-	$.ajax
 	$.get('/students/applications', function(response) {
 		loadPage(mainContainer, 's_dash_page', { apps: response.content.applications });
 	});
@@ -72,10 +71,12 @@ var loadListingPage = function(listingId, company) {
 var loadCustomAppPage = function(userId, listingId) {
 	$.ajax({
 		type: "GET",
-		url: "/users/applications/custom/" + userId + "/" + listingId
+		url: "/students/applications/custom/" + listingId
 	}).done(function(response) {
 		var data = {
 	      title : response.content.listing.title,
+	      listing : listingId, 
+	      owner : userId,
 	      questions : response.content.application.questions, 
 	      appId : response.content._id, 
 	      isCommon : false,

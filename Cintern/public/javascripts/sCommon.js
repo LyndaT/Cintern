@@ -9,7 +9,7 @@
  */
 var loadHomePage = function() {
 	var userId = $('#common-main-container').data('user-id');
-	$.get('/users/applications/common/' + userId, function(response) {
+	$.get('/students/applications/common', function(response) {
 		loadPage(mainContainer, 'application', {
 			questions : response.content.application.questions, 
 			appId : response.content._id, 
@@ -21,6 +21,5 @@ var loadHomePage = function() {
 
 // load the home page
 $(document).ready(function() {
-	console.log("loading common page");
 	loadHomePage();
 });

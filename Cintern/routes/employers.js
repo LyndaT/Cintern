@@ -1,6 +1,7 @@
 var express = require('express');
 var listing = require('../controllers/listing');
 var custom = require('../controllers/custom');
+var application = require('../controllers/application');
 var utils = require('../utils/utils');
 var router = express.Router();
 
@@ -35,6 +36,12 @@ router.param('customid', function(req, res, next, customId) {
   next();
 });
 
+// Add a given user ID to the request body
+router.param('userid', function(req, res, next, userId) {
+  req.body.userId = userId;
+  next();
+});
+
 /* GET home page for Employer User */
 router.get('/', function(req, res) {
   res.render('e-index', { title: 'Cintern' });    
@@ -42,6 +49,9 @@ router.get('/', function(req, res) {
 
 /* GET listings */
 router.get('/listings', listing.getEmployerListings);
+
+/* GET full app */  
+router.get('/applications/fullapp/:userid/:lstgid', application.getFullApplication);
 
 /* POST listing */
 router.post('/listings', listing.createListing);

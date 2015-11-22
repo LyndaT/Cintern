@@ -4,7 +4,6 @@
 
 var express = require('express');
 var user = require('../controllers/user');
-var application = require('../controllers/application');
 var router = express.Router();
 var student = require('../controllers/student');
 var employer = require('../controllers/employer');
@@ -22,11 +21,6 @@ router.param('userid', function(req, res, next, userId) {
   next();
 });
 
-/* GET users listing. */
-/*router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});*/
-
 /* POST login */
 router.post('/login', user.login);
 
@@ -38,14 +32,5 @@ router.post('/students', student.createStudent);
 
 /* POST new employer */
 router.post('/employers', employer.createEmployer);
-
-/* GET common app */
-router.get('/applications/common/:userid', application.getCommon);
-
-/* GET custom app */
-router.get('/applications/custom/:userid/:lstgid', application.getCustom);
-
-/* GET full app */  
-router.get('/applications/fullapp/:userid/:lstgid', application.getFullApplication);
 
 module.exports = router;

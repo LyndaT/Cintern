@@ -42,7 +42,6 @@ var loadCreateListingPage = function() {
 
 // Loads the applicant page corresponding to the listingId
 var loadApplicantsPage = function(listingId) {
-	console.log("loading");
 	$.get('/employers/applications/listings/' + listingId, function(response) {
 		loadPage(mainContainer, 'e_applicants', {applicants: response.content.applicants});
 	});
@@ -50,7 +49,7 @@ var loadApplicantsPage = function(listingId) {
 
 // Loads the Full Application page corresponding to the userId and listingId
 var getFullAppPage = function(userId, listingId) {
-	$.get('/users/applications/fullapp/' + userId + '/' + listingId, function(response) {
+	$.get('/employers/applications/fullapp/' + userId + '/' + listingId, function(response) {
     	loadPage(mainContainer, 'full_app', {
     		common : response.content.commonApp,
     		custom : response.content.customApp,

@@ -62,17 +62,23 @@ router.get('/listings/:lstgid', listing.getListing);
 /* GET all applications */
 router.get('/applications', custom.getStudentApplications);
 
-/* GET template */
-router.get('/applications/template/:lstgid', custom.getListingTemplate);
+/* GET common application */
+router.get('/applications/common', common.getCommonApplication);
 
-/* POST add custom application */
-router.post('/applications/custom/saved/:lstgid', custom.saveCustomApplication);
+/* GET custom application */
+router.get('/applications/custom/:lstgid', custom.getCustomApplication);
 
 /* PUT submit common application */
 router.put('/applications/common', common.submitCommonApplication);
 
 /* PUT submit custom application */
 router.put('/applications/custom/:customid', custom.submitCustomApplication);
+
+/* GET template */
+router.get('/applications/template/:lstgid', custom.getListingTemplate);
+
+/* POST add custom application */
+router.post('/applications/custom/saved/:lstgid', custom.saveCustomApplication);
 
 /* PUT update a custom application */
 router.put('/applications/updates/:customid', custom.updateApplication);

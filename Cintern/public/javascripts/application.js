@@ -9,7 +9,7 @@ $(document).on('submit', '#submit-app-form', function(evt) {
     var formData = helpers.getFormData('#submit-app-form');
     var appId = $('#submit-app-form').data('app-id');
     var isCommon = $('#submit-app-form').data('is-common');
-
+    
     var content = {
       "answers" : formData
     };
@@ -24,7 +24,8 @@ $(document).on('submit', '#submit-app-form', function(evt) {
         contentType: 'application/json',
         data: JSON.stringify(content)
     }).done(function(response) {
-        location.reload();
+        if (isCommon) location.reload();
+        else loadDashPage();
     }).fail(function(responseObject) {
         var response = $.parseJSON(responseObject.responseText);
         $('.error').text(response.err);
@@ -37,6 +38,8 @@ $(document).on('click', '#save-app-btn', function(evt) {
     var formData = helpers.getFormData('#submit-app-form');
     var appId = $('#submit-app-form').data('app-id');
     var isCommon = $('#submit-app-form').data('is-common');
+    var listingId = $('#submit-app-form').data('listing-id');
+    var userId = $('#submit-app-form').data('user-id');
 
     var content = {
       "answers" : formData
@@ -52,7 +55,7 @@ $(document).on('click', '#save-app-btn', function(evt) {
         contentType: 'application/json',
         data: JSON.stringify(content)
     }).done(function(response) {
-        location.reload();
+        loadCustomAppPage(userId, listingId);
     }).fail(function(responseObject) {
         var response = $.parseJSON(responseObject.responseText);
         $('.error').text(response.err);

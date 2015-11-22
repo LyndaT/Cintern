@@ -5,6 +5,50 @@ var Custom = require('../models/custom.js');
 var utils = require('../utils/utils');
 
 /**
+ * GET /students/applications/custom/:lstgid
+ *
+ * Gets the custom application associated with the lstgid for the 
+ * current User
+ * 
+ * Request body:
+ *	- lstgid: listingId of the listing's whose Custom we need
+ *
+ * Response:
+ *  - success: true if succeeded got the custom
+ *  - err: on failure (i.e. server failure, invalid user);
+ */
+exports.getCustomApplication = function(req, res, next) {
+	var currentUser = req.session.user;
+	var userId = currentUser.userId;
+	var listingId = req.body.listingId;
+	console.log(listingId);
+	console.log(userId);
+
+	Custom.getByOwnerAndListing(userId, listingId, true, function(errMsg, custom) {
+		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+		else if (!custom) utils.sendErrResponse(res, 403, "No custom");
+		else {
+			custom.populateCustom(function(errMsg, custom) {
+				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+				else if (!custom) utils.sendErrResponse(res, 403, "No custom");
+				else {
+					var content = {
+						"listing" : custom.listing,
+						"state" : custom.state,
+						"application" : custom.application,
+						"owner" : custom.owner,
+						"isTemplate" : custom.isTemplate,
+						"submitTime" : custom.submitTime,
+						"_id" : custom._id
+					};
+					utils.sendSuccessResponse(res, content);
+				}
+			});
+		}
+	});
+};
+
+/**
  * GET /employers/listings/:lstgid
  *
  * Retrieves applicants for a given listing
