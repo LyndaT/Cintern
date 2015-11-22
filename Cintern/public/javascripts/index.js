@@ -1,64 +1,96 @@
 /**
  * @author Jennifer Wu
  */
+
+var mainContainer = '#main-container';
+
+
+// load the home page
+$(document).ready(function() {
+	loadHomePage();
+});
+
+$(document).on('click', '#login-btn', function(evt) {
+	loadPage(mainContainer, 'login');
+});
+
+$(document).on('click', '#e-signup-btn', function(evt) {
+	loadPage(mainContainer, 'e_signup');
+});
+
+$(document).on('click', '#s-signup-btn', function(evt) {
+	loadPage(mainContainer, 's_signup');
+});
+
+// load the home page when the home link is clicked
+$(document).on('click', '#home-link', function(evt) {
+	evt.preventDefault();
+	loadHomePage();
+});
+
 $(document).on('submit', '#login-form', function(evt) {
     evt.preventDefault();
-    $.post(
-        '/users/login',
-        helpers.getFormData(this)
-    ).done(function(response) {
-        console.log("logged in");
-        location.reload();
+    $.ajax({
+    	type: 'POST',
+    	url: '/users/login',
+    	data: helpers.getFormData(this)
+    }).done(function(response) {
+    	location.reload();
     }).fail(function(responseObject) {
-        var response = $.parseJSON(responseObject.responseText);
-        $('.error').text(response.err);
+    	var response = $.parseJSON(responseObject.responseText);
+    	$('.error').text(response.err);
     });
 });
 
 $(document).on('submit', '#s-signup-form', function(evt) {
     evt.preventDefault();
     var formData = helpers.getFormData(this);
+
+    // check that passwords match
     if (formData.password !== formData.confirm) {
-        $('.error').text('Password and confirmation do not match!');
+        $('.error').text('Passwords do not match!');
         return;
     }
-    console.log(formData);
+
     delete formData['confirm'];
-    $.post(
-        '/users/students',
-        formData
-    ).done(function(response) {
-        console.log("signed up");
-        location.reload();
+
+    $.ajax({
+    	type: 'POST',
+    	url: '/users/students',
+    	data: formData
+    }).done(function(response) {
+    	location.reload();
     }).fail(function(responseObject) {
-        var response = $.parseJSON(responseObject.responseText);
-        $('.error').text(response.err);
+    	var response = $.parseJSON(responseObject.responseText);
+    	$('.error').text(response.err);
     });
 });
 
- $(document).on('submit', '#e-signup-form', function(evt) {
+$(document).on('submit', '#e-signup-form', function(evt) {
     evt.preventDefault();
     var formData = helpers.getFormData(this);
+    
+    // check that passwords match
     if (formData.password !== formData.confirm) {
-        $('.error').text('Password and confirmation do not match!');
+        $('.error').text('Passwords do not match!');
         return;
     }
+
     delete formData['confirm'];
-    $.post(
-        '/users/employers',
-        formData
-    ).done(function(response) {
-        console.log("signed up");
-        // REDIRECT
-        location.reload();
+
+    $.ajax({
+    	type: 'POST',
+    	url: '/users/employers',
+    	data: formData
+    }).done(function(response) {
+    	location.reload();
     }).fail(function(responseObject) {
-        var response = $.parseJSON(responseObject.responseText);
-        $('.error').text(response.err);
+    	var response = $.parseJSON(responseObject.responseText);
+    	$('.error').text(response.err);
     });
 });
 
-// change the active status of the navigarion tabs when a new one is clicked on
-$(document).on('click', 'ul.nav-tabs li', function(e){
-  $('ul.nav-tabs li.active').removeClass('active');
-    $(this).addClass('active');
-});
+// Loads the home page
+var loadHomePage = function() {
+	loadPage(mainContainer, 'index');
+};

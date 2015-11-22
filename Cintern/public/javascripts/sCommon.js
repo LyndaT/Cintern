@@ -2,26 +2,15 @@
  * @author Jennifer Wu
  */
  
-/**
- * This function loads the Handlebar template called template initialized
- * with data
- *
- * @param{String} template
- * @param{Object} data
- */
-var loadPage = function(template, data) {
-	data = data || {};
-	$('#common-main-container').html(Handlebars.templates[template](data));
-};
+ var mainContainer = '#common-main-container';
 
 /**
  * This function loads the home page Handlebar template
  */
 var loadHomePage = function() {
-	var userId = $('#user-id').data('user');
+	var userId = $('#common-main-container').data('user-id');
 	$.get('/users/applications/common/' + userId, function(response) {
-		console.log(response);
-		loadPage('application', {
+		loadPage(mainContainer, 'application', {
 			questions : response.content.application.questions, 
 			appId : response.content._id, 
 			isCommon : true,

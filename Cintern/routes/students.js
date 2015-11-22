@@ -23,36 +23,30 @@ var requireStudent = function(req, res, next) {
 
 router.all('*', requireStudent);
 
-
-/**
- * Add a given employer ID to the request body
- */
+// Add a given employer ID to the request body
 router.param('employerid', function(req, res, next, employerId) {
   req.body.employerId = employerId;
   next();
 });
 
-/**
- * Add a given listing ID to the request body
- */
+// Add a given listing ID to the request body
 router.param('lstgid', function(req, res, next, listingId) {
   req.body.listingId = listingId;
   next();
 });
 
-/**
- * Add a given application ID to the request body
- */
+// Add a given application ID to the request body
 router.param('customid', function(req, res, next, customId) {
   req.body.customId = customId;
   next();
 });
 
+/* GET home page for Student User */
 router.get('/', function(req, res) {
   if (req.session.user.studentInfo.commonFilled) {
-    res.render('s-dash', { title: 'Cintern' });    
+    res.render('s-index', { title: 'Cintern' });    
   } else {
-    res.render('common', { user : req.session.user.userId });
+    res.render('s-common', { user : req.session.user.userId });
   }
 });
 
@@ -74,22 +68,19 @@ router.get('/applications/template/:lstgid', custom.getListingTemplate);
 /* POST add custom application */
 router.post('/applications/custom/saved/:lstgid', custom.saveCustomApplication);
 
-/* POST submit common application */
-router.post('/applications/common', common.submitCommonApplication);
+/* PUT submit common application */
+router.put('/applications/common', common.submitCommonApplication);
 
-/* GET submit common application */
-//router.get('/applications/common', common.submitCommonApplication);
+/* PUT submit custom application */
+router.put('/applications/custom/:customid', custom.submitCustomApplication);
 
-/* POST submit custom application */
-router.post('/applications/custom/:customid', custom.submitCustomApplication);
+/* PUT update a custom application */
+// router.put('/applications/updates/:customid', custom.updateApplication);
 
-/* POST application update */
-// router.post('/applications/updates/:customid', custom.updateApplication);
+/* PUT withdraw a custom application */
+// router.put('/applications/withdrawal/:customid', custom.withdrawApplication);
 
-/* POST application withdrawal */
-// router.post('/applications/withdrawal/:customid', custom.withdrawApplication);
-
-/* DELETE application */
+/* DELETE delete a custom application */
 // router.delete('/applications/:customid', custom.deleteApplication);
 
 module.exports = router;

@@ -11,3 +11,7 @@ a {
     position: absolute;
     right: 20px;
 }
+
+.clickable{
+	cursor: pointer;
+}

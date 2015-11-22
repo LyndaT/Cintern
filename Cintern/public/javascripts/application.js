@@ -19,7 +19,7 @@ $(document).on('submit', '#submit-app-form', function(evt) {
     else postUrl = '/students/applications/custom/' + appId;
     
     $.ajax({
-        type: 'POST', 
+        type: 'PUT', 
         url: postUrl,
         contentType: 'application/json',
         data: JSON.stringify(content)

@@ -33,9 +33,9 @@ exports.getApplicants = function(req, res, next) {
 };
 
 /**
- * POST /employers/applications/starred/:customid
+ * PUT /employers/applications/starred/:customid
  *
- * Marks an application as starred
+ * Marks a custom application as starred
  *
  * Request body:
  *  - customId: custom ID for to-be-starred custom
@@ -47,9 +47,9 @@ exports.getApplicants = function(req, res, next) {
 //exports.starApplication = function(req, res, next) {};
 
 /**
- * POST /employers/applications/unstarred/:customid
+ * PUT /employers/applications/unstarred/:customid
  *
- * Marks an application as unstarred
+ * Marks a custom application as unstarred
  *
  * Request body:
  *  - customId: custom ID for to-be-unstarred custom
@@ -61,12 +61,12 @@ exports.getApplicants = function(req, res, next) {
 //exports.unstarApplication = function(req, res, next) {};
 
 /**
- * POST /employers/applications/rejected/:customid
+ * PUT /employers/applications/rejected/:customid
  *
- * Marks an application as rejected
+ * Marks an custom application as rejected
  *
  * Request body:
- *  - customId: custom ID for to-be-rejected application
+ *  - customId: custom ID for to-be-rejected custom
  *
  * Response:
  *	- success: true if succeeded in changing custom state
@@ -160,7 +160,7 @@ exports.saveCustomApplication = function(req, res, next) {
 };
 
 /**
- * POST /students/applications/custom/:customid
+ * PUT /students/applications/custom/:customid
  *
  * Submits answers for a custom
  *

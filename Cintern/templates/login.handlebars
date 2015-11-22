@@ -1,18 +1,15 @@
 <div id="signin">
   <a href="#" id="home-link">Back to Home</a>
   <h1>Login</h1>
+  <br>
+  
   <div class="error">
     {{#if error}}
       {{error}}
+    {{else}}
+      <br>
     {{/if}}
   </div>
-
-  <ul class="nav nav-tabs" id="login-menu">
-    <li role="presentation" class="active" data-toggle="tab" id="s-login-nav"><a>Student</a></li>
-    <li role="presentation" data-toggle="tab" id="e-login-nav"><a>Employer</a></li>
-  </ul>
-
-  <br>
   
   <form id="login-form" class="form-horizontal">
     <div class="form-group">
