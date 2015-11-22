@@ -47,7 +47,7 @@ $(document).on('click', '#s_view_listings', function(evt) {
 });
 
 // loads an individual listing's description
-$(document).on('click', '.s_listing', function(evt) {
+$(document).on('click', '.s-listing', function(evt) {
 	var listingId = $(this).data('listing-id');
 	var company = $(this).data('listing-company');
 	$.get('/students/listings/' + listingId, function(response) {
@@ -58,7 +58,7 @@ $(document).on('click', '.s_listing', function(evt) {
 });
 
 // save listing
-$(document).on('click', '#add_app', function(evt) {
+$(document).on('click', '#add-app', function(evt) {
 	var listingId = $(this).data('listing-id');
 	$.ajax({
 		type: 'POST', 

@@ -39,6 +39,6 @@ $(document).ready(function() {
 });
 
 $(document).on('click', '#new-listing-btn', function(evt) {
-	loadPage('createlisting');
+	loadPage('create_listing');
 });
 

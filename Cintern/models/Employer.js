@@ -1,7 +1,6 @@
 /**
  * @author Lynda Tang
  */
-
 var mongoose = require("mongoose");
 var User = require('../models/User.js');
 

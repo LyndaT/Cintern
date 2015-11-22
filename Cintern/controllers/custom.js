@@ -1,9 +1,8 @@
-var Custom = require('../models/custom.js');
-var utils = require('../utils/utils');
-
 /**
  * @author: Maddie Dawson
  */
+var Custom = require('../models/custom.js');
+var utils = require('../utils/utils');
 
 /**
  * GET /employers/listings/:lstgid

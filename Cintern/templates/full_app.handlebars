@@ -2,7 +2,7 @@
 <a href='/employers'>Back to Dash</a>
 <div class="full-app">
 	<h3>Common Application</h3>
-	{{> application common isSubmitted=isSubmitted}}
+	{{> application common isSubmitted=isSubmitted isCommon=true}}
 	<h3>Custom Application</h3>
-	{{> application custom isSubmitted=isSubmitted}}
+	{{> application custom isSubmitted=isSubmitted isCommon=false}}
 </div>

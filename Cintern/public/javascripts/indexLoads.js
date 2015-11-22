@@ -1,4 +1,8 @@
 /**
+ * @author Jennifer Wu
+ */
+
+/**
  * This function loads the Handlebar template called template initialized
  * with data
  *
