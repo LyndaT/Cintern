@@ -209,7 +209,6 @@ customSchema.statics.getListingTemplate = function(listingId, callback) {
  */
 customSchema.statics.getByOwnerAndListing = function(ownerId, listingId, isStudent, callback) {
 	Custom.findOne({ "listing" : listingId, "owner" : ownerId }, function(err, custom) {
-		console.log(custom);
 		if (err) callback(err.message);
 		else if (!custom) callback("Invalid custom");
 		else if (isStudent) callback(null, custom);
