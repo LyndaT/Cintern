@@ -195,4 +195,38 @@ exports.submitCustomApplication = function(req, res, next) {
 	});
 };
 
-// exports.updateApplication = function(req, res, next) {};
+/**
+ * PUT /students/applications/updates/:customid
+ *
+ * Saves answers for a custom
+ *
+ * Request body:
+ *	- answers: Object with keys that are "_id" (mapping to questionId)
+ *			and "answer" (mapping to a string)
+ *  - customId: the custom ID of the relevant custom
+ *
+ * Response:
+ *	- success: true if succeeded in submitting
+ *	- err: on failure (i.e. server fail, invalid update, invalid custom)
+ */ 
+exports.updateApplication = function(req, res, next) {
+	var userId = req.session.user.userId;
+	var customId = req.body.customId;
+	var answers = req.body.answers;
+	// format answers for model call
+	var answerArray = [];
+	Object.keys(answers).forEach(function(id) {
+        answerArray.push({
+          "_id" : id,
+          "answer" : answers[id]
+        });
+    });
+
+	Custom.update(customId, answerArray, false, function(errMsg, custom) {
+		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+		else if (!custom) utils.sendErrResponse(res, 403, "Could not submit custom application");
+		else {
+			utils.sendSuccessResponse(res);
+		}
+	});
+};

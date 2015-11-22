@@ -75,7 +75,7 @@ router.put('/applications/common', common.submitCommonApplication);
 router.put('/applications/custom/:customid', custom.submitCustomApplication);
 
 /* PUT update a custom application */
-// router.put('/applications/updates/:customid', custom.updateApplication);
+router.put('/applications/updates/:customid', custom.updateApplication);
 
 /* PUT withdraw a custom application */
 // router.put('/applications/withdrawal/:customid', custom.withdrawApplication);
