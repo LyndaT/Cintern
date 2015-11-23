@@ -1,0 +1,25 @@
+<<<<<<< HEAD:Cintern/templates/e_applicants.handlebars
+<div id="e-applicants">
+=======
+<a href='/employers'>Back to Dash</a>
+<div class="e_applicants">
+>>>>>>> mvp:templates/e_applicants.handlebars
+  <h1>Applicants</h1>
+    <p>Currently {{applicants.length}} students have applied to this listing</p>
+
+  <table class="table table-hover table-condensed">
+    <thead>
+      <th>Email</th>
+    </thead>
+    <tbody>
+      {{#each applicants}}
+        {{> applicant}}
+      {{else}}
+        <tr>
+          <td>No applicants have applied yet.</td>
+        </tr>
+      {{/each}}
+    </tbody>
+
+  </table>
+</div>

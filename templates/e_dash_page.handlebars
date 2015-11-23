@@ -1,0 +1,26 @@
+<!-- author: Maddie Dawson -->
+
+<div id="employer-dash">
+  <h1>Welcome!</h1>
+  <button class="btn btn-primary right-align" id="new-listing-btn">Create New Listing</button>
+  
+  Here are your listings:
+
+  <br>
+  <br>
+
+  <table class="table table-hover table-condensed">
+    <thead>
+  	  <th>Title</th>
+  	</thead>
+    <tbody>
+    {{#each listings as |l|}}
+      {{> e_dash_page_listing listing=l}}
+    {{else}}
+      <tr>
+      	<td>No listings yet!</td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</div>

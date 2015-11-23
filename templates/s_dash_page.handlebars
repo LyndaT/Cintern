@@ -1,0 +1,34 @@
+<!-- author: Maddie Dawson -->
+
+<div id="student-dash">
+  <button class="btn btn-primary" id="s_view_listings">View Listings</button>
+  
+  <h1>Welcome!</h1>
+  Here are your applications:
+
+  <br>
+  <br>
+  
+  <table class="table table-hover table-condensed">
+  	<thead>
+  	  <th>Company</th>
+  	  <th>Title</th>
+  	  <th>Status</th>
+  	</thead>
+
+    <tbody>
+    {{#each apps as |a|}}
+      {{> s_dash_page_app 
+      company=a.listing.employerId.company 
+      title=a.listing.title 
+      state=a.state
+      listingid=a.listing._id
+      userid=a.owner._id}}
+    {{else}}
+      <tr>
+      	<td>No applications yet!</td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</div>
