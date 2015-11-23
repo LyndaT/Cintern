@@ -64,8 +64,8 @@ exports.getCustom = function(req, res, next) {
 	var currentUser = req.session.user;
 	if (currentUser) {
 		var isStudent = currentUser.studentInfo !== undefined;
-		var listingId = req.body.lstgid;
-		var userId = req.body.userid;
+		var listingId = req.body.listingId;
+		var userId = req.body.userId;
 
 		if (currentUser.studentInfo) userId = currentUser.userId;
 		// FOR LATER: else check that listingId belongs to the currentUser
@@ -84,7 +84,8 @@ exports.getCustom = function(req, res, next) {
 							"application" : custom.application,
 							"owner" : custom.owner,
 							"isTemplate" : custom.isTemplate,
-							"submitTime" : custom.submitTime
+							"submitTime" : custom.submitTime,
+							"_id" : custom._id
 						};
 						utils.sendSuccessResponse(res, content);
 					}

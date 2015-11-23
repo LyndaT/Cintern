@@ -1,6 +1,9 @@
 Handlebars.registerPartial('s_dash_page_app', Handlebars.templates['s_dash_page_app']);
 Handlebars.registerPartial('listing', Handlebars.templates['s_listing_row']);
 
+/**
+ * @author: Maddie Dawson
+ */
 
 /**
  * This function loads the Handlebar template called template initialized
@@ -18,7 +21,6 @@ var loadPage = function(template, data) {
  * This function loads the home page Handlebar template
  */
 var loadHomePage = function() {
-	//createFakeApps();
 	loadApps();
 };
 
@@ -27,7 +29,6 @@ var loadHomePage = function() {
  */
 var loadApps = function() {
 	$.get('/students/applications', function(response) {
-		console.log(response);
 		loadPage('s_dash_page', { apps: response.content.applications });
 	});
 };
@@ -37,7 +38,6 @@ var loadApps = function() {
  */
 var loadAllListings = function() {
 	$.get('/students/listings', function(response) {
-		console.log(response);
 		loadPage('s_listings', {listings: response.content.listings});
 	});
 }

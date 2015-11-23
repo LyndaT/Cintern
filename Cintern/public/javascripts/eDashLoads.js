@@ -1,6 +1,10 @@
 Handlebars.registerPartial('e_dash_page_listing', Handlebars.templates['e_dash_page_listing']);
 
 /**
+ * @author: Maddie Dawson
+ */
+
+/**
  * This function loads the Handlebar template called template initialized
  * with data
  *

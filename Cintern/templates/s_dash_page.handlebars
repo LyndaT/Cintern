@@ -1,3 +1,5 @@
+<!-- author: Maddie Dawson -->
+
 <div id="student-dash">
   <button class="btn btn-primary" id="s_view_listings">View Listings</button>
   
@@ -16,7 +18,12 @@
 
     <tbody>
     {{#each apps as |a|}}
-      {{> s_dash_page_app company=a.listing.employerId.company title=a.listing.title state=a.state}}
+      {{> s_dash_page_app 
+      company=a.listing.employerId.company 
+      title=a.listing.title 
+      state=a.state
+      listingid=a.listing._id
+      userid=a.owner._id}}
     {{else}}
       <tr>
       	<td>No applications yet!</td>
