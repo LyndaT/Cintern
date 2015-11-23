@@ -1,3 +1,7 @@
+/**
+ * @author Lynda Tang
+ */
+
 var questionNum = 0;
 
 $(document).on('click', '#add-question', function(evt) {
@@ -8,15 +12,16 @@ $(document).on('click', '#add-question', function(evt) {
 	questionNum = questionNum + 1;
 });
 
+// Create a new Listing
 $(document).on('click', '#submit-listing-btn', function(evt) {
 	evt.preventDefault();
 	var data = helpers.getFormData("#create-listing");
 	
 	var questionList = [];
 	Object.keys(data).forEach(function(id) {
-			if (id.indexOf("newq")==0){
-		        questionList.push(data[id]);
-	       }
+		if (id.indexOf("newq")==0){
+	        questionList.push(data[id]);
+        }
 	});
 	
 	var content = {
@@ -25,27 +30,16 @@ $(document).on('click', '#submit-listing-btn', function(evt) {
 		requirements : data.requirements,
 		questions: questionList,
 	};
-	
-	// $.post(
-          // '/employers/listings',
-          // content
-      // ).done(function(response) {
-          // console.log("listing posted");
-          // location.reload();
-      // }).fail(function(responseObject) {
-          // var response = $.parseJSON(responseObject.responseText);
-          // $('.error').text(response.err);
-      // });
+
    $.ajax({
    		type:'POST',
    		url: '/employers/listings',
    		contentType: 'application/json',
    		data: JSON.stringify(content)
    	}).done(function(response) {
-          console.log("listing posted");
-          location.reload();
-      }).fail(function(responseObject) {
-          var response = $.parseJSON(responseObject.responseText);
-          $('.error').text(response.err);
-      });;
+        loadDashPage();
+ 	}).fail(function(responseObject) {
+    	var response = $.parseJSON(responseObject.responseText);
+      	$('.error').text(response.err);
+  	});;
 });

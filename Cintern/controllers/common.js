@@ -8,6 +8,37 @@ var Student = require('../models/Student.js');
 var utils = require('../utils/utils');
 
 /**
+ * GET /students/applications/common
+ *
+ * Gets the common application associated for the currentUser
+ * 
+ * Response:
+ *  - success: true if succeeded got the common
+ *  - err: on failure (i.e. server failure, invalid user);
+ */
+exports.getCommonApplication = function(req, res, next) {
+	var currentUser = req.session.user;
+	var userId = currentUser.userId;
+	
+	Common.getCommonByOwnerId(userId, function(errMsg, common) {
+		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+		else if (!common) utils.sendErrResponse(res, 403, "No common");
+		else {
+			common.populateCommon(function(errMsg, common) {
+				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+				else if (!common) utils.sendErrResponse(res, 403, "No common");
+				else {
+					var content = {
+						"application" : common.application,
+					};
+					utils.sendSuccessResponse(res, content);
+				}
+			});
+		}
+	});
+};
+
+/**
  * POST /students/applications/common
  *
  * Submits answers for the common application

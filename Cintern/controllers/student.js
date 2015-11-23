@@ -1,7 +1,6 @@
 /**
  * @author: Lynda Tang
  */
-
 var ObjectID = require('mongodb').ObjectID;
 var Student = require('../models/Student.js');
 var User = require('../models/User.js');

@@ -2,7 +2,6 @@
  * Listing controller that handles HTTP requests for students/listing and employers/listing
  * @author Heeyoon Kim
  */
-
 var utils = require('../utils/utils');
 var Listing = require('../models/listing.js');
 var Employer = require('../models/Employer.js');

@@ -1,10 +1,6 @@
 /**
  * @author Lynda Tang
  */
-/**
- * @author: Lynda Tang
- */
-
 var ObjectID = require('mongodb').ObjectID;
 var Employer = require('../models/Employer.js');
 var User = require('../models/User.js');
