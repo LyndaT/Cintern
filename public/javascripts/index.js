@@ -54,10 +54,4 @@
           $('.error').text(response.err);
       });
   });
-
- // change the active status of the navigarion tabs when a new one is clicked on
-  $(document).on('click', 'ul.nav-tabs li', function(e){
-    $('ul.nav-tabs li.active').removeClass('active');
-      $(this).addClass('active');
-  });
 })();
