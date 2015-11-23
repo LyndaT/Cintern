@@ -14,7 +14,7 @@ var employers = require('./routes/employers');
 
 //Setting up MongoDB
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/cintern');
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/cintern');
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) {
