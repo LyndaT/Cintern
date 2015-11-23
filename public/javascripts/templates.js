@@ -44,7 +44,7 @@ templates['e_applicants'] = template({"1":function(container,depth0,helpers,part
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "<div class=\"e_applicants\">\n  <h1>Applicants</h1>\n    <p>Currently "
+  return "<a href='/employers'>Back to Dash</a>\n<div class=\"e_applicants\">\n  <h1>Applicants</h1>\n    <p>Currently "
     + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.applicants : depth0)) != null ? stack1.length : stack1), depth0))
     + " students have applied to this listing</p>\n\n  <table class=\"table table-hover table-condensed\">\n    <thead>\n      <th>Email</th>\n    </thead>\n    <tbody>\n"
     + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.applicants : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
