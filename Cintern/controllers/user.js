@@ -34,7 +34,8 @@ module.exports.login = function(req, res, next){
 						var currUser = {
 							userId : user._id,
 							studentInfo : {
-								commonFilled : student.commonFilled
+								commonFilled : student.commonFilled,
+								_id : student._id
 							}
 						}
 						req.session.user = currUser;
@@ -49,7 +50,8 @@ module.exports.login = function(req, res, next){
 						var currUser = {
 							userId : user._id,
 							employerInfo : {
-								company : employer.company
+								company : employer.company,
+								_id : employer._id
 							}
 						}
 						req.session.user = currUser;

@@ -116,7 +116,7 @@ customSchema.statics.getCustomsForStudentDash = function(ownerId, callback) {
 		if (err) callback(err.message);
 		else {
 			Custom.populate(customs, {
-				path: "listing.employerId",
+				path: "listing.employer",
 				model: "Employer"
 			},
 			function(err, populated_customs) {

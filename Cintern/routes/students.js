@@ -75,7 +75,7 @@ router.put('/applications/common', common.submitCommonApplication);
 router.put('/applications/custom/:customid', custom.submitCustomApplication);
 
 /* GET template */
-router.get('/applications/template/:lstgid', custom.getListingTemplate);
+//router.get('/applications/template/:lstgid', custom.getListingTemplate);
 
 /* POST add custom application */
 router.post('/applications/custom/saved/:lstgid', custom.saveCustomApplication);

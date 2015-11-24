@@ -12,6 +12,8 @@ var _ = require("../helpers/lodash");
 
 /**
  * Functions to test:
+ * createListing
+ * deleteListing
  * getAllListings
  * filterListings
  *   (1) no filter provided
@@ -20,10 +22,15 @@ var _ = require("../helpers/lodash");
  *   (1) employer exists
  *   (2) employer does not exist
  *   (3) employer ID is not an ObjectId
- * getListingInformation
+ * getByListingId
  *   (1) listing exists
  *   (2) listing does not exist
  *   (3) listing ID is not an ObjectId
+ * doesEmployerOwnListing
+ *   (1) Employer does own the Listing
+ *   (2) Employer does not own the Listing
+ *   (3) employer ID is not an ObjectId
+ *   (4) listing ID is not an ObjectId
  */
 
 var EMPLOYER = {
@@ -151,17 +158,17 @@ describe('Listing', function() {
               assert.equal(err, null);
               assert.equal(listings.length, 2);
               
-              assert.equal(listings[0]["employerId"]["company"], employer["company"]);
-              assert.equal(listings[0]["employerId"]["_id"].toHexString(), employer["_id"].toHexString());
-              assert.equal(listings[0]["employerId"]["user"].toHexString(), employer["user"].toHexString());
+              assert.equal(listings[0]["employer"]["company"], employer["company"]);
+              assert.equal(listings[0]["employer"]["_id"].toHexString(), employer["_id"].toHexString());
+              assert.equal(listings[0]["employer"]["user"].toHexString(), employer["user"].toHexString());
               assert.equal(listings[0]["title"], LISTING1["title"]);
               assert.equal(listings[0]["description"], LISTING1["description"]);
               assert.equal(listings[0]["requirements"], LISTING1["requirements"]);
               assert.equal(listings[0]["deadline"], LISTING1["deadline"]);
 
-              assert.equal(listings[1]["employerId"]["company"], employer["company"]);
-              assert.equal(listings[1]["employerId"]["_id"].toHexString(), employer["_id"].toHexString());
-              assert.equal(listings[1]["employerId"]["user"].toHexString(), employer["user"].toHexString());
+              assert.equal(listings[1]["employer"]["company"], employer["company"]);
+              assert.equal(listings[1]["employer"]["_id"].toHexString(), employer["_id"].toHexString());
+              assert.equal(listings[1]["employer"]["user"].toHexString(), employer["user"].toHexString());
               assert.equal(listings[1]["title"], LISTING2["title"]);
               assert.equal(listings[1]["description"], LISTING2["description"]);
               assert.equal(listings[1]["requirements"], LISTING2["requirements"]);
@@ -195,9 +202,9 @@ describe('Listing', function() {
               assert.equal(err, null);
               assert.equal(listings.length, 1);
               
-              assert.equal(listings[0]["employerId"]["company"], employer["company"]);
-              assert.equal(listings[0]["employerId"]["_id"].toHexString(), employer["_id"].toHexString());
-              assert.equal(listings[0]["employerId"]["user"].toHexString(), employer["user"].toHexString());
+              assert.equal(listings[0]["employer"]["company"], employer["company"]);
+              assert.equal(listings[0]["employer"]["_id"].toHexString(), employer["_id"].toHexString());
+              assert.equal(listings[0]["employer"]["user"].toHexString(), employer["user"].toHexString());
               assert.equal(listings[0]["title"], LISTING1["title"]);
               assert.equal(listings[0]["description"], LISTING1["description"]);
               assert.equal(listings[0]["requirements"], LISTING1["requirements"]);
@@ -222,17 +229,17 @@ describe('Listing', function() {
               assert.equal(err, null);
               assert.equal(listings.length, 2);
               
-              assert.equal(listings[0]["employerId"]["company"], employer["company"]);
-              assert.equal(listings[0]["employerId"]["_id"].toHexString(), employer["_id"].toHexString());
-              assert.equal(listings[0]["employerId"]["user"].toHexString(), employer["user"].toHexString());
+              assert.equal(listings[0]["employer"]["company"], employer["company"]);
+              assert.equal(listings[0]["employer"]["_id"].toHexString(), employer["_id"].toHexString());
+              assert.equal(listings[0]["employer"]["user"].toHexString(), employer["user"].toHexString());
               assert.equal(listings[0]["title"], LISTING1["title"]);
               assert.equal(listings[0]["description"], LISTING1["description"]);
               assert.equal(listings[0]["requirements"], LISTING1["requirements"]);
               assert.equal(listings[0]["deadline"], LISTING1["deadline"]);
 
-              assert.equal(listings[1]["employerId"]["company"], employer["company"]);
-              assert.equal(listings[1]["employerId"]["_id"].toHexString(), employer["_id"].toHexString());
-              assert.equal(listings[1]["employerId"]["user"].toHexString(), employer["user"].toHexString());
+              assert.equal(listings[1]["employer"]["company"], employer["company"]);
+              assert.equal(listings[1]["employer"]["_id"].toHexString(), employer["_id"].toHexString());
+              assert.equal(listings[1]["employer"]["user"].toHexString(), employer["user"].toHexString());
               assert.equal(listings[1]["title"], LISTING2["title"]);
               assert.equal(listings[1]["description"], LISTING2["description"]);
               assert.equal(listings[1]["requirements"], LISTING2["requirements"]);
@@ -277,17 +284,17 @@ describe('Listing', function() {
               assert.equal(err, null);
               assert.equal(listings.length, 2);
 
-              assert.equal(listings[0]["employerId"]["company"], employer["company"]);
-              assert.equal(listings[0]["employerId"]["_id"].toHexString(), employer["_id"].toHexString());
-              assert.equal(listings[0]["employerId"]["user"].toHexString(), employer["user"].toHexString());
+              assert.equal(listings[0]["employer"]["company"], employer["company"]);
+              assert.equal(listings[0]["employer"]["_id"].toHexString(), employer["_id"].toHexString());
+              assert.equal(listings[0]["employer"]["user"].toHexString(), employer["user"].toHexString());
               assert.equal(listings[0]["title"], LISTING1["title"]);
               assert.equal(listings[0]["description"], LISTING1["description"]);
               assert.equal(listings[0]["requirements"], LISTING1["requirements"]);
               assert.equal(listings[0]["deadline"], LISTING1["deadline"]);
 
-              assert.equal(listings[1]["employerId"]["company"], employer["company"]);
-              assert.equal(listings[1]["employerId"]["_id"].toHexString(), employer["_id"].toHexString());
-              assert.equal(listings[1]["employerId"]["user"].toHexString(), employer["user"].toHexString());
+              assert.equal(listings[1]["employer"]["company"], employer["company"]);
+              assert.equal(listings[1]["employer"]["_id"].toHexString(), employer["_id"].toHexString());
+              assert.equal(listings[1]["employer"]["user"].toHexString(), employer["user"].toHexString());
               assert.equal(listings[1]["title"], LISTING2["title"]);
               assert.equal(listings[1]["description"], LISTING2["description"]);
               assert.equal(listings[1]["requirements"], LISTING2["requirements"]);
@@ -316,7 +323,7 @@ describe('Listing', function() {
     });
   });
 
-  describe('#getListingInformation', function() {
+  describe('#getByListingId', function() {
   	it('should return all listing information', function(done) {
       Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, employer) {
         Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"], function(err1, listing1) {
@@ -328,12 +335,12 @@ describe('Listing', function() {
 
             var listing_id = listings[0]["_id"];
 
-            Listing.getListingInformation(listing_id, function(err, listing) {
+            Listing.getByListingId(listing_id, function(err, listing) {
               assert.equal(err, null);
 
-              assert.equal(listings[0]["employerId"]["company"], employer["company"]);
-              assert.equal(listings[0]["employerId"]["_id"].toHexString(), employer["_id"].toHexString());
-              assert.equal(listings[0]["employerId"]["user"].toHexString(), employer["user"].toHexString());
+              assert.equal(listings[0]["employer"]["company"], employer["company"]);
+              assert.equal(listings[0]["employer"]["_id"].toHexString(), employer["_id"].toHexString());
+              assert.equal(listings[0]["employer"]["user"].toHexString(), employer["user"].toHexString());
               assert.equal(listings[0]["title"], LISTING1["title"]);
               assert.equal(listings[0]["description"], LISTING1["description"]);
               assert.equal(listings[0]["requirements"], LISTING1["requirements"]);
@@ -347,7 +354,7 @@ describe('Listing', function() {
     });
 
   	it('should return an error if the listing does not exist', function(done) {
-  		Listing.getListingInformation(ObjectId("507f1f77bcf86cd799439011"), function(err, listing) {
+  		Listing.getByListingId(ObjectId("507f1f77bcf86cd799439011"), function(err, listing) {
   			assert.notEqual(err, null);
   			assert.equal(err, 'Invalid listing.');
   			done();
@@ -355,9 +362,57 @@ describe('Listing', function() {
   	});
 
     it('should return an error if the ID passed is not an ObjectId', function(done) {
-      Listing.getListingInformation(123, function(err, listings) {
+      Listing.getByListingId(123, function(err, listings) {
         assert.notEqual(err, null);
         done();
+      });
+    });
+  });
+
+  describe('#doesEmployerOwnListing', function() {
+    it('should be true if employer does own listing', function(done) {
+      Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, employer) {
+        Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"], function(err1, listing1) {
+          Listing.doesEmployerOwnListing(employer._id, listing1._id, function(errMsg, isOwn) {
+            assert.equal(true, isOwn);
+            done();
+          });
+        });
+      });
+    });
+
+    it('should be false if employer does not own listing', function(done) {
+      Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, employer1) {
+        Listing.createListing(employer1["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"], function(err1, listing1) {
+          Employer.createEmployer("a", "a", "a", function(err0, employer2) {
+            Listing.doesEmployerOwnListing(employer2._id, listing1._id, function(errMsg, isOwn) {
+              assert.equal(false, isOwn);
+              done();
+            });
+          });
+        });
+      });
+    });
+
+    it('should be false if employer is not valid ObjectId', function(done) {
+      Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, employer) {
+        Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"], function(err1, listing1) {
+          Listing.doesEmployerOwnListing("2a", listing1._id, function(errMsg, isOwn) {
+            assert.equal(false, isOwn);
+            done();
+          });
+        });
+      });
+    });
+
+    it('should be false if listing is not a valid ObjectId', function(done) {
+      Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, employer) {
+        Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"], function(err1, listing1) {
+          Listing.doesEmployerOwnListing(employer._id, "@", function(errMsg, isOwn) {
+            assert.equal(false, isOwn);
+            done();
+          });
+        });
       });
     });
   });

@@ -2,6 +2,7 @@
  * @author: Maddie Dawson
  */
 var Custom = require('../models/custom.js');
+var Listing = require('../models/listing.js');
 var utils = require('../utils/utils');
 
 /**
@@ -21,8 +22,6 @@ exports.getCustomApplication = function(req, res, next) {
 	var currentUser = req.session.user;
 	var userId = currentUser.userId;
 	var listingId = req.body.listingId;
-	console.log(listingId);
-	console.log(userId);
 
 	Custom.getByOwnerAndListing(userId, listingId, true, function(errMsg, custom) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
@@ -62,16 +61,26 @@ exports.getCustomApplication = function(req, res, next) {
  */ 
 exports.getApplicants = function(req, res, next) {
 	// possibly useful later to check if the userId owns the listingId, commented by Heeyoon
-	//var userId = req.session.user.userId;
+	var currentUser = req.session.user;
+	var employerId = currentUser.employerInfo._id;
 	var listingId = req.body.listingId;
-	Custom.getCustomsForListingDash(listingId, function(errMsg, customs) {
+
+	// check if listing belongs to employer
+	Listing.doesEmployerOwnListing(employerId, listingId, function(errMsg, employerOwns) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!customs) utils.sendErrResponse(res, 403, "Could not get applications");
+		else if (!employerOwns) utils.sendErrResponse(res, 403, "Cannot get applicants if you do not own the listing");
 		else {
-			var content = {
-				applicants : customs
-			}
-			utils.sendSuccessResponse(res, content);
+			// get the customs for the listing if the employer owns the listing
+			Custom.getCustomsForListingDash(listingId, function(errMsg, customs) {
+				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+				else if (!customs) utils.sendErrResponse(res, 403, "Could not get applications");
+				else {
+					var content = {
+						applicants : customs
+					}
+					utils.sendSuccessResponse(res, content);
+				}
+			});
 		}
 	});
 };
@@ -147,38 +156,6 @@ exports.getStudentApplications = function(req, res, next) {
 };
 
 /**
- * GET /students/applications/template/:lstgid
- *
- * Retrieves the application template for listing
- *
- * Request body:
- *  - listingId: the listing ID of the relevant listing
- *
- * Response:
- *  - success: true if succeeded in changing custom state
- *	- err: on failure (i.e. server fail, invalid listing)
- */
-exports.getListingTemplate = function(req, res, next) {
-	// FOR LATER: else check that listingId belongs to the currentUser
-	var listingId = req.body.listingId;
-
-	Custom.getListingTemplate(listingId, function(errMsg, customTemplate) {
-		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!app_template) utils.sendErrResponse(res, 403, "Could not get template");
-		else {
-			customTemplate.populateCustom( function(errMsg, customTemplate) {
-				var content = {
-					"listing": customTemplate.listing,
-					"application": customTemplate.application,
-					"owner": customTemplate.owner
-				};
-				utils.sendSuccessResponse(res, content);
-			});
-		}
-	});
-};
-
-/**
  * POST /students/applications/custom/saved/:lstgid
  *
  * Save an empty custom
@@ -221,6 +198,7 @@ exports.submitCustomApplication = function(req, res, next) {
 	var userId = req.session.user.userId;
 	var customId = req.body.customId;
 	var answers = req.body.answers;
+	
 	// format answers for model call
 	var answerArray = [];
 	Object.keys(answers).forEach(function(id) {
@@ -230,13 +208,20 @@ exports.submitCustomApplication = function(req, res, next) {
         });
     });
 
-	Custom.update(customId, answerArray, true, function(errMsg, custom) {
+	// check that the current user is the owner of the application
+	Custom.getIfOwner(userId, customId, function(errMsg, custom) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!custom) utils.sendErrResponse(res, 403, "Could not submit custom application");
+		else if (!custom) utils.sendErrResponse(res, 403, "Not valid");
 		else {
-			utils.sendSuccessResponse(res);
+			Custom.update(customId, answerArray, true, function(errMsg, custom) {
+				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+				else if (!custom) utils.sendErrResponse(res, 403, "Could not submit custom application");
+				else {
+					utils.sendSuccessResponse(res);
+				}
+			});
 		}
-	});
+	})
 };
 
 /**
@@ -257,6 +242,7 @@ exports.updateApplication = function(req, res, next) {
 	var userId = req.session.user.userId;
 	var customId = req.body.customId;
 	var answers = req.body.answers;
+	
 	// format answers for model call
 	var answerArray = [];
 	Object.keys(answers).forEach(function(id) {
@@ -266,11 +252,49 @@ exports.updateApplication = function(req, res, next) {
         });
     });
 
-	Custom.update(customId, answerArray, false, function(errMsg, custom) {
+	// check that the current user is the owner of the application
+	Custom.getIfOwner(userId, customId, function(errMsg, custom) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!custom) utils.sendErrResponse(res, 403, "Could not submit custom application");
+		else if (!custom) utils.sendErrResponse(res, 403, "Not valid");
 		else {
-			utils.sendSuccessResponse(res);
+			Custom.update(customId, answerArray, false, function(errMsg, custom) {
+				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+				else if (!custom) utils.sendErrResponse(res, 403, "Could not submit custom application");
+				else {
+					utils.sendSuccessResponse(res);
+				}
+			});
 		}
 	});
 };
+
+/**
+ * GET /students/applications/template/:lstgid
+ *
+ * Retrieves the application template for listing
+ *
+ * Request body:
+ *  - listingId: the listing ID of the relevant listing
+ *
+ * Response:
+ *  - success: true if succeeded in changing custom state
+ *	- err: on failure (i.e. server fail, invalid listing)
+ */
+/*exports.getListingTemplate = function(req, res, next) {
+	var listingId = req.body.listingId;
+
+	Custom.getListingTemplate(listingId, function(errMsg, customTemplate) {
+		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+		else if (!app_template) utils.sendErrResponse(res, 403, "Could not get template");
+		else {
+			customTemplate.populateCustom( function(errMsg, customTemplate) {
+				var content = {
+					"listing": customTemplate.listing,
+					"application": customTemplate.application,
+					"owner": customTemplate.owner
+				};
+				utils.sendSuccessResponse(res, content);
+			});
+		}
+	});
+};*/

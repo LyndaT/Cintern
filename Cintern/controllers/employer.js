@@ -30,7 +30,8 @@ module.exports.createEmployer = function(req, res, next){
 			var currUser = {
 				userId: employer.user,
 				employerInfo : {
-					company : employer.company
+					company : employer.company,
+					_id : employer._id
 				},
 			};
 			req.session.user = currUser;

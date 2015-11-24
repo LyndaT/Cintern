@@ -162,7 +162,7 @@ templates['s_custom'] = template({"compiler":[7,">= 4.0.0"],"main":function(cont
 templates['s_dash_page'] = template({"1":function(container,depth0,helpers,partials,data,blockParams) {
     var stack1;
 
-  return ((stack1 = container.invokePartial(partials.s_dash_page_app,depth0,{"name":"s_dash_page_app","hash":{"userid":((stack1 = ((stack1 = blockParams[0][0]) != null ? stack1.owner : stack1)) != null ? stack1._id : stack1),"listingid":((stack1 = ((stack1 = blockParams[0][0]) != null ? stack1.listing : stack1)) != null ? stack1._id : stack1),"state":((stack1 = blockParams[0][0]) != null ? stack1.state : stack1),"title":((stack1 = ((stack1 = blockParams[0][0]) != null ? stack1.listing : stack1)) != null ? stack1.title : stack1),"company":((stack1 = ((stack1 = ((stack1 = blockParams[0][0]) != null ? stack1.listing : stack1)) != null ? stack1.employerId : stack1)) != null ? stack1.company : stack1)},"data":data,"blockParams":blockParams,"indent":"      ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
+  return ((stack1 = container.invokePartial(partials.s_dash_page_app,depth0,{"name":"s_dash_page_app","hash":{"userid":((stack1 = ((stack1 = blockParams[0][0]) != null ? stack1.owner : stack1)) != null ? stack1._id : stack1),"listingid":((stack1 = ((stack1 = blockParams[0][0]) != null ? stack1.listing : stack1)) != null ? stack1._id : stack1),"state":((stack1 = blockParams[0][0]) != null ? stack1.state : stack1),"title":((stack1 = ((stack1 = blockParams[0][0]) != null ? stack1.listing : stack1)) != null ? stack1.title : stack1),"company":((stack1 = ((stack1 = ((stack1 = blockParams[0][0]) != null ? stack1.listing : stack1)) != null ? stack1.employer : stack1)) != null ? stack1.company : stack1)},"data":data,"blockParams":blockParams,"indent":"      ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
 },"3":function(container,depth0,helpers,partials,data) {
     return "      <tr>\n      	<td>No applications yet!</td>\n      </tr>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams) {
@@ -208,9 +208,9 @@ templates['s_listing_row'] = template({"compiler":[7,">= 4.0.0"],"main":function
   return "<div>\n    <tr class=\"clickable s-listing\" data-listing-id="
     + alias4(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"_id","hash":{},"data":data}) : helper)))
     + " data-listing-company="
-    + alias4(alias5(((stack1 = (depth0 != null ? depth0.employerId : depth0)) != null ? stack1.company : stack1), depth0))
+    + alias4(alias5(((stack1 = (depth0 != null ? depth0.employer : depth0)) != null ? stack1.company : stack1), depth0))
     + ">\n      <td>"
-    + alias4(alias5(((stack1 = (depth0 != null ? depth0.employerId : depth0)) != null ? stack1.company : stack1), depth0))
+    + alias4(alias5(((stack1 = (depth0 != null ? depth0.employer : depth0)) != null ? stack1.company : stack1), depth0))
     + "</td>\n      <td>"
     + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
     + "</td>\n      <td>"

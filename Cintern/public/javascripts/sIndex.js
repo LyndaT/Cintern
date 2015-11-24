@@ -47,6 +47,7 @@ $(document).on('click', '#add-app', function(evt) {
 // Loads the dash page
 var loadDashPage = function() {
 	$.get('/students/applications', function(response) {
+		console.log(response);
 		loadPage(mainContainer, 's_dash_page', { apps: response.content.applications });
 	});
 };

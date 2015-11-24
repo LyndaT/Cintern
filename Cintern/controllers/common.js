@@ -19,7 +19,6 @@ var utils = require('../utils/utils');
 exports.getCommonApplication = function(req, res, next) {
 	var currentUser = req.session.user;
 	var userId = currentUser.userId;
-	
 	Common.getCommonByOwnerId(userId, function(errMsg, common) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 		else if (!common) utils.sendErrResponse(res, 403, "No common");

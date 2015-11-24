@@ -5,7 +5,6 @@
  */
 var Common = require('../models/common.js');
 var Custom = require('../models/custom.js');
-var Employer = require('../models/Employer.js');
 var Listing = require('../models/listing.js');
 var utils = require('../utils/utils');
 
@@ -27,61 +26,48 @@ var utils = require('../utils/utils');
  *
  */
 exports.getFullApplication = function(req, res, next) {
-	var currentUserId = req.session.user.userId;
+	var currentUser = req.session.user;
+	var employerId = currentUser.employerInfo._id;
 	var listingId = req.body.listingId;
 	var userId = req.body.userId;
 
-	Employer.findByUserId(currentUserId, function(errMsg, employer) {
+	// check that the listing belongs to the user
+	Listing.doesEmployerOwnListing(employerId, listingId, function(errMsg, employerOwns) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!employer) utils.sendErrResponse(res, 403, "You are no employer.");
+		else if (!employerOwns) utils.sendErrResponse(res, 403, "employer does not own");
 		else {
-			Listing.getAllEmployerListings(employer._id, function(errMsg, listings) {
+			Common.getCommonByOwnerId(userId, function(errMsg, common) {
 				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+				else if (!common) utils.sendErrResponse(res, 403, "No common");
 				else {
-					// check that the listing belongs to the user
-					var belongsToEmployer = false;
-					listings.forEach(function(listing) {
-						if (listing._id.toString() === listingId.toString()) belongsToEmployer = true;
+					common.populateCommon(function(errMsg, common) {
+						if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+						else if (!common) utils.sendErrResponse(res, 403, "No common");
+						else {
+							Custom.getByOwnerAndListing(userId, listingId, false, function(errMsg, custom) {
+								if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+								else if (!custom) utils.sendErrResponse(res, 403, "No custom");
+								else {
+									custom.populateCustom(function(errMsg, custom) {
+										if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+										else if (!custom) utils.sendErrResponse(res, 403, "No custom");
+										else {
+											var content = {
+												"commonApp": common.application,
+												"listing" : custom.listing,
+												"state" : custom.state,
+												"customApp" : custom.application,
+												"owner" : custom.owner,
+												"isTemplate" : custom.isTemplate,
+												"submitTime" : custom.submitTime
+											};
+											utils.sendSuccessResponse(res, content);
+										}
+									});
+								}
+							});
+						}
 					});
-
-					if (!belongsToEmployer) utils.sendErrResponse(res, 403, "You cannot view applications for this listing");
-					else {
-						Common.getCommonByOwnerId(userId, function(errMsg, common) {
-							if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-							else if (!common) utils.sendErrResponse(res, 403, "No common");
-							else {
-								common.populateCommon(function(errMsg, common) {
-									if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-									else if (!common) utils.sendErrResponse(res, 403, "No common");
-									else {
-
-										Custom.getByOwnerAndListing(userId, listingId, false, function(errMsg, custom) {
-											if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-											else if (!custom) utils.sendErrResponse(res, 403, "No custom");
-											else {
-												custom.populateCustom(function(errMsg, custom) {
-													if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-													else if (!custom) utils.sendErrResponse(res, 403, "No custom");
-													else {
-														var content = {
-															"commonApp": common.application,
-															"listing" : custom.listing,
-															"state" : custom.state,
-															"customApp" : custom.application,
-															"owner" : custom.owner,
-															"isTemplate" : custom.isTemplate,
-															"submitTime" : custom.submitTime
-														};
-														utils.sendSuccessResponse(res, content);
-													}
-												});
-											}
-										});
-									}
-								});
-							}
-						});
-					}
 				}
 			});
 		}

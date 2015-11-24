@@ -40,36 +40,33 @@ var Custom = require('../models/custom.js');
  */
 exports.createListing = function(req, res, next) {
 	var currentUser = req.session.user;
-	var body = req.body;
-	Employer.findOne({user: currentUser.userId}, function(err, employer){
-		var employerId = employer._id;
-		var title = req.body.title;
-		var desc = req.body.description;
-		var reqs = req.body.requirements;
-		var deadline = undefined;
-		var questions = req.body.questions;
+	var employerId = currentUser.employerInfo._id;
+	var title = req.body.title;
+	var desc = req.body.description;
+	var reqs = req.body.requirements;
+	var deadline = undefined;
+	var questions = req.body.questions;
 		
-		var questionList = [];
-		questions.forEach(function(question) {
-			questionList.push({
-				"question" : question,
-				"type" : "text",
-				"required" : true
-			})
-		});
+	var questionList = [];
+	questions.forEach(function(question) {
+		questionList.push({
+			"question" : question,
+			"type" : "text",
+			"required" : true
+		})
+	});
 
-		Listing.createListing(employerId, title, desc, reqs, deadline, function(errMsg, listing) {
-			
-			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-			else if (!listing) utils.sendErrResponse(res, 403, "No listing");
-			else {
-				Custom.createTemplate(listing._id, questionList, currentUser.userId, function(errMsg, template) {
-					if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-					else if (!template) utils.sendErrResponse(res, 403, "No template");
-					else utils.sendSuccessResponse(res);
-				});
-			}
-		});
+	Listing.createListing(employerId, title, desc, reqs, deadline, function(errMsg, listing) {
+		
+		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+		else if (!listing) utils.sendErrResponse(res, 403, "No listing");
+		else {
+			Custom.createTemplate(listing._id, questionList, currentUser.userId, function(errMsg, template) {
+				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+				else if (!template) utils.sendErrResponse(res, 403, "No template");
+				else utils.sendSuccessResponse(res);
+			});
+		}
 	});	
 };
 
@@ -85,7 +82,7 @@ exports.createListing = function(req, res, next) {
  *  - success: true if successfully retrieved all listings
  *  - err: if failed to retrieve
  */
-exports.getAllListings = function(req, res) {
+exports.getAllListings = function(req, res, next) {
 	Listing.getAllListings(function(errMsg, listings) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 		else if (!listings) utils.sendErrResponse(res, 403, "No listings");
@@ -111,28 +108,20 @@ exports.getAllListings = function(req, res) {
  *  - success: true if successfully retrieved the employer's listings
  *  - err: if failed to retrieve
  */
-exports.getEmployerListings = function(req, res) {
-	/*var currentUser = req.session.user;
-	if(currentUser.studentInfo) {
-		var employerId = req.body.employerId;
-	} 
-	else {
-		var employerId = currentUser.userId;
-	}*/
+exports.getEmployerListings = function(req, res, next) {
 	var currentUser = req.session.user;
-	Employer.findOne({user: currentUser.userId}, function(err, employer){
-		var employerId = employer._id;
+	var employerId = currentUser.employerInfo._id;
+	console.log(employerId);
 		
-		Listing.getAllEmployerListings(employerId, function(errMsg, listings) {
-			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-			else if (!listings) utils.sendErrResponse(res, 403, "No listings");
-			else {
-				var content = {
-					"listings" : listings,
-				}
-				utils.sendSuccessResponse(res, content);
+	Listing.getAllEmployerListings(employerId, function(errMsg, listings) {
+		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+		else if (!listings) utils.sendErrResponse(res, 403, "No listings");
+		else {
+			var content = {
+				"listings" : listings,
 			}
-		});
+			utils.sendSuccessResponse(res, content);
+		}
 	});
 }
 
@@ -149,10 +138,10 @@ exports.getEmployerListings = function(req, res) {
  *  - success: true if successfully retrieved some information about that listing
  *  - err: if failed to retrieve any information, or there was an error with the query
  */
-exports.getListing = function(req, res) {
+exports.getListing = function(req, res, next) {
 	var listingId = req.body.listingId;
 
-	Listing.getListingInformation(listingId, function(errMsg, listing) {
+	Listing.getByListingId(listingId, function(errMsg, listing) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 		else if (!listing) utils.sendErrResponse(res, 403, "No listing with that listing id");
 		else {
@@ -171,7 +160,7 @@ exports.getListing = function(req, res) {
  * This function deletes the listing with lstgid as well as its associated template
  */
 /*
-exports.deleteListing = function(req, res) {
+exports.deleteListing = function(req, res, next) {
 	//Retrieve template id associated with the listing
 	//Delete template
 
