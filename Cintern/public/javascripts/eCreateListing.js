@@ -13,7 +13,7 @@ $(document).on('click', '#add-question', function(evt) {
 });
 
 // Create a new Listing
-$(document).on('click', '#create-listing', function(evt) {
+$(document).on('submit', '#create-listing', function(evt) {
 	evt.preventDefault();
 	var data = helpers.getFormData(this);
 	
