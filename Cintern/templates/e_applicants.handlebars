@@ -1,12 +1,17 @@
-<div id="e-applicants">
+<div>
+
   <a href="/" id="home-link">Back to Dash</a>
+
   <h1>Applicants</h1>
-    <p>Currently {{applicants.length}} students have applied to this listing</p>
+  
+  <p>Currently {{applicants.length}} students have applied to this listing</p>
 
   <table class="table table-hover table-condensed">
+    
     <thead>
       <th>Email</th>
     </thead>
+    
     <tbody>
       {{#each applicants}}
         {{> applicant}}
@@ -18,4 +23,5 @@
     </tbody>
 
   </table>
+
 </div>

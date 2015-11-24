@@ -12,7 +12,7 @@ $(document).ready(function() {
 
 $(document).on('submit', '#submit-common-form', function(evt) {
     evt.preventDefault();
-    var formData = helpers.getFormData('#submit-common-form');
+    var formData = helpers.getFormData(this);
     
     $.ajax({
         type: 'PUT', 

@@ -28,15 +28,15 @@ $(document).on('click', '.applicant-row', function(evt) {
     getFullAppPage(userId, listingId);
 });
 
-$(document).on('click', '#star-app-btn', function(evt) {
+$(document).on('click', '#star-custom-btn', function(evt) {
     evt.preventDefault();
-    var appId = $(this).data('app-id');
+    var customId = $(this).data('custom-id');
     var listingId = $(this).data('listing-id');
     var userId = $(this).data('user-id');
 
     $.ajax({
         type: 'PUT', 
-        url: '/employers/applications/starred/' + appId,
+        url: '/employers/applications/starred/' + customId,
         data : { "listingId" : listingId }
     }).done(function(response) {
         getFullAppPage(userId, listingId);
@@ -45,15 +45,15 @@ $(document).on('click', '#star-app-btn', function(evt) {
     });
 });
 
-$(document).on('click', '#unstar-app-btn', function(evt) {
+$(document).on('click', '#unstar-custom-btn', function(evt) {
     evt.preventDefault();
-    var appId = $(this).data('app-id');
+    var customId = $(this).data('custom-id');
     var listingId = $(this).data('listing-id');
     var userId = $(this).data('user-id');
     
     $.ajax({
         type: 'PUT', 
-        url: '/employers/applications/unstarred/' + appId,
+        url: '/employers/applications/unstarred/' + customId,
         data : { "listingId" : listingId }
     }).done(function(response) {
         getFullAppPage(userId, listingId);
@@ -62,15 +62,15 @@ $(document).on('click', '#unstar-app-btn', function(evt) {
     });
 });
 
-$(document).on('click', '#reject-app-btn', function(evt) {
+$(document).on('click', '#reject-custom-btn', function(evt) {
     evt.preventDefault();
-    var appId = $(this).data('app-id');
+    var customId = $(this).data('custom-id');
     var listingId = $(this).data('listing-id');
     var userId = $(this).data('user-id');
     
     $.ajax({
         type: 'PUT', 
-        url: '/employers/applications/rejected/' + appId,
+        url: '/employers/applications/rejected/' + customId,
         data : { "listingId" : listingId }
     }).done(function(response) {
         loadApplicantsPage(listingId);
@@ -88,7 +88,7 @@ var loadDashPage = function() {
 
 // Loads the page to create a listing
 var loadCreateListingPage = function() {
-	loadPage(mainContainer, 'create_listing');
+	loadPage(mainContainer, 'e_create_listing');
 };
 
 // Loads the applicant page corresponding to the listingId

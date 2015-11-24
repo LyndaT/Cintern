@@ -16,12 +16,12 @@ Handlebars.registerHelper("interpretState", function(state) {
 var mainContainer = '#s-main-container';
 
 
-// load the app page
+// load the dash page
 $(document).ready(function() {
 	loadDashPage();
 });
 
-$(document).on('click', '#s_view_listings', function(evt) {
+$(document).on('click', '#s-view-listings', function(evt) {
 	loadAllListingsPage();
 });
 
@@ -38,8 +38,8 @@ $(document).on('click', '.student-app', function(evt) {
 	loadCustomAppPage(userId, listingId);
 });
 
-// save listing to user's list
-$(document).on('click', '#add-app', function(evt) {
+// save listing's custom template to user's list
+$(document).on('click', '#add-custom', function(evt) {
 	var listingId = $(this).data('listing-id');
 	$.ajax({
 		type: 'POST', 
@@ -78,8 +78,8 @@ $(document).on('click', '#delete-custom-btn', function(evt) {
 // Submit a custom
 $(document).on('submit', '#submit-custom-form', function(evt) {
     evt.preventDefault();
-    var formData = helpers.getFormData('#submit-custom-form');
-    var customId = $('#submit-custom-form').data('custom-id');
+    var formData = helpers.getFormData(this);
+    var customId = $(this).data('custom-id');
 
     $.ajax({
         type: 'PUT', 

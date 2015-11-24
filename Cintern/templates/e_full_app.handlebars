@@ -3,16 +3,16 @@
 <div class="full-app">
 
 	{{#if isStar}}
-		<button id="unstar-app-btn" class="btn btn-primary btn-lg" data-app-id="{{customId}}" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
+		<button id="unstar-custom-btn" class="btn btn-primary btn-lg" data-custom-id="{{customId}}" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
 			<span class='glyphicon glyphicon-star center' style="color:yellow"></span>
 		</button>
 	{{else}}
-		<button id="star-app-btn" class="btn btn-primary btn-lg" data-app-id="{{customId}}" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
+		<button id="star-custom-btn" class="btn btn-primary btn-lg" data-custom-id="{{customId}}" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
 			<span class='glyphicon glyphicon-star center'></span>
 		</button>
 	{{/if}}
 
-	<button id="reject-app-btn" class="btn btn-primary" data-app-id="{{customId}}" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
+	<button id="reject-custom-btn" class="btn btn-primary" data-custom-id="{{customId}}" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
 		Reject
 	</button>
 
