@@ -9,17 +9,17 @@ $(document).on('click', '#add-question', function(evt) {
 	$('<textarea/>').attr({ form: 'create-listing', cols: '50', name:"newq" + questionNum}).appendTo('#question-list');
 	$('<br>').appendTo('#question-list');
 	$('<br>').appendTo('#question-list');
-	questionNum = questionNum + 1;
+	questionNum += 1;
 });
 
 // Create a new Listing
-$(document).on('click', '#submit-listing-btn', function(evt) {
+$(document).on('submit', '#create-listing', function(evt) {
 	evt.preventDefault();
-	var data = helpers.getFormData("#create-listing");
+	var data = helpers.getFormData(this);
 	
 	var questionList = [];
 	Object.keys(data).forEach(function(id) {
-		if (id.indexOf("newq")==0){
+		if (id.indexOf("newq") === 0){
 	        questionList.push(data[id]);
         }
 	});

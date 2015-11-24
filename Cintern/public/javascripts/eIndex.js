@@ -28,6 +28,57 @@ $(document).on('click', '.applicant-row', function(evt) {
     getFullAppPage(userId, listingId);
 });
 
+$(document).on('click', '#star-custom-btn', function(evt) {
+    evt.preventDefault();
+    var customId = $(this).data('custom-id');
+    var listingId = $(this).data('listing-id');
+    var userId = $(this).data('user-id');
+
+    $.ajax({
+        type: 'PUT', 
+        url: '/employers/applications/starred/' + customId,
+        data : { "listingId" : listingId }
+    }).done(function(response) {
+        getFullAppPage(userId, listingId);
+    }).fail(function(responseObject) {
+        var response = $.parseJSON(responseObject.responseText);
+    });
+});
+
+$(document).on('click', '#unstar-custom-btn', function(evt) {
+    evt.preventDefault();
+    var customId = $(this).data('custom-id');
+    var listingId = $(this).data('listing-id');
+    var userId = $(this).data('user-id');
+    
+    $.ajax({
+        type: 'PUT', 
+        url: '/employers/applications/unstarred/' + customId,
+        data : { "listingId" : listingId }
+    }).done(function(response) {
+        getFullAppPage(userId, listingId);
+    }).fail(function(responseObject) {
+        var response = $.parseJSON(responseObject.responseText);
+    });
+});
+
+$(document).on('click', '#reject-custom-btn', function(evt) {
+    evt.preventDefault();
+    var customId = $(this).data('custom-id');
+    var listingId = $(this).data('listing-id');
+    var userId = $(this).data('user-id');
+    
+    $.ajax({
+        type: 'PUT', 
+        url: '/employers/applications/rejected/' + customId,
+        data : { "listingId" : listingId }
+    }).done(function(response) {
+        loadApplicantsPage(listingId);
+    }).fail(function(responseObject) {
+        var response = $.parseJSON(responseObject.responseText);
+    });
+});
+
 // Loads the Employer Dash
 var loadDashPage = function() {
 	$.get('/employers/listings', function(response) {
@@ -37,7 +88,7 @@ var loadDashPage = function() {
 
 // Loads the page to create a listing
 var loadCreateListingPage = function() {
-	loadPage(mainContainer, 'create_listing');
+	loadPage(mainContainer, 'e_create_listing');
 };
 
 // Loads the applicant page corresponding to the listingId
@@ -53,6 +104,10 @@ var getFullAppPage = function(userId, listingId) {
     	loadPage(mainContainer, 'e_full_app', {
     		common : response.content.commonApp,
     		custom : response.content.customApp,
+    		customId : response.content.customId,
+    		listing : response.content.listing,
+    		owner : response.content.owner,
+    		isStar : response.content.state === "star",
     		isSubmitted : true
     	});
 	});

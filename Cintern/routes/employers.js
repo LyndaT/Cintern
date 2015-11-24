@@ -58,12 +58,12 @@ router.post('/listings', listing.createListing);
 router.get('/applications/listings/:lstgid', custom.getApplicants);
 
 /* PUT star a custom application */
-// router.put('/applications/starred/:customid', custom.starApplication);
+router.put('/applications/starred/:customid', custom.starApplication);
 
 /* PUT unstar a custom application */
-// router.put('/applications/unstarred/:customid', custom.unstarApplication);
+router.put('/applications/unstarred/:customid', custom.unstarApplication);
 
 /* PUT reject a custom application */
-// router.put('/applications/rejected/:customid', custom.rejectApplication);
+router.put('/applications/rejected/:customid', custom.rejectApplication);
 
 module.exports = router;

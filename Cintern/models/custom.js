@@ -164,17 +164,17 @@ customSchema.statics.getIfOwner = function(ownerId, customId, callback) {
 };
 
 /**
- * Gets a submitted or starred Custom, where the owner is the ownerId and the listing 
+ * Gets a submitted or starred Custom, where the id is the customId and the listing 
  * is the listingId, then runs callback on the submitted Custom
  *
- * @param{ObjectId} ownerId
+ * @param{ObjectId} customId
  * @param{ObjectId} listingId
  * @param{Function} callback(err, Custom)
  */
-customSchema.statics.getStarOrSubmCustomForListing = function(ownerId, listingId, callback) {
+customSchema.statics.getStarOrSubmCustomIfListing = function(customId, listingId, callback) {
 	Custom.findOne({ 
 		"listing" : listingId, 
-		"owner" : ownerId, 
+		"_id" : customId, 
 		state : { $in : ["subm", "star"] } 
 	}, function(err, custom) {
 		if (err) callback(err.message);
