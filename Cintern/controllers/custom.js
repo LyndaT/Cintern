@@ -33,7 +33,7 @@ exports.getCustomApplication = function(req, res, next) {
 				else {
 					var content = {
 						"listing" : custom.listing,
-						"state" : (custom.state === "star") ? "subm" : custom.state,
+						"state" : custom.state,
 						"application" : custom.application,
 						"owner" : custom.owner,
 						"isTemplate" : custom.isTemplate,
@@ -147,10 +147,6 @@ exports.getStudentApplications = function(req, res, next) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 		else if (!customs) utils.sendErrResponse(res, 403, "Could not get applications");
 		else {
-			// change any starred custom states to normal submitted
-			customs.forEach(function(custom) {
-				custom.state = (custom.state === "star") ? "subm" : custom.state;
-			});
 			var content = {
 				applications : customs
 			}
