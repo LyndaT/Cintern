@@ -42,6 +42,7 @@ exports.getFullApplication = function(req, res, next) {
 			var customResult;
 			var failedTask = false;
 			
+			// get the common application
 			var getCommonTask = function(callback) {
 				Common.getCommonByOwnerId(userId, function(errMsg, common) {
 					if (errMsg || !common) {
@@ -57,6 +58,7 @@ exports.getFullApplication = function(req, res, next) {
 				});	
 			};
 
+			// get the custom application
 			var getCustomTask = function(callback) {
 				Custom.getByOwnerAndListing(userId, listingId, false, function(errMsg, custom) {
 					if (errMsg || !custom) {
@@ -72,9 +74,8 @@ exports.getFullApplication = function(req, res, next) {
 				});
 			};
 
-			asyncTasks = [getCommonTask, getCustomTask];
-
-			async.parallel(asyncTasks, function() {
+			// get common and custom in parallel
+			async.parallel([getCommonTask, getCustomTask], function() {
 				if (failedTask) utils.sendErrResponse(res, 403, "Could not get common and custom");
 				else {
 					var content = {
