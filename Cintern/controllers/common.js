@@ -19,6 +19,7 @@ var utils = require('../utils/utils');
 exports.getCommonApplication = function(req, res, next) {
 	var currentUser = req.session.user;
 	var userId = currentUser.userId;
+	
 	Common.getCommonByOwnerId(userId, function(errMsg, common) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 		else if (!common) utils.sendErrResponse(res, 403, "No common");
@@ -53,7 +54,7 @@ exports.getCommonApplication = function(req, res, next) {
 exports.submitCommonApplication = function(req, res, next) {
 	var currentUser = req.session.user;
 	if (!currentUser.studentInfo.commonFilled) {
-		var currentUserId = currentUser.userId;
+		var userId = currentUser.userId;
 		var answers = req.body.answers;
 
 		// format answers for model call
@@ -66,12 +67,12 @@ exports.submitCommonApplication = function(req, res, next) {
 	    });
 
 		// submit the common
-		Common.submitCommon(currentUserId, answerArray, function(errMsg, success) {
+		Common.submitCommon(userId, answerArray, function(errMsg, success) {
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 			else if (!success) utils.sendErrResponse(res, 403, "Could not submit");
 			else {
 				// student's common is filled
-				Student.setCommonFilled(currentUserId, function(errMsg, student) {
+				Student.setCommonFilled(userId, function(errMsg, student) {
 					if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 					else if (!student) utils.sendErrResponse(res, 403, "Invalid student");
 					else {
