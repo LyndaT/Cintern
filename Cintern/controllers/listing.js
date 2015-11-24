@@ -83,17 +83,21 @@ exports.createListing = function(req, res, next) {
  *  - err: if failed to retrieve
  */
 exports.getAllListings = function(req, res, next) {
-	Listing.getAllListings(function(errMsg, listings) {
-		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!listings) utils.sendErrResponse(res, 403, "No listings");
-		else {
-			var content = {
-				"listings" : listings,
+	if (!req.session.user.studentInfo.commonFilled){
+		utils.sendErrResponse(res, 403, "Common application not filled");
+	} else {
+		Listing.getAllListings(function(errMsg, listings) {
+			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+			else if (!listings) utils.sendErrResponse(res, 403, "No listings");
+			else {
+				var content = {
+					"listings" : listings,
+				};
+				utils.sendSuccessResponse(res, content);
 			}
-			utils.sendSuccessResponse(res, content);
-		}
-	});
-}
+		});
+	}
+};
 
 /**
  * GET /employers/listings and GET users/students/listings
@@ -119,11 +123,11 @@ exports.getEmployerListings = function(req, res, next) {
 		else {
 			var content = {
 				"listings" : listings,
-			}
+			};
 			utils.sendSuccessResponse(res, content);
-		}
+		};
 	});
-}
+};
 
 
 /**
@@ -139,19 +143,23 @@ exports.getEmployerListings = function(req, res, next) {
  *  - err: if failed to retrieve any information, or there was an error with the query
  */
 exports.getListing = function(req, res, next) {
-	var listingId = req.body.listingId;
-
-	Listing.getByListingId(listingId, function(errMsg, listing) {
-		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!listing) utils.sendErrResponse(res, 403, "No listing with that listing id");
-		else {
-			var content = {
-				"listing" : listing
+	if (!req.session.user.studentInfo.commonFilled){
+		utils.sendErrResponse(res, 403, "Common application not filled");
+	} else {
+		var listingId = req.body.listingId;
+	
+		Listing.getByListingId(listingId, function(errMsg, listing) {
+			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+			else if (!listing) utils.sendErrResponse(res, 403, "No listing with that listing id");
+			else {
+				var content = {
+					"listing" : listing
+				};
+				utils.sendSuccessResponse(res, content);
 			}
-			utils.sendSuccessResponse(res, content);
-		}
-	});
-}
+		});
+	}
+};
 
 
 /**

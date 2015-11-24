@@ -34,7 +34,7 @@ exports.getApplicants = function(req, res, next) {
 				else {
 					var content = {
 						applicants : customs
-					}
+					};
 					utils.sendSuccessResponse(res, content);
 				}
 			});
@@ -148,7 +148,7 @@ exports.getAllStudentCustoms = function(req, res, next) {
 			});
 			var content = {
 				applications : customs
-			}
+			};
 			utils.sendSuccessResponse(res, content);
 		}
 	});
@@ -168,32 +168,37 @@ exports.getAllStudentCustoms = function(req, res, next) {
  *  - err: on failure (i.e. server failure, invalid user);
  */
 exports.getCustom = function(req, res, next) {
-	var currentUser = req.session.user;
-	var userId = currentUser.userId;
-	var listingId = req.body.listingId;
-
-	Custom.getByOwnerAndListing(userId, listingId, true, function(errMsg, custom) {
-		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!custom) utils.sendErrResponse(res, 403, "No custom");
-		else {
-			custom.populateCustom(function(errMsg, custom) {
-				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-				else if (!custom) utils.sendErrResponse(res, 403, "No custom");
-				else {
-					var content = {
-						"listing" : custom.listing,
-						"state" : (custom.state === "star") ? "subm" : custom.state, 	// so student doesn't know if application has been starred
-						"application" : custom.application,
-						"owner" : custom.owner,
-						"isTemplate" : custom.isTemplate,
-						"submitTime" : custom.submitTime,
-						"_id" : custom._id
-					};
-					utils.sendSuccessResponse(res, content);
-				}
-			});
-		}
-	});
+	if (!req.session.user.studentInfo.commonFilled){
+		utils.sendErrResponse(res, 403, "Common application not filled");
+	} else {
+	
+		var currentUser = req.session.user;
+		var userId = currentUser.userId;
+		var listingId = req.body.listingId;
+	
+		Custom.getByOwnerAndListing(userId, listingId, true, function(errMsg, custom) {
+			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+			else if (!custom) utils.sendErrResponse(res, 403, "No custom");
+			else {
+				custom.populateCustom(function(errMsg, custom) {
+					if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+					else if (!custom) utils.sendErrResponse(res, 403, "No custom");
+					else {
+						var content = {
+							"listing" : custom.listing,
+							"state" : (custom.state === "star") ? "subm" : custom.state, 	// so student doesn't know if application has been starred
+							"application" : custom.application,
+							"owner" : custom.owner,
+							"isTemplate" : custom.isTemplate,
+							"submitTime" : custom.submitTime,
+							"_id" : custom._id
+						};
+						utils.sendSuccessResponse(res, content);
+					}
+				});
+			}
+		});
+	}
 };
 
 /**
@@ -209,16 +214,21 @@ exports.getCustom = function(req, res, next) {
  *	- err: on failure (i.e. server fail, invalid submission, invalid custom)
  */ 
 exports.addCustom = function(req, res, next) {
-	var userId = req.session.user.userId;
-	var listingId = req.body.listingId;
+	if (!req.session.user.studentInfo.commonFilled){
+		utils.sendErrResponse(res, 403, "Common application not filled");
+	} else {
 
-	Custom.copyTemplateToSave(listingId, userId, function(errMsg, custom) {
-		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!custom) utils.sendErrResponse(res, 403, "Could not save application");
-		else {
-			utils.sendSuccessResponse(res);
-		}
-	});
+		var userId = req.session.user.userId;
+		var listingId = req.body.listingId;
+	
+		Custom.copyTemplateToSave(listingId, userId, function(errMsg, custom) {
+			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+			else if (!custom) utils.sendErrResponse(res, 403, "Could not save application");
+			else {
+				utils.sendSuccessResponse(res);
+			}
+		});
+	}
 };
 
 /**
@@ -236,29 +246,33 @@ exports.addCustom = function(req, res, next) {
  *	- err: on failure (i.e. server fail, invalid submission, invalid custom)
  */ 
 exports.submitCustom = function(req, res, next) {
-	var userId = req.session.user.userId;
-	var customId = req.body.customId;
-	var answers = req.body.answers;
+	if (!req.session.user.studentInfo.commonFilled){
+		utils.sendErrResponse(res, 403, "Common application not filled");
+	} else {
+		var userId = req.session.user.userId;
+		var customId = req.body.customId;
+		var answers = req.body.answers;
+		
+		// format answers for model call
+		var answerArray = [];
+		Object.keys(answers).forEach(function(id) {
+	        answerArray.push({
+	          "_id" : id,
+	          "answer" : answers[id]
+	        });
+	    });
 	
-	// format answers for model call
-	var answerArray = [];
-	Object.keys(answers).forEach(function(id) {
-        answerArray.push({
-          "_id" : id,
-          "answer" : answers[id]
-        });
-    });
-
-	// check that the current user is the owner of the application
-	checkIfCustomOfUser(userId, customId, function() {
-		Custom.update(customId, answerArray, true, function(errMsg, custom) {
-			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-			else if (!custom) utils.sendErrResponse(res, 403, "Could not submit custom application");
-			else {
-				utils.sendSuccessResponse(res);
-			}
+		// check that the current user is the owner of the application
+		checkIfCustomOfUser(userId, customId, function() {
+			Custom.update(customId, answerArray, true, function(errMsg, custom) {
+				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+				else if (!custom) utils.sendErrResponse(res, 403, "Could not submit custom application");
+				else {
+					utils.sendSuccessResponse(res);
+				}
+			});
 		});
-	});
+	}
 };
 
 /**
@@ -276,29 +290,33 @@ exports.submitCustom = function(req, res, next) {
  *	- err: on failure (i.e. server fail, invalid update, invalid custom)
  */ 
 exports.saveCustom = function(req, res, next) {
-	var userId = req.session.user.userId;
-	var customId = req.body.customId;
-	var answers = req.body.answers;
+	if (!req.session.user.studentInfo.commonFilled){
+		utils.sendErrResponse(res, 403, "Common application not filled");
+	} else {
+		var userId = req.session.user.userId;
+		var customId = req.body.customId;
+		var answers = req.body.answers;
+		
+		// format answers for model call
+		var answerArray = [];
+		Object.keys(answers).forEach(function(id) {
+	        answerArray.push({
+	          "_id" : id,
+	          "answer" : answers[id]
+	        });
+	    });
 	
-	// format answers for model call
-	var answerArray = [];
-	Object.keys(answers).forEach(function(id) {
-        answerArray.push({
-          "_id" : id,
-          "answer" : answers[id]
-        });
-    });
-
-	// check that the current user is the owner of the application
-	checkIfCustomOfUser(userId, customId, function() {
-		Custom.update(customId, answerArray, false, function(errMsg, custom) {
-			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-			else if (!custom) utils.sendErrResponse(res, 403, "Could not save custom application");
-			else {
-				utils.sendSuccessResponse(res);
-			}
+		// check that the current user is the owner of the application
+		checkIfCustomOfUser(userId, customId, function() {
+			Custom.update(customId, answerArray, false, function(errMsg, custom) {
+				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+				else if (!custom) utils.sendErrResponse(res, 403, "Could not save custom application");
+				else {
+					utils.sendSuccessResponse(res);
+				}
+			});
 		});
-	});
+	}
 };
 
 /**
@@ -314,17 +332,21 @@ exports.saveCustom = function(req, res, next) {
  *	- err: on failure (i.e. server fail, invalid withdrawal, invalid custom)
  */ 
 exports.withdrawCustom = function(req, res, next) {
-	var currentUser = req.session.user;
-	var userId = currentUser.userId;
-	var customId = req.body.customId;
-
-	checkIfCustomOfUser(userId, customId, function() {
-		Custom.withdraw(customId, function(errMsg, custom) {
-			if (errMsg) utils.sendErrRsponse(res, 403, errMsg);
-			else if (!custom) utils.sendErrRsponse(res, 403, "Not valid custom");
-			else utils.sendSuccessResponse(res);
+	if (!req.session.user.studentInfo.commonFilled){
+		utils.sendErrResponse(res, 403, "Common application not filled");
+	} else {
+		var currentUser = req.session.user;
+		var userId = currentUser.userId;
+		var customId = req.body.customId;
+	
+		checkIfCustomOfUser(userId, customId, function() {
+			Custom.withdraw(customId, function(errMsg, custom) {
+				if (errMsg) utils.sendErrRsponse(res, 403, errMsg);
+				else if (!custom) utils.sendErrRsponse(res, 403, "Not valid custom");
+				else utils.sendSuccessResponse(res);
+			});
 		});
-	});
+	}
 };
 
 /**
@@ -340,16 +362,20 @@ exports.withdrawCustom = function(req, res, next) {
  *	- err: on failure (i.e. server fail, invalid deletion, invalid custom)
  */ 
 exports.deleteCustom = function(req, res, next) {
-	var currentUser = req.session.user;
-	var userId = currentUser.userId;
-	var customId = req.body.customId;
-
-	checkIfCustomOfUser(userId, customId, function() {
-		Custom.deleteCustom(customId, function(errMsg, custom) {
-			if (errMsg) utils.sendErrRsponse(res, 403, errMsg);
-			else utils.sendSuccessResponse(res);
+	if (!req.session.user.studentInfo.commonFilled){
+		utils.sendErrResponse(res, 403, "Common application not filled");
+	} else {
+		var currentUser = req.session.user;
+		var userId = currentUser.userId;
+		var customId = req.body.customId;
+	
+		checkIfCustomOfUser(userId, customId, function() {
+			Custom.deleteCustom(customId, function(errMsg, custom) {
+				if (errMsg) utils.sendErrRsponse(res, 403, errMsg);
+				else utils.sendSuccessResponse(res);
+			});
 		});
-	});
+	}
 };
 
 
@@ -377,7 +403,7 @@ var checkIfCustomOfEmployer = function(employerId, customId, listingId, callIfTr
 			});
 		}
 	});
-}
+};
 
 /**
  * Runs callIfTrue if the customassociated with the customId has an owner
@@ -395,7 +421,7 @@ var checkIfCustomOfUser = function(userId, customId, callIfTrue) {
 			callIfTrue();
 		}
 	});
-}
+};
 
 /**
  * GET /students/applications/template/:lstgid
