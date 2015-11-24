@@ -136,22 +136,26 @@ exports.rejectCustom = function(req, res, next) {
  *	- err: on failure (i.e. server fail)
  */
 exports.getAllStudentCustoms = function(req, res, next) {
-	var userId = req.session.user.userId;
-	
-	Custom.getCustomsForStudentDash(userId, function(errMsg, customs) {
-		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!customs) utils.sendErrResponse(res, 403, "Could not get applications");
-		else {
-			// change any starred custom states to normal submitted
-			customs.forEach(function(custom) {
-				custom.state = (custom.state === "star") ? "subm" : custom.state;
-			});
-			var content = {
-				applications : customs
-			};
-			utils.sendSuccessResponse(res, content);
-		}
-	});
+	if (!req.session.user.studentInfo.commonFilled){
+		utils.sendErrResponse(res, 403, "Common application not filled");
+	} else {
+		var userId = req.session.user.userId;
+		
+		Custom.getCustomsForStudentDash(userId, function(errMsg, customs) {
+			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+			else if (!customs) utils.sendErrResponse(res, 403, "Could not get applications");
+			else {
+				// change any starred custom states to normal submitted
+				customs.forEach(function(custom) {
+					custom.state = (custom.state === "star") ? "subm" : custom.state;
+				});
+				var content = {
+					applications : customs
+				};
+				utils.sendSuccessResponse(res, content);
+			}
+		});
+	}
 };
 
 /**
