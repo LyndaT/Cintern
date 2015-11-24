@@ -55,7 +55,7 @@ exports.getApplicants = function(req, res, next) {
  *	- success: true if succeeded in changing custom state
  *	- err: on failure (i.e. server fail, invalid custom)
  */
-exports.starApplication = function(req, res, next) {
+exports.starCustom = function(req, res, next) {
 	var currentUser = req.session.user;
 	var employerId = currentUser.employerInfo._id;
 	var listingId = req.body.listingId;
@@ -83,7 +83,7 @@ exports.starApplication = function(req, res, next) {
  *	- success: true if succeeded in changing custom state
  *	- err: on failure (i.e. server fail, invalid custom)
  */
-exports.unstarApplication = function(req, res, next) {
+exports.unstarCustom = function(req, res, next) {
 	var currentUser = req.session.user;
 	var employerId = currentUser.employerInfo._id;
 	var listingId = req.body.listingId;
@@ -111,7 +111,7 @@ exports.unstarApplication = function(req, res, next) {
  *	- success: true if succeeded in changing custom state
  *	- err: on failure (i.e. server fail, invalid custom)
  */
-exports.rejectApplication = function(req, res, next) {
+exports.rejectCustom = function(req, res, next) {
 	var currentUser = req.session.user;
 	var employerId = currentUser.employerInfo._id;
 	var listingId = req.body.listingId;
@@ -135,7 +135,7 @@ exports.rejectApplication = function(req, res, next) {
  *  - success: true if succeeded in changing application state
  *	- err: on failure (i.e. server fail)
  */
-exports.getStudentApplications = function(req, res, next) {
+exports.getAllStudentCustoms = function(req, res, next) {
 	var userId = req.session.user.userId;
 	
 	Custom.getCustomsForStudentDash(userId, function(errMsg, customs) {
@@ -167,7 +167,7 @@ exports.getStudentApplications = function(req, res, next) {
  *  - success: true if succeeded got the custom
  *  - err: on failure (i.e. server failure, invalid user);
  */
-exports.getCustomApplication = function(req, res, next) {
+exports.getCustom = function(req, res, next) {
 	var currentUser = req.session.user;
 	var userId = currentUser.userId;
 	var listingId = req.body.listingId;
@@ -182,7 +182,7 @@ exports.getCustomApplication = function(req, res, next) {
 				else {
 					var content = {
 						"listing" : custom.listing,
-						"state" : (custom.state === "star") ? "subm" : custom.state,
+						"state" : (custom.state === "star") ? "subm" : custom.state, 	// so student doesn't know if application has been starred
 						"application" : custom.application,
 						"owner" : custom.owner,
 						"isTemplate" : custom.isTemplate,
@@ -197,7 +197,7 @@ exports.getCustomApplication = function(req, res, next) {
 };
 
 /**
- * POST /students/applications/custom/saved/:lstgid
+ * POST /students/applications/custom/added/:lstgid
  *
  * Save an empty custom
  *
@@ -208,7 +208,7 @@ exports.getCustomApplication = function(req, res, next) {
  *	- success: true if succeeded in submitting
  *	- err: on failure (i.e. server fail, invalid submission, invalid custom)
  */ 
-exports.saveCustomApplication = function(req, res, next) {
+exports.addCustom = function(req, res, next) {
 	var userId = req.session.user.userId;
 	var listingId = req.body.listingId;
 
@@ -235,7 +235,7 @@ exports.saveCustomApplication = function(req, res, next) {
  *	- success: true if succeeded in submitting
  *	- err: on failure (i.e. server fail, invalid submission, invalid custom)
  */ 
-exports.submitCustomApplication = function(req, res, next) {
+exports.submitCustom = function(req, res, next) {
 	var userId = req.session.user.userId;
 	var customId = req.body.customId;
 	var answers = req.body.answers;
@@ -262,7 +262,7 @@ exports.submitCustomApplication = function(req, res, next) {
 };
 
 /**
- * PUT /students/applications/updates/:customid
+ * PUT /students/applications/saved/:customid
  *
  * Saves answers for a custom
  *
@@ -275,7 +275,7 @@ exports.submitCustomApplication = function(req, res, next) {
  *	- success: true if succeeded in submitting
  *	- err: on failure (i.e. server fail, invalid update, invalid custom)
  */ 
-exports.updateApplication = function(req, res, next) {
+exports.saveCustom = function(req, res, next) {
 	var userId = req.session.user.userId;
 	var customId = req.body.customId;
 	var answers = req.body.answers;
@@ -313,7 +313,7 @@ exports.updateApplication = function(req, res, next) {
  *	- success: true if succeeded in withdrawal
  *	- err: on failure (i.e. server fail, invalid withdrawal, invalid custom)
  */ 
-exports.withdrawApplication = function(req, res, next) {
+exports.withdrawCustom = function(req, res, next) {
 	var currentUser = req.session.user;
 	var userId = currentUser.userId;
 	var customId = req.body.customId;
@@ -339,7 +339,7 @@ exports.withdrawApplication = function(req, res, next) {
  *	- success: true if succeeded in deleting
  *	- err: on failure (i.e. server fail, invalid deletion, invalid custom)
  */ 
-exports.deleteApplication = function(req, res, next) {
+exports.deleteCustom = function(req, res, next) {
 	var currentUser = req.session.user;
 	var userId = currentUser.userId;
 	var customId = req.body.customId;
