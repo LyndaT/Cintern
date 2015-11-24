@@ -182,7 +182,7 @@ exports.getCustom = function(req, res, next) {
 				else {
 					var content = {
 						"listing" : custom.listing,
-						"state" : (custom.state === "star") ? "subm" : custom.state,
+						"state" : (custom.state === "star") ? "subm" : custom.state, 	// so student doesn't know if application has been starred
 						"application" : custom.application,
 						"owner" : custom.owner,
 						"isTemplate" : custom.isTemplate,
