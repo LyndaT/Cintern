@@ -61,7 +61,7 @@ exports.getFullApplication = function(req, res, next) {
 			// get the custom application
 			var getCustomTask = function(callback) {
 				Custom.getByOwnerAndListing(userId, listingId, false, function(errMsg, custom) {
-					if (errMsg || !custom) {
+					if (errMsg || !custom || (custom.state !== "subm" && custom.state !== "star")) {
 						failedTask = true;
 						callback();
 					}
@@ -85,7 +85,8 @@ exports.getFullApplication = function(req, res, next) {
 						"customApp" : customResult.application,
 						"owner" : customResult.owner,
 						"isTemplate" : customResult.isTemplate,
-						"submitTime" : customResult.submitTime
+						"submitTime" : customResult.submitTime,
+						"customId" : customResult._id
 					};
 					utils.sendSuccessResponse(res, content);
 				}

@@ -28,6 +28,57 @@ $(document).on('click', '.applicant-row', function(evt) {
     getFullAppPage(userId, listingId);
 });
 
+$(document).on('click', '#star-app-btn', function(evt) {
+    evt.preventDefault();
+    var appId = $(this).data('app-id');
+    var listingId = $(this).data('listing-id');
+    var userId = $(this).data('user-id');
+
+    $.ajax({
+        type: 'PUT', 
+        url: '/employers/applications/starred/' + appId,
+        data : { "listingId" : listingId }
+    }).done(function(response) {
+        getFullAppPage(userId, listingId);
+    }).fail(function(responseObject) {
+        var response = $.parseJSON(responseObject.responseText);
+    });
+});
+
+$(document).on('click', '#unstar-app-btn', function(evt) {
+    evt.preventDefault();
+    var appId = $(this).data('app-id');
+    var listingId = $(this).data('listing-id');
+    var userId = $(this).data('user-id');
+    
+    $.ajax({
+        type: 'PUT', 
+        url: '/employers/applications/unstarred/' + appId,
+        data : { "listingId" : listingId }
+    }).done(function(response) {
+        getFullAppPage(userId, listingId);
+    }).fail(function(responseObject) {
+        var response = $.parseJSON(responseObject.responseText);
+    });
+});
+
+$(document).on('click', '#reject-app-btn', function(evt) {
+    evt.preventDefault();
+    var appId = $(this).data('app-id');
+    var listingId = $(this).data('listing-id');
+    var userId = $(this).data('user-id');
+    
+    $.ajax({
+        type: 'PUT', 
+        url: '/employers/applications/rejected/' + appId,
+        data : { "listingId" : listingId }
+    }).done(function(response) {
+        loadApplicantsPage(listingId);
+    }).fail(function(responseObject) {
+        var response = $.parseJSON(responseObject.responseText);
+    });
+});
+
 // Loads the Employer Dash
 var loadDashPage = function() {
 	$.get('/employers/listings', function(response) {
@@ -53,6 +104,10 @@ var getFullAppPage = function(userId, listingId) {
     	loadPage(mainContainer, 'e_full_app', {
     		common : response.content.commonApp,
     		custom : response.content.customApp,
+    		customId : response.content.customId,
+    		listing : response.content.listing,
+    		owner : response.content.owner,
+    		isStar : response.content.state === "star",
     		isSubmitted : true
     	});
 	});

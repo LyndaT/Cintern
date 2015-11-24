@@ -5,6 +5,7 @@
 Handlebars.registerPartial('listing', Handlebars.templates['s_listing_row']);
 Handlebars.registerPartial('s_dash_page_app', Handlebars.templates['s_dash_page_app']);
 Handlebars.registerPartial('application', Handlebars.templates['application']);
+Handlebars.registerPartial('question', Handlebars.templates['question']);
 Handlebars.registerHelper("interpretState", function(state) {
     if (state === "subm") return "Submitted";
     if (state === "save") return "Saved";
@@ -50,6 +51,72 @@ $(document).on('click', '#add-app', function(evt) {
 	});
 });
 
+$(document).on('click', '#withdraw-custom-btn', function(evt) {
+	var customId = $(this).data('custom-id');
+	$.ajax({
+		type: 'PUT', 
+		url: '/students/applications/withdrawal/' + customId,
+	}).done(function(response) {
+		loadDashPage();
+	}).fail(function(response) {
+		console.log('Error');
+	});
+});
+
+$(document).on('click', '#delete-custom-btn', function(evt) {
+	var customId = $(this).data('custom-id');
+	$.ajax({
+		type: 'DELETE', 
+		url: '/students/applications/' + customId,
+	}).done(function(response) {
+		loadDashPage();
+	}).fail(function(response) {
+		console.log('Error');
+	});
+});
+
+// Submit a custom
+$(document).on('submit', '#submit-custom-form', function(evt) {
+    evt.preventDefault();
+    var formData = helpers.getFormData('#submit-custom-form');
+    var customId = $('#submit-custom-form').data('custom-id');
+
+    $.ajax({
+        type: 'PUT', 
+        url: '/students/applications/custom/' + customId,
+        contentType: 'application/json',
+        data: JSON.stringify({ "answers" : formData})
+    }).done(function(response) {
+        loadDashPage();
+    }).fail(function(responseObject) {
+        var response = $.parseJSON(responseObject.responseText);
+    });
+});
+
+// Update a custom
+$(document).on('click', '#save-custom-btn', function(evt) {
+    evt.preventDefault();
+    var formData = helpers.getFormData('#submit-custom-form');
+    var customId = $('#submit-custom-form').data('custom-id');
+    var listingId = $('#submit-custom-form').data('listing-id');
+    var userId = $('#submit-custom-form').data('user-id');
+
+    var content = {
+      "answers" : formData
+    };
+
+    $.ajax({
+        type: 'PUT', 
+        url: '/students/applications/updates/' + customId,
+        contentType: 'application/json',
+        data: JSON.stringify({ "answers" : formData})
+    }).done(function(response) {
+        loadCustomAppPage(userId, listingId);
+    }).fail(function(responseObject) {
+        var response = $.parseJSON(responseObject.responseText);
+    });
+});
+
 // Loads the dash page
 var loadDashPage = function() {
 	$.get('/students/applications', function(response) {
@@ -85,9 +152,10 @@ var loadCustomAppPage = function(userId, listingId) {
 	      listing : listingId, 
 	      owner : userId,
 	      questions : response.content.application.questions, 
-	      appId : response.content._id, 
+	      customId : response.content._id, 
 	      isCommon : false,
-	      isSubmitted : response.content.state !== "save",
+	      isSaved : response.content.state === "save",
+	      isSubmitted : response.content.state === "subm"
 	    };
 	    loadPage(mainContainer, 's_custom', data);
 	}).fail(function(response) {

@@ -6,6 +6,155 @@ var Listing = require('../models/listing.js');
 var utils = require('../utils/utils');
 
 /**
+ * GET /employers/listings/:lstgid
+ *
+ * Retrieves applicants for a given listing
+ *
+ * Request body:
+ *	- listingId: listing ID for relevant listing
+ *
+ * Response:
+ *	- success: true if succeeded in retrieving applicants
+ *	- err: on failure (i.e. server fail, invalid listing)
+ */ 
+exports.getApplicants = function(req, res, next) {
+	var currentUser = req.session.user;
+	var employerId = currentUser.employerInfo._id;
+	var listingId = req.body.listingId;
+
+	// check if listing belongs to employer
+	Listing.doesEmployerOwnListing(employerId, listingId, function(errMsg, employerOwns) {
+		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+		else if (!employerOwns) utils.sendErrResponse(res, 403, "Cannot get applicants if you do not own the listing");
+		else {
+			// get the customs for the listing if the employer owns the listing
+			Custom.getCustomsForListingDash(listingId, function(errMsg, customs) {
+				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+				else if (!customs) utils.sendErrResponse(res, 403, "Could not get applications");
+				else {
+					var content = {
+						applicants : customs
+					}
+					utils.sendSuccessResponse(res, content);
+				}
+			});
+		}
+	});
+};
+
+/**
+ * PUT /employers/applications/starred/:customid
+ *
+ * Marks a custom application as starred
+ *
+ * Request body:
+ *  - customId: custom ID for to-be-starred custom
+ *  - listingId: listing ID corresponding to the listing of the custom
+ *
+ * Response:
+ *	- success: true if succeeded in changing custom state
+ *	- err: on failure (i.e. server fail, invalid custom)
+ */
+exports.starApplication = function(req, res, next) {
+	var currentUser = req.session.user;
+	var employerId = currentUser.employerInfo._id;
+	var listingId = req.body.listingId;
+	var customId = req.body.customId;
+
+	checkIfCustomOfEmployer(employerId, customId, listingId, function() {
+		Custom.star(customId, function(errMsg, custom) {
+			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+			else if (!custom) utils.sendErrResponse(res, 403, "Not valid custom");
+			else utils.sendSuccessResponse(res);
+		});
+	});			
+};
+
+/**
+ * PUT /employers/applications/unstarred/:customid
+ *
+ * Marks a custom application as unstarred
+ *
+ * Request body:
+ *  - customId: custom ID for to-be-unstarred custom
+ *  - listingId: listing ID corresponding to the listing of the custom
+ *
+ * Response:
+ *	- success: true if succeeded in changing custom state
+ *	- err: on failure (i.e. server fail, invalid custom)
+ */
+exports.unstarApplication = function(req, res, next) {
+	var currentUser = req.session.user;
+	var employerId = currentUser.employerInfo._id;
+	var listingId = req.body.listingId;
+	var customId = req.body.customId;
+
+	checkIfCustomOfEmployer(employerId, customId, listingId, function() {
+		Custom.unstar(customId, function(errMsg, custom) {
+			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+			else if (!custom) utils.sendErrResponse(res, 403, "Not valid custom");
+			else utils.sendSuccessResponse(res);
+		});
+	});		
+};
+
+/**
+ * PUT /employers/applications/rejected/:customid
+ *
+ * Marks an custom application as rejected
+ *
+ * Request body:
+ *  - customId: custom ID for to-be-rejected custom
+ *  - listingId: listing ID corresponding to the listing of the custom
+ *
+ * Response:
+ *	- success: true if succeeded in changing custom state
+ *	- err: on failure (i.e. server fail, invalid custom)
+ */
+exports.rejectApplication = function(req, res, next) {
+	var currentUser = req.session.user;
+	var employerId = currentUser.employerInfo._id;
+	var listingId = req.body.listingId;
+	var customId = req.body.customId;
+
+	checkIfCustomOfEmployer(employerId, customId, listingId, function() {
+		Custom.reject(customId, function(errMsg, custom) {
+			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+			else if (!custom) utils.sendErrResponse(res, 403, "Not valid custom");
+			else utils.sendSuccessResponse(res);
+		});
+	});		
+};
+
+/**
+ * GET /students/applications
+ *
+ * Retrieves all student applications
+ *
+ * Response:
+ *  - success: true if succeeded in changing application state
+ *	- err: on failure (i.e. server fail)
+ */
+exports.getStudentApplications = function(req, res, next) {
+	var userId = req.session.user.userId;
+	
+	Custom.getCustomsForStudentDash(userId, function(errMsg, customs) {
+		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+		else if (!customs) utils.sendErrResponse(res, 403, "Could not get applications");
+		else {
+			// change any starred custom states to normal submitted
+			customs.forEach(function(custom) {
+				custom.state = (custom.state === "star") ? "subm" : custom.state;
+			});
+			var content = {
+				applications : customs
+			}
+			utils.sendSuccessResponse(res, content);
+		}
+	});
+};
+
+/**
  * GET /students/applications/custom/:lstgid
  *
  * Gets the custom application associated with the lstgid for the 
@@ -43,118 +192,6 @@ exports.getCustomApplication = function(req, res, next) {
 					utils.sendSuccessResponse(res, content);
 				}
 			});
-		}
-	});
-};
-
-/**
- * GET /employers/listings/:lstgid
- *
- * Retrieves applicants for a given listing
- *
- * Request body:
- *	- listingId: listing ID for relevant listing
- *
- * Response:
- *	- success: true if succeeded in retrieving applicants
- *	- err: on failure (i.e. server fail, invalid listing)
- */ 
-exports.getApplicants = function(req, res, next) {
-	// possibly useful later to check if the userId owns the listingId, commented by Heeyoon
-	var currentUser = req.session.user;
-	var employerId = currentUser.employerInfo._id;
-	var listingId = req.body.listingId;
-
-	// check if listing belongs to employer
-	Listing.doesEmployerOwnListing(employerId, listingId, function(errMsg, employerOwns) {
-		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!employerOwns) utils.sendErrResponse(res, 403, "Cannot get applicants if you do not own the listing");
-		else {
-			// get the customs for the listing if the employer owns the listing
-			Custom.getCustomsForListingDash(listingId, function(errMsg, customs) {
-				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-				else if (!customs) utils.sendErrResponse(res, 403, "Could not get applications");
-				else {
-					var content = {
-						applicants : customs
-					}
-					utils.sendSuccessResponse(res, content);
-				}
-			});
-		}
-	});
-};
-
-/**
- * PUT /employers/applications/starred/:customid
- *
- * Marks a custom application as starred
- *
- * Request body:
- *  - customId: custom ID for to-be-starred custom
- *
- * Response:
- *	- success: true if succeeded in changing custom state
- *	- err: on failure (i.e. server fail, invalid custom)
- */
-//exports.starApplication = function(req, res, next) {};
-
-/**
- * PUT /employers/applications/unstarred/:customid
- *
- * Marks a custom application as unstarred
- *
- * Request body:
- *  - customId: custom ID for to-be-unstarred custom
- *
- * Response:
- *	- success: true if succeeded in changing custom state
- *	- err: on failure (i.e. server fail, invalid custom)
- */
-//exports.unstarApplication = function(req, res, next) {};
-
-/**
- * PUT /employers/applications/rejected/:customid
- *
- * Marks an custom application as rejected
- *
- * Request body:
- *  - customId: custom ID for to-be-rejected custom
- *
- * Response:
- *	- success: true if succeeded in changing custom state
- *	- err: on failure (i.e. server fail, invalid custom)
- */
-//exports.rejectApplication = function(req, res, next) {};
-
-//exports.withdrawApplication = function(req, res, next) {};
-
-//exports.deleteApplication = function(req, res, next) {};
-
-/**
- * GET /students/applications
- *
- * Retrieves all student applications
- *
- * Response:
- *  - success: true if succeeded in changing application state
- *	- err: on failure (i.e. server fail)
- */
-exports.getStudentApplications = function(req, res, next) {
-	var userId = req.session.user.userId;
-	
-	Custom.getCustomsForStudentDash(userId, function(errMsg, customs) {
-		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!customs) utils.sendErrResponse(res, 403, "Could not get applications");
-		else {
-			// change any starred custom states to normal submitted
-			customs.forEach(function(custom) {
-				custom.state = (custom.state === "star") ? "subm" : custom.state;
-			});
-			var content = {
-				applications : customs
-			}
-			utils.sendSuccessResponse(res, content);
 		}
 	});
 };
@@ -213,19 +250,15 @@ exports.submitCustomApplication = function(req, res, next) {
     });
 
 	// check that the current user is the owner of the application
-	Custom.getIfOwner(userId, customId, function(errMsg, custom) {
-		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!custom) utils.sendErrResponse(res, 403, "Not valid");
-		else {
-			Custom.update(customId, answerArray, true, function(errMsg, custom) {
-				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-				else if (!custom) utils.sendErrResponse(res, 403, "Could not submit custom application");
-				else {
-					utils.sendSuccessResponse(res);
-				}
-			});
-		}
-	})
+	checkIfCustomOfUser(userId, customId, function() {
+		Custom.update(customId, answerArray, true, function(errMsg, custom) {
+			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+			else if (!custom) utils.sendErrResponse(res, 403, "Could not submit custom application");
+			else {
+				utils.sendSuccessResponse(res);
+			}
+		});
+	});
 };
 
 /**
@@ -257,20 +290,112 @@ exports.updateApplication = function(req, res, next) {
     });
 
 	// check that the current user is the owner of the application
-	Custom.getIfOwner(userId, customId, function(errMsg, custom) {
+	checkIfCustomOfUser(userId, customId, function() {
+		Custom.update(customId, answerArray, false, function(errMsg, custom) {
+			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+			else if (!custom) utils.sendErrResponse(res, 403, "Could not save custom application");
+			else {
+				utils.sendSuccessResponse(res);
+			}
+		});
+	});
+};
+
+/**
+ * PUT /students/applications/withdrawn/:customid
+ *
+ * Withdraws a custom application
+ *
+ * Request body:
+ *	- customId : custom ID for to-be-rejected custom
+ *
+ * Response:
+ *	- success: true if succeeded in withdrawal
+ *	- err: on failure (i.e. server fail, invalid withdrawal, invalid custom)
+ */ 
+exports.withdrawApplication = function(req, res, next) {
+	var currentUser = req.session.user;
+	var userId = currentUser.userId;
+	var customId = req.body.customId;
+
+	checkIfCustomOfUser(userId, customId, function() {
+		Custom.withdraw(customId, function(errMsg, custom) {
+			if (errMsg) utils.sendErrRsponse(res, 403, errMsg);
+			else if (!custom) utils.sendErrRsponse(res, 403, "Not valid custom");
+			else utils.sendSuccessResponse(res);
+		});
+	});
+};
+
+/**
+ * DELETE /students/applications/:customid
+ *
+ * Deletes a custom application
+ *
+ * Request body:
+ *	- customId : custom ID for to-be-rejected custom
+ *
+ * Response:
+ *	- success: true if succeeded in deleting
+ *	- err: on failure (i.e. server fail, invalid deletion, invalid custom)
+ */ 
+exports.deleteApplication = function(req, res, next) {
+	var currentUser = req.session.user;
+	var userId = currentUser.userId;
+	var customId = req.body.customId;
+
+	checkIfCustomOfUser(userId, customId, function() {
+		Custom.deleteCustom(customId, function(errMsg, custom) {
+			if (errMsg) utils.sendErrRsponse(res, 403, errMsg);
+			else utils.sendSuccessResponse(res);
+		});
+	});
+};
+
+
+/**
+ * Runs callIfTrue if the custom associated with the customId corresponds to
+ * the listing associated with listingId AND if the listing associated with
+ * listingId belongs to the employer associated with employerId
+ * 
+ * @param{ObjectId} employerId
+ * @param{ObjectId} customId
+ * @param{ObjectId} listingId
+ * @param{Function} callIfTrue()
+ */
+var checkIfCustomOfEmployer = function(employerId, customId, listingId, callIfTrue) {
+	Listing.doesEmployerOwnListing(employerId, listingId, function(errMsg, employerOwns) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!custom) utils.sendErrResponse(res, 403, "Not valid");
+		else if (!employerOwns) utils.sendErrResponse(res, 403, "Cannot get applicants if you do not own the listing");
 		else {
-			Custom.update(customId, answerArray, false, function(errMsg, custom) {
+			Custom.getStarOrSubmCustomIfListing(customId, listingId, function(errMsg, custom) {
 				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-				else if (!custom) utils.sendErrResponse(res, 403, "Could not submit custom application");
+				else if (!custom) utils.sendErrResponse(res, 403, "Not valid custom");
 				else {
-					utils.sendSuccessResponse(res);
+					callIfTrue();
 				}
 			});
 		}
 	});
-};
+}
+
+/**
+ * Runs callIfTrue if the customassociated with the customId has an owner
+ * that is the User corresponding to the userId
+ * 
+ * @param{ObjectId} userId
+ * @param{ObjectId} customId
+ * @param{Function} callIfTrue()
+ */
+var checkIfCustomOfUser = function(userId, customId, callIfTrue) {
+	Custom.getIfOwner(userId, customId, function(errMsg, custom) {
+		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+		else if (!custom) utils.sendErrResponse(res, 403, "Not valid");
+		else {
+			callIfTrue();
+		}
+	});
+}
 
 /**
  * GET /students/applications/template/:lstgid

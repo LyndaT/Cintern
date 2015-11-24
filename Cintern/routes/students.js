@@ -75,9 +75,9 @@ router.post('/applications/custom/saved/:lstgid', custom.saveCustomApplication);
 router.put('/applications/updates/:customid', custom.updateApplication);
 
 /* PUT withdraw a custom application */
-// router.put('/applications/withdrawal/:customid', custom.withdrawApplication);
+router.put('/applications/withdrawal/:customid', custom.withdrawApplication);
 
 /* DELETE delete a custom application */
-// router.delete('/applications/:customid', custom.deleteApplication);
+router.delete('/applications/:customid', custom.deleteApplication);
 
 module.exports = router;
