@@ -3,6 +3,24 @@
  *
  * Test file for the custom model
  */
+
+/**
+ * Functions tested
+ * createTemplate
+ * copyTemplateToSave
+ * getCustomsForStudentDash
+ * getCustomsForListingDash
+ * getIfOwner
+ * getStarOrSubmCustomForListing
+ * getListingTemplate
+ * getByOwnerAndListing
+ * withdraw
+ * deleteCustom
+ * star
+ * unstar
+ * reject
+ * update
+ */
 var assert = require("assert");
 var Custom = require('../models/custom');
 var User = require('../models/User');
@@ -1094,7 +1112,6 @@ describe('Custom', function() {
         });
       });
     });
-  
   });
 
   /**
@@ -1284,7 +1301,6 @@ describe('Custom', function() {
         });
       });
     });
-  
   });
 
   /**
@@ -1411,7 +1427,6 @@ describe('Custom', function() {
         });
       });
     });
-  
   });
 
   /**
@@ -1541,7 +1556,6 @@ describe('Custom', function() {
         });
       });
     });
-
   });
 
   /**
