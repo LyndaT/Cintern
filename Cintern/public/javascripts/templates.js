@@ -4,7 +4,7 @@ templates['application'] = template({"1":function(container,depth0,helpers,parti
     var stack1;
 
   return "	<div class=\"form-group\">\n"
-    + ((stack1 = container.invokePartial(partials.question,depth0,{"name":"question","hash":{"isCommon":(depths[1] != null ? depths[1].isCommon : depths[1]),"isSubmitted":(depths[1] != null ? depths[1].isSubmitted : depths[1])},"data":data,"indent":"\t\t","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
+    + ((stack1 = container.invokePartial(partials.question,depth0,{"name":"question","hash":{"isInProgress":(depths[1] != null ? depths[1].isInProgress : depths[1])},"data":data,"indent":"\t\t","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
     + "	</div>\n";
 },"3":function(container,depth0,helpers,partials,data) {
     return "	<p>No Questions!</p>\n";
@@ -138,7 +138,7 @@ templates['question'] = template({"1":function(container,depth0,helpers,partials
 },"3":function(container,depth0,helpers,partials,data) {
     return "";
 },"5":function(container,depth0,helpers,partials,data) {
-    return "			disabled \n";
+    return "			disabled\n";
 },"7":function(container,depth0,helpers,partials,data) {
     return "			required\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
@@ -149,7 +149,7 @@ templates['question'] = template({"1":function(container,depth0,helpers,partials
     + "</label>\n	<textarea \n"
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isCommon : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + "		\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isSubmitted : depth0),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isInProgress : depth0),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.program(5, data, 0),"data":data})) != null ? stack1 : "")
     + "		\n"
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.required : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + "		\n		class=\"form-control\" name=\""
@@ -187,7 +187,7 @@ templates['s_custom'] = template({"1":function(container,depth0,helpers,partials
   return "<!-- author: Jennifer Wu -->\n\n<div>\n\n	<a href=\"/\" id=\"home-link\">Back to Dash</a>\n\n	<h1>Custom Application</h1>\n\n	<br>\n\n	<label>Position Title: </label> "
     + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
     + "\n\n	<br>\n	<br>\n\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isSaved : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isInProgress : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + "\n"
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isSubmitted : depth0),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + "\n	<h3>Application</h3>\n\n	<form id=\"submit-custom-form\" data-custom-id=\""
@@ -198,7 +198,7 @@ templates['s_custom'] = template({"1":function(container,depth0,helpers,partials
     + alias4(((helper = (helper = helpers.listing || (depth0 != null ? depth0.listing : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"listing","hash":{},"data":data}) : helper)))
     + "\">\n"
     + ((stack1 = container.invokePartial(partials.application,depth0,{"name":"application","data":data,"indent":"\t\t","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isSaved : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isInProgress : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + "	</form>\n	\n</div>";
 },"usePartial":true,"useData":true});
 templates['s_dash_page'] = template({"1":function(container,depth0,helpers,partials,data,blockParams) {

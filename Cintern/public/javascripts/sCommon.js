@@ -35,6 +35,7 @@ var loadHomePage = function() {
 	$.get('/students/applications/common', function(response) {
 		loadPage(mainContainer, 's_common', {
 			questions : response.content.application.questions, 
+            isInProgress : true
 		});
 	});
 };

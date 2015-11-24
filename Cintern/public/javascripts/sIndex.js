@@ -154,8 +154,8 @@ var loadCustomAppPage = function(userId, listingId) {
 	      questions : response.content.application.questions, 
 	      customId : response.content._id, 
 	      isCommon : false,
-	      isSaved : response.content.state === "save",
-	      isSubmitted : response.content.state === "subm"
+	      isInProgress : response.content.state === "save",
+	      isSubmitted : response.content.state === "subm",
 	    };
 	    loadPage(mainContainer, 's_custom', data);
 	}).fail(function(response) {

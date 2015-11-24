@@ -1,7 +1,7 @@
 <!-- author: Jennifer Wu -->
 {{#each questions}}
 	<div class="form-group">
-		{{> question this isSubmitted=../isSubmitted isCommon=../isCommon}}
+		{{> question this isInProgress=../isInProgress}}
 	</div>
 {{else}}
 	<p>No Questions!</p>
