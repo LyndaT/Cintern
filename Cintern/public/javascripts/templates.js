@@ -74,7 +74,7 @@ templates['e_full_app'] = template({"1":function(container,depth0,helpers,partia
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1._id : stack1), depth0))
     + "\" data-user-id=\""
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.owner : depth0)) != null ? stack1._id : stack1), depth0))
-    + "\">\n			<span class='glyphicon glyphicon-star center'></span>\n		</button>\n";
+    + "\">\n			<span class='glyphicon glyphicon-star center' style=\"color:yellow\"></span>\n		</button>\n";
 },"3":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=container.escapeExpression, alias2=container.lambda;
 
@@ -84,7 +84,7 @@ templates['e_full_app'] = template({"1":function(container,depth0,helpers,partia
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1._id : stack1), depth0))
     + "\" data-user-id=\""
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.owner : depth0)) != null ? stack1._id : stack1), depth0))
-    + "\">\n			<span class='glyphicon glyphicon-star center' style=\"color:yellow\"></span>\n		</button>\n";
+    + "\">\n			<span class='glyphicon glyphicon-star center'></span>\n		</button>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=container.escapeExpression, alias3=container.lambda;
 
@@ -96,7 +96,7 @@ templates['e_full_app'] = template({"1":function(container,depth0,helpers,partia
     + alias2(alias3(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1._id : stack1), depth0))
     + "\" data-user-id=\""
     + alias2(alias3(((stack1 = (depth0 != null ? depth0.owner : depth0)) != null ? stack1._id : stack1), depth0))
-    + "\">\n		Reject\n	</button>\n	\n	<h3>Common Application</h3>\n"
+    + "\">\n		Reject\n	</button>\n\n	<h3>Common Application</h3>\n"
     + ((stack1 = container.invokePartial(partials.application,(depth0 != null ? depth0.common : depth0),{"name":"application","hash":{"isCommon":true,"isSubmitted":(depth0 != null ? depth0.isSubmitted : depth0)},"data":data,"indent":"\t","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
     + "	<h3>Custom Application</h3>\n"
     + ((stack1 = container.invokePartial(partials.application,(depth0 != null ? depth0.custom : depth0),{"name":"application","hash":{"isCommon":false,"isSubmitted":(depth0 != null ? depth0.isSubmitted : depth0)},"data":data,"indent":"\t","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
@@ -163,7 +163,7 @@ templates['s_common'] = template({"compiler":[7,">= 4.0.0"],"main":function(cont
 
   return "<!-- author: Jennifer Wu -->\n\n<div>\n\n	<h3>Common Application</h3>\n\n	<form id=\"submit-common-form\">\n"
     + ((stack1 = container.invokePartial(partials.application,depth0,{"name":"application","data":data,"indent":"\t\t","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
-    + "		<input type=\"submit\" class=\"btn btn-primary\"/>\n	</form>\n</div>";
+    + "		<input type=\"submit\" class=\"btn btn-primary\"/>\n	</form>\n	\n</div>";
 },"usePartial":true,"useData":true});
 templates['s_custom'] = template({"1":function(container,depth0,helpers,partials,data) {
     var helper;
@@ -199,7 +199,7 @@ templates['s_custom'] = template({"1":function(container,depth0,helpers,partials
     + "\">\n"
     + ((stack1 = container.invokePartial(partials.application,depth0,{"name":"application","data":data,"indent":"\t\t","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isSaved : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
-    + "	</form>\n</div>";
+    + "	</form>\n	\n</div>";
 },"usePartial":true,"useData":true});
 templates['s_dash_page'] = template({"1":function(container,depth0,helpers,partials,data,blockParams) {
     var stack1;
