@@ -50,7 +50,7 @@ var loadApplicantsPage = function(listingId) {
 // Loads the Full Application page corresponding to the userId and listingId
 var getFullAppPage = function(userId, listingId) {
 	$.get('/employers/applications/fullapp/' + userId + '/' + listingId, function(response) {
-    	loadPage(mainContainer, 'full_app', {
+    	loadPage(mainContainer, 'e_full_app', {
     		common : response.content.commonApp,
     		custom : response.content.customApp,
     		isSubmitted : true

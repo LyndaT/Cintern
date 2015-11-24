@@ -41,15 +41,6 @@ router.param('customid', function(req, res, next, customId) {
   next();
 });
 
-/* GET home page for Student User */
-router.get('/', function(req, res) {
-  if (req.session.user.studentInfo.commonFilled) {
-    res.render('s-index', { title: 'Cintern' });    
-  } else {
-    res.render('s-common', { user : req.session.user.userId });
-  }
-});
-
 /* GET all listings */
 router.get('/listings',listing.getAllListings);
 

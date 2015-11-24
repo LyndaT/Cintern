@@ -42,11 +42,6 @@ router.param('userid', function(req, res, next, userId) {
   next();
 });
 
-/* GET home page for Employer User */
-router.get('/', function(req, res) {
-  res.render('e-index', { title: 'Cintern' });    
-});
-
 /* GET listings */
 router.get('/listings', listing.getEmployerListings);
 
