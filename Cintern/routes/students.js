@@ -50,34 +50,34 @@ router.get('/listings/employer/:employerid', listing.getEmployerListings);
 /* GET listing */
 router.get('/listings/:lstgid', listing.getListing);
 
-/* GET all applications */
-router.get('/applications', custom.getStudentApplications);
-
 /* GET common application */
-router.get('/applications/common', common.getCommonApplication);
-
-/* GET custom application */
-router.get('/applications/custom/:lstgid', custom.getCustomApplication);
+router.get('/applications/common', common.getCommon);
 
 /* PUT submit common application */
-router.put('/applications/common', common.submitCommonApplication);
-
-/* PUT submit custom application */
-router.put('/applications/custom/:customid', custom.submitCustomApplication);
+router.put('/applications/common', common.submitCustom);
 
 /* GET template */
 //router.get('/applications/template/:lstgid', custom.getListingTemplate);
 
-/* POST add custom application */
-router.post('/applications/custom/saved/:lstgid', custom.saveCustomApplication);
+/* GET all applications */
+router.get('/applications', custom.getAllStudentCustoms);
 
-/* PUT update a custom application */
-router.put('/applications/updates/:customid', custom.updateApplication);
+/* GET custom application */
+router.get('/applications/custom/:lstgid', custom.getCustom);
+
+/* POST add custom application */
+router.post('/applications/custom/added/:lstgid', custom.addCustom);
+
+/* PUT submit custom application */
+router.put('/applications/custom/:customid', custom.submitCustom);
+
+/* PUT save updates to a custom application */
+router.put('/applications/saved/:customid', custom.saveCustom);
 
 /* PUT withdraw a custom application */
-router.put('/applications/withdrawal/:customid', custom.withdrawApplication);
+router.put('/applications/withdrawal/:customid', custom.withdrawCustom);
 
 /* DELETE delete a custom application */
-router.delete('/applications/:customid', custom.deleteApplication);
+router.delete('/applications/:customid', custom.deleteCustom);
 
 module.exports = router;

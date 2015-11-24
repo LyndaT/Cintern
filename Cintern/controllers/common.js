@@ -16,7 +16,7 @@ var utils = require('../utils/utils');
  *  - success: true if succeeded got the common
  *  - err: on failure (i.e. server failure, invalid user);
  */
-exports.getCommonApplication = function(req, res, next) {
+exports.getCommon = function(req, res, next) {
 	var currentUser = req.session.user;
 	var userId = currentUser.userId;
 	
@@ -51,7 +51,7 @@ exports.getCommonApplication = function(req, res, next) {
  *	- success: true if succeeded in submitting
  *	- err: on failure (i.e. server fail, invalid submission)
  */ 
-exports.submitCommonApplication = function(req, res, next) {
+exports.submitCustom = function(req, res, next) {
 	var currentUser = req.session.user;
 	if (!currentUser.studentInfo.commonFilled) {
 		var userId = currentUser.userId;

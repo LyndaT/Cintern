@@ -31,7 +31,7 @@ $(document).on('click', '.s-listing', function(evt) {
 	loadListingPage(listingId, company);
 });
 
-$(document).on('click', '.student-app', function(evt) {
+$(document).on('click', '.student-custom', function(evt) {
 	var item = $(this);
 	var listingId = item.data('listing-id');
 	var userId = item.data('user-id');
@@ -43,7 +43,7 @@ $(document).on('click', '#add-custom', function(evt) {
 	var listingId = $(this).data('listing-id');
 	$.ajax({
 		type: 'POST', 
-		url: '/students/applications/custom/saved/' + listingId,
+		url: '/students/applications/custom/added/' + listingId,
 	}).done(function(response) {
 		loadAllListingsPage();
 	}).fail(function(response) {
@@ -107,7 +107,7 @@ $(document).on('click', '#save-custom-btn', function(evt) {
 
     $.ajax({
         type: 'PUT', 
-        url: '/students/applications/updates/' + customId,
+        url: '/students/applications/saved/' + customId,
         contentType: 'application/json',
         data: JSON.stringify({ "answers" : formData})
     }).done(function(response) {
