@@ -32,7 +32,6 @@ var mainContainer = '#common-main-container';
  * This function loads the home page Handlebar template
  */
 var loadHomePage = function() {
-	var userId = $('#common-main-container').data('user-id');
 	$.get('/students/applications/common', function(response) {
 		loadPage(mainContainer, 's_common', {
 			questions : response.content.application.questions, 

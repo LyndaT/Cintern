@@ -1,5 +1,5 @@
 /**
- * @author: Maddie Dawson
+ * @author: Maddie Dawson and Jennifer Wu
  */
 var Custom = require('../models/custom.js');
 var Listing = require('../models/listing.js');
