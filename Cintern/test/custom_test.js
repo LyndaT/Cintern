@@ -495,7 +495,7 @@ describe('Custom', function() {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
                   Custom.getCustomsForStudentDash(user2._id, function(e, customs) {
                     assert.equal(1, customs.length);
-                    assert.equal(listings[0]._id.toString(), customs[0].listing.toString());
+                    assert.equal(listings[0]._id.toString(), customs[0].listing._id.toString());
                     done();
                   });
                 });
@@ -519,7 +519,7 @@ describe('Custom', function() {
                     Custom.copyTemplateToSave(listings[0]._id, user3._id, function(e, c2) {
                       Custom.getCustomsForStudentDash(user2._id, function(e, customs) {
                         assert.equal(1, customs.length);
-                        assert.equal(listings[0]._id.toString(), customs[0].listing.toString());
+                        assert.equal(listings[0]._id.toString(), customs[0].listing._id.toString());
                         done();
                       });
                     });
