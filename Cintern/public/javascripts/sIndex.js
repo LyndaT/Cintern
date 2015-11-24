@@ -5,6 +5,12 @@
 Handlebars.registerPartial('listing', Handlebars.templates['s_listing_row']);
 Handlebars.registerPartial('s_dash_page_app', Handlebars.templates['s_dash_page_app']);
 Handlebars.registerPartial('application', Handlebars.templates['application']);
+Handlebars.registerHelper("interpretState", function(state) {
+    if (state === "subm") return "Submitted";
+    if (state === "save") return "Saved";
+    if (state === "with") return "Withdrawn";
+    if (state === "rej") return "Rejected";
+});
 
 var mainContainer = '#s-main-container';
 
