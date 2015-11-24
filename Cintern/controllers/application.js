@@ -7,6 +7,7 @@ var Common = require('../models/common.js');
 var Custom = require('../models/custom.js');
 var Listing = require('../models/listing.js');
 var utils = require('../utils/utils');
+var async = require('async');
 
 /** NEED TO FIX, THIS IS COPY AND PASTED..*/
 
@@ -30,44 +31,62 @@ exports.getFullApplication = function(req, res, next) {
 	var employerId = currentUser.employerInfo._id;
 	var listingId = req.body.listingId;
 	var userId = req.body.userId;
+	console.log("get full app");
 
 	// check that the listing belongs to the user
 	Listing.doesEmployerOwnListing(employerId, listingId, function(errMsg, employerOwns) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 		else if (!employerOwns) utils.sendErrResponse(res, 403, "employer does not own");
 		else {
-			Common.getCommonByOwnerId(userId, function(errMsg, common) {
-				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-				else if (!common) utils.sendErrResponse(res, 403, "No common");
-				else {
+			var commonResult;
+			var customResult;
+			var failedTask = false;
+			
+			var getCommonTask = function(callback) {
+				Common.getCommonByOwnerId(userId, function(errMsg, common) {
+					if (errMsg || !common) {
+						failedTask = true;
+						callback();
+					}
 					common.populateCommon(function(errMsg, common) {
-						if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-						else if (!common) utils.sendErrResponse(res, 403, "No common");
-						else {
-							Custom.getByOwnerAndListing(userId, listingId, false, function(errMsg, custom) {
-								if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-								else if (!custom) utils.sendErrResponse(res, 403, "No custom");
-								else {
-									custom.populateCustom(function(errMsg, custom) {
-										if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-										else if (!custom) utils.sendErrResponse(res, 403, "No custom");
-										else {
-											var content = {
-												"commonApp": common.application,
-												"listing" : custom.listing,
-												"state" : custom.state,
-												"customApp" : custom.application,
-												"owner" : custom.owner,
-												"isTemplate" : custom.isTemplate,
-												"submitTime" : custom.submitTime
-											};
-											utils.sendSuccessResponse(res, content);
-										}
-									});
-								}
-							});
-						}
+						if (errMsg) failedTask = true;
+						else if (!common) failedTask = true;
+						else commonResult = common;
+						callback();
 					});
+				});	
+			};
+
+			var getCustomTask = function(callback) {
+				Custom.getByOwnerAndListing(userId, listingId, false, function(errMsg, custom) {
+					if (errMsg || !custom) {
+						failedTask = true;
+						callback();
+					}
+					custom.populateCustom(function(errMsg, custom) {
+						if (errMsg) failedTask = true;
+						else if (!custom) failedTask = true
+						else customResult = custom;
+						callback();
+					});					
+				});
+			};
+
+			asyncTasks = [getCommonTask, getCustomTask];
+
+			async.parallel(asyncTasks, function() {
+				if (failedTask) utils.sendErrResponse(res, 403, "Could not get common and custom");
+				else {
+					var content = {
+						"commonApp": commonResult.application,
+						"listing" : customResult.listing,
+						"state" : customResult.state,
+						"customApp" : customResult.application,
+						"owner" : customResult.owner,
+						"isTemplate" : customResult.isTemplate,
+						"submitTime" : customResult.submitTime
+					};
+					utils.sendSuccessResponse(res, content);
 				}
 			});
 		}
