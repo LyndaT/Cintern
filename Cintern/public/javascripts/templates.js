@@ -222,7 +222,7 @@ templates['s_dash_page_app'] = template({"compiler":[7,">= 4.0.0"],"main":functi
     + "</td>\n  	<td>"
     + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
     + "</td>\n  	<td>"
-    + alias4(((helper = (helper = helpers.state || (depth0 != null ? depth0.state : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"state","hash":{},"data":data}) : helper)))
+    + alias4((helpers.interpretState || (depth0 && depth0.interpretState) || alias2).call(alias1,(depth0 != null ? depth0.state : depth0),{"name":"interpretState","hash":{},"data":data}))
     + "</td>\n  </tr>\n</div>";
 },"useData":true});
 templates['s_listing'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
