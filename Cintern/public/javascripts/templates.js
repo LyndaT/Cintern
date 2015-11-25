@@ -25,7 +25,7 @@ templates['e_applicants'] = template({"1":function(container,depth0,helpers,part
 
   return "<div>\n\n  <a href=\"/\" id=\"home-link\">Back to Dash</a>\n\n  <h1>Applicants</h1>\n  \n  <p>Currently "
     + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.applicants : depth0)) != null ? stack1.length : stack1), depth0))
-    + " students have applied to this listing</p>\n\n  <table class=\"table table-hover table-condensed\">\n    \n    <thead>\n      <th>Email</th>\n    </thead>\n    \n    <tbody>\n"
+    + " students have applied to this listing</p>\n\n  <table class=\"table table-hover table-condensed\">\n    \n    <thead>\n      <th>Name</th>\n      <th>Email</th>\n      <th>School</th>\n      <th>Date submitted</th>\n    </thead>\n    \n    <tbody>\n"
     + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.applicants : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + "    </tbody>\n\n  </table>\n\n</div>\n";
 },"usePartial":true,"useData":true});
@@ -252,7 +252,7 @@ templates['s_listing_row'] = template({"compiler":[7,">= 4.0.0"],"main":function
     + "</td>\n      <td>"
     + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
     + "</td>\n      <td>"
-    + alias4(((helper = (helper = helpers.description || (depth0 != null ? depth0.description : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"description","hash":{},"data":data}) : helper)))
+    + alias4(((helper = (helper = helpers.deadline || (depth0 != null ? depth0.deadline : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"deadline","hash":{},"data":data}) : helper)))
     + "</td>\n    </tr>\n</div>\n";
 },"useData":true});
 templates['s_listings'] = template({"1":function(container,depth0,helpers,partials,data) {
@@ -264,7 +264,7 @@ templates['s_listings'] = template({"1":function(container,depth0,helpers,partia
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "<div>\n  <a href=\"/\" id=\"home-link\">Back to Dash</a>\n\n  <h1>Current available listings</h1>\n  <p>Click on a listing for more detailed information.</p>\n  <br>\n\n  <table class=\"table table-hover table-condensed row-clickable\">\n\n    <thead>\n      <th>Company</th>\n      <th>Position</th>\n      <th>Description</th>\n    </thead>\n\n    <tbody>\n"
+  return "<div>\n  <a href=\"/\" id=\"home-link\">Back to Dash</a>\n\n  <h1>Current available listings</h1>\n  <p>Click on a listing for more detailed information.</p>\n  <br>\n\n  <table class=\"table table-hover table-condensed row-clickable\">\n\n    <thead>\n      <th>Company</th>\n      <th>Position</th>\n      <th>Deadline</th>\n    </thead>\n\n    <tbody>\n"
     + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.listings : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + "    </tbody>\n\n  </table>\n</div>\n";
 },"usePartial":true,"useData":true});
