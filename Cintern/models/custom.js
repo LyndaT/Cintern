@@ -232,7 +232,7 @@ customSchema.statics.withdraw = function(customId, callback) {
 };
 
 /**
- * Deletes the Custom from the db if the Custom has the saved state, then runs calblack
+ * Deletes the Custom from the db if the Custom has the saved state, then runs callback
  *
  * @param{ObjectId} customId
  * @param{Function} callback(err)
@@ -249,6 +249,22 @@ customSchema.statics.deleteCustom = function(customId, callback) {
 				// delete the Application associated with the Custom from the DB
 				else Application.deleteApplication(applicationId, callback);
 			});
+		}
+	});
+};
+
+/**
+ * Deletes all the Customs with a particular listingId, then runs the callback
+ * Used in Listing model for deleting listing.
+ * Someone should really check this function --heeyoon
+ * @param{ObjectId} listingId
+ * @param{Function} callback(err)
+ */
+customSchema.statics.deleteByListing = function(listingId, callback) {
+	Custom.remove({"listing": listingId}, function(err, result) {
+		if (err) callback(err.message);
+		else {
+			callback(null, result);
 		}
 	});
 };

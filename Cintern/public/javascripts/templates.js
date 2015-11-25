@@ -21,13 +21,15 @@ templates['e_applicants'] = template({"1":function(container,depth0,helpers,part
 },"3":function(container,depth0,helpers,partials,data) {
     return "        <tr>\n          <td>No applicants have applied yet.</td>\n        </tr>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1;
+    var stack1, helper, alias1=container.escapeExpression, alias2=depth0 != null ? depth0 : {};
 
   return "<div>\n\n  <a href=\"/\" id=\"home-link\">Back to Dash</a>\n\n  <h1>Applicants</h1>\n  \n  <p>Currently "
-    + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.applicants : depth0)) != null ? stack1.length : stack1), depth0))
-    + " students have applied to this listing</p>\n\n  <table class=\"table table-hover table-condensed\">\n    \n    <thead>\n      <th>Name</th>\n      <th>Email</th>\n      <th>School</th>\n      <th>Date submitted</th>\n    </thead>\n    \n    <tbody>\n"
-    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.applicants : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
-    + "    </tbody>\n\n  </table>\n\n</div>\n";
+    + alias1(container.lambda(((stack1 = (depth0 != null ? depth0.applicants : depth0)) != null ? stack1.length : stack1), depth0))
+    + " students have applied to this listing.</p>\n\n  <table class=\"table table-hover table-condensed\">\n    \n    <thead>\n      <th>Name</th>\n      <th>Email</th>\n      <th>School</th>\n      <th>Date submitted</th>\n    </thead>\n    \n    <tbody>\n"
+    + ((stack1 = helpers.each.call(alias2,(depth0 != null ? depth0.applicants : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
+    + "    </tbody>\n\n  </table>\n\n  <button id=\"delete-listing-btn\" class=\"btn btn-primary\" data-listing-id="
+    + alias1(((helper = (helper = helpers.listingId || (depth0 != null ? depth0.listingId : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias2,{"name":"listingId","hash":{},"data":data}) : helper)))
+    + ">Delete Listing</button>\n</div>\n";
 },"usePartial":true,"useData":true});
 templates['e_applicants_row'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=container.lambda, alias2=container.escapeExpression;

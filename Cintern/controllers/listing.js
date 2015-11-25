@@ -165,23 +165,30 @@ exports.getListing = function(req, res, next) {
 /**
  * DELETE /employers/listings/:lstgid
  * 
- * This function deletes the listing with lstgid as well as its associated template
+ * This function deletes the listing with lstgid as well as its associated template, and all the applications
  */
-/*
 exports.deleteListing = function(req, res, next) {
-	//Retrieve template id associated with the listing
-	//Delete template
-
-	listingId = req.body.listing;
-	Listing.deleteListing(listingId, function(err, listing) {
-		if(err) {
-			res.send(err.msg);
-		} else {
-			res.send(listing);
+	var listingId = req.body.listingId;
+	Custom.deleteByListing(listingId, function(errMsg, listings) {
+		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+		else {
+			
 		}
 	});
-}
-*/
+
+	
+	Listing.deleteListing(listingId, function(errMsg, listing) {
+		if(errMsg) {
+			utils.sendErrResponse(res, errMsg);
+		} else {
+			var content = {
+				"listing" : listing
+			};
+			utils.sendSuccessResponse(res, content);
+		}
+	});
+};
+
 
 
 
