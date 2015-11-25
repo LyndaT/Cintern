@@ -4,7 +4,15 @@
 
 var questionNum = 0;
 
-$(document).on('click', '#add-question', function(evt) {
+$(document).on('click', '#add-text-question', function(evt) {
+	evt.preventDefault();
+	$('<textarea/>').attr({ form: 'create-listing', cols: '50', name:"newq" + questionNum}).appendTo('#question-list');
+	$('<br>').appendTo('#question-list');
+	$('<br>').appendTo('#question-list');
+	questionNum += 1;
+});
+
+$(document).on('click', '#add-dropdown-question', function(evt) {
 	evt.preventDefault();
 	$('<textarea/>').attr({ form: 'create-listing', cols: '50', name:"newq" + questionNum}).appendTo('#question-list');
 	$('<br>').appendTo('#question-list');
@@ -20,7 +28,11 @@ $(document).on('submit', '#create-listing', function(evt) {
 	var questionList = [];
 	Object.keys(data).forEach(function(id) {
 		if (id.indexOf("newq") === 0){
-	        questionList.push(data[id]);
+	        questionList.push({
+	        	"question" : data[id],
+	        	"type" : "text",
+	        	"required" : true
+	        });
         }
 	});
 	

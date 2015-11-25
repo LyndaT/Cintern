@@ -37,9 +37,20 @@
 	<div>
 		Questions:
 		<div id="question-list"></div>
-		<button class="btn btn-primary" id="add-question">Add Question</button>
+		<div class="dropdown-hover">
+
+		    <!-- trigger button -->
+		    <button class="btn btn-primary">Add Question</button>
+
+		    <!-- dropdown menu -->
+		    <ul class="dropdown-menu">
+		        <li><a id="add-text-question">Text Question</a></li>
+		        <li><a id="add-dropdown-question="#about">Dropdown Question</a></li>
+		    </ul>
+		</div>
 	</div>
 
 	<br>
 	<button type="submit" class="btn btn-primary">Submit</button>
+
 </form>
