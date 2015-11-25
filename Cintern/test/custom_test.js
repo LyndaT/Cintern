@@ -4,6 +4,8 @@
  * Test file for the custom model
  */
 
+
+//TODO: test deleteByListingId
 /**
  * Functions tested
  * createTemplate

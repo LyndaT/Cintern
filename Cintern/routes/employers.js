@@ -52,7 +52,7 @@ router.get('/applications/fullapp/:userid/:lstgid', application.getFullApplicati
 router.post('/listings', listing.createListing);
 
 /* DELETE listing */
-// router.delete('/listings/:lstgid', listing.deleteListing);
+router.delete('/listings/:lstgid', listing.deleteListing);
 
 /* GET listing applicants */
 router.get('/applications/listings/:lstgid', custom.getApplicants);

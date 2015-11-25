@@ -33,6 +33,19 @@ $(document).on('click', '.listing-row', function(evt) {
     loadApplicantsPage(listingId);
 });
 
+$(document).on('click', '#delete-listing-btn', function(evt) {
+    var listingId = $(this).data('listing-id');
+    $.ajax({
+        type: 'DELETE',
+        url: '/employers/listings/' + listingId,
+        contentType: 'application/json'
+    }).done(function(response) {
+        loadDashPage();
+    }).fail(function(responseObject) {
+        var response = $.parseJSON(responseObject.responseText);
+    });
+});
+
 $(document).on('click', '.applicant-row', function(evt) {
 	var item = $(this);
     var userId = item.data('applicant-id');
@@ -106,7 +119,7 @@ var loadCreateListingPage = function() {
 // Loads the applicant page corresponding to the listingId
 var loadApplicantsPage = function(listingId) {
 	$.get('/employers/applications/listings/' + listingId, function(response) {
-		loadPage(mainContainer, 'e_applicants', {applicants: response.content.applicants});
+		loadPage(mainContainer, 'e_applicants', {applicants: response.content.applicants, listingId: listingId});
 	});
 };
 
