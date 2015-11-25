@@ -165,28 +165,40 @@ exports.getListing = function(req, res, next) {
 /**
  * DELETE /employers/listings/:lstgid
  * 
- * This function deletes the listing with lstgid as well as its associated template, and all the applications
+ * Deletes the listing with lstgid and the associated templates
+ * and the associated applications
+ * 
+ * Request body:
+ *	- listingId: the id of the listing to delete
+ * 
+ * Response:
+ * 	- success: true if successfully deleted listing
+ *  - err: if failed to delete
  */
 exports.deleteListing = function(req, res, next) {
+	console.log("here");
 	var listingId = req.body.listingId;
-	Custom.deleteByListing(listingId, function(errMsg, listings) {
+	var currentUser = req.session.user;
+	// check that the listing belongs to the employer
+	Listing.doesEmployerOwnListing(currentUser.employerInfo._id, listingId, function(errMsg, employerOwns) {
+		console.log("made it", employerOwns);
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+		else if (!employerOwns) utils.sendErrResponse(res, 403, "This listing does not belong to you");
 		else {
-			
-		}
-	});
-
-	
-	Listing.deleteListing(listingId, function(errMsg, listing) {
-		if(errMsg) {
-			utils.sendErrResponse(res, errMsg);
-		} else {
-			var content = {
-				"listing" : listing
-			};
-			utils.sendSuccessResponse(res, content);
-		}
-	});
+			Custom.deleteByListing(listingId, function(errMsg) {
+				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+				else {
+					Listing.deleteListing(listingId, function(errMsg) {
+						if(errMsg) {
+							utils.sendErrResponse(res, errMsg);
+						} else {
+							utils.sendSuccessResponse(res);
+						}
+					});
+				}
+			});
+		}		
+	})
 };
 
 

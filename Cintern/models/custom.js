@@ -256,7 +256,7 @@ customSchema.statics.deleteCustom = function(customId, callback) {
 /**
  * Deletes all the Customs with a particular listingId, then runs the callback
  * Used in Listing model for deleting listing.
- * Someone should really check this function --heeyoon
+ *
  * @param{ObjectId} listingId
  * @param{Function} callback(err)
  */
@@ -264,7 +264,7 @@ customSchema.statics.deleteByListing = function(listingId, callback) {
 	Custom.remove({"listing": listingId}, function(err, result) {
 		if (err) callback(err.message);
 		else {
-			callback(null, result);
+			callback(null);
 		}
 	});
 };
