@@ -2,6 +2,18 @@ Handlebars.registerPartial('e_dash_page_listing', Handlebars.templates['e_dash_p
 Handlebars.registerPartial('applicant', Handlebars.templates['e_applicants_row']);
 Handlebars.registerPartial('question', Handlebars.templates['question']);
 Handlebars.registerPartial('application', Handlebars.templates['application']);
+Handlebars.registerHelper('equal', function(lvalue, rvalue, options) {
+    console.log(lvalue);
+    console.log(rvalue);
+    
+    if (arguments.length < 3)
+        throw new Error("Handlebars Helper equal needs 2 parameters");
+    if( lvalue!=rvalue ) {
+        return options.inverse(this);
+    } else {
+        return options.fn(this);
+    }
+});
 
 var mainContainer = '#e-main-container';
 
@@ -101,9 +113,34 @@ var loadApplicantsPage = function(listingId) {
 // Loads the Full Application page corresponding to the userId and listingId
 var getFullAppPage = function(userId, listingId) {
 	$.get('/employers/applications/fullapp/' + userId + '/' + listingId, function(response) {
+
+        var flaggedCommonQuestions = [];
+        response.content.commonApp.questions.forEach(function(q) {
+            q["isText"] = q.type === "text";
+            q["isCheck"] = q.type === "check";
+            q["isDropdown"] = q.type === "dropdown";
+            flaggedCommonQuestions.push(q);
+        });
+
+        console.log(flaggedCommonQuestions);
+
+        var flaggedCustomQuestions = [];
+        response.content.customApp.questions.forEach(function(q) {
+            q["isText"] = q.type === "text";
+            q["isCheck"] = q.type === "check";
+            q["isDropdown"] = q.type === "dropdown";
+            flaggedCustomQuestions.push(q);
+        });
+
+        var newCommon = response.content.commonApp;
+        newCommon.questions = flaggedCommonQuestions;
+
+        var newCustom = response.content.customApp;
+        newCustom.questions = flaggedCustomQuestions;
+
     	loadPage(mainContainer, 'e_full_app', {
-    		common : response.content.commonApp,
-    		custom : response.content.customApp,
+    		common : newCommon,
+    		custom : newCustom,
     		customId : response.content.customId,
     		listing : response.content.listing,
     		owner : response.content.owner,

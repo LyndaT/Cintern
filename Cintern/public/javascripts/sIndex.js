@@ -13,6 +13,16 @@ Handlebars.registerHelper("interpretState", function(state) {
     if (state === "rej") return "Rejected";
 });
 
+Handlebars.registerHelper('equal', function(lvalue, rvalue, options) {
+	if (arguments.length < 3)
+        throw new Error("Handlebars Helper equal needs 2 parameters");
+    if( lvalue!=rvalue ) {
+        return options.inverse(this);
+    } else {
+        return options.fn(this);
+    }
+});
+
 var mainContainer = '#s-main-container';
 
 
@@ -147,20 +157,11 @@ var loadCustomAppPage = function(userId, listingId) {
 		type: "GET",
 		url: "/students/applications/custom/" + listingId
 	}).done(function(response) {
-
-		var flaggedQuestions = [];
-		response.content.application.questions.forEach(function(q) {
-			q["isText"] = q.type === "text";
-			q["isCheck"] = q.type === "check";
-			q["isDropdown"] = q.type === "dropdown";
-			flaggedQuestions.push(q);
-		});
-
 		var data = {
 	      title : response.content.listing.title,
 	      listing : listingId, 
 	      owner : userId,
-	      questions : flaggedQuestions, 
+	      questions : response.content.application.questions, 
 	      customId : response.content._id, 
 	      isCommon : false,
 	      isInProgress : response.content.state === "save",

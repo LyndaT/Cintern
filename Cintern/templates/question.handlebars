@@ -1,18 +1,65 @@
 <!-- author: Jennifer Wu -->
 
 <div class="question">
-	<label class="control-label">{{question}}</label>
-	
-	<textarea 
-		{{#if isInProgress}} 
-		{{else}}
-			disabled
-		{{/if}}
+	{{#equal type "text"}}
+		<label class="control-label">{{question}}</label>
 		
-		{{#if required}}
-			required
-		{{else}}
-		{{/if}}
-		
-		class="form-control" name="{{_id}}">{{answer}}</textarea>
+		<textarea 
+			{{#if isInProgress}} 
+			{{else}}
+				disabled
+			{{/if}}
+			
+			{{#if required}}
+				required
+			{{else}}
+			{{/if}}
+			
+			class="form-control" name="{{_id}}">{{answer}}</textarea>
+	{{/equal}}
+
+	{{#equal type "dropdown"}}
+		{{question}}
+		<select name="{{_id}}"
+			{{#if required}}
+				required
+			{{else}}
+			{{/if}}
+			{{#if isInProgress}} 
+			{{else}}
+				disabled
+			{{/if}}>
+			
+			{{#each options}}
+				<option value="{{this}}"
+					{{#equal ../answer this}}
+						selected
+					{{/equal}}
+				>{{this}}</option>
+			{{else}}
+			{{/each}}
+
+		</select>
+	{{/equal}}
+
+	{{#equal type "check"}}
+		<input 
+			type="checkbox" 
+			class="form-control" 
+			name="{{_id}}" 
+			value="yes"
+			{{#if isInProgress}} 
+			{{else}}
+				disabled
+			{{/if}}
+			{{#equal answer "yes"}}
+				checked
+			{{/equal}}>
+		<input 
+			type='hidden' 
+			class="form-control"
+			name="{{_id}}"
+			value="no">
+		<label>{{question}}</label>
+	{{/equal}}
 </div>

@@ -27,7 +27,9 @@ var createQuestion = function(question, type, required, options) {
 
 var commonQuestions = [
 	createQuestion("Email", "text", true, null),
-	createQuestion("Name", "text", true, null)
+	createQuestion("Name", "text", true, null),
+	createQuestion("University", "dropdown", true, ["MIT", "Harvard"]),
+	createQuestion("Are you eligible to work in the US", "check", true, null),
 ];
 
 /**
@@ -35,10 +37,6 @@ var commonQuestions = [
  * @param{Function} callback(err, Common);
  */
 commonSchema.statics.createCommon = function(ownerId, callback){
-	var commonQuestions = [
-		createQuestion("Email", "text", true, null),
-		createQuestion("Name", "text", true, null)
-	];
 	Application.createApplication(commonQuestions, function(errMsg, app) {
 		if (errMsg) callback(errMsg);
 		else if (!app) callback("No app");
