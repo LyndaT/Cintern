@@ -30,6 +30,13 @@
 				disabled
 			{{/if}}>
 			
+			<option
+				{{#equal answer ""}}
+					selected
+				{{/equal}}
+			>
+				
+			</option>
 			{{#each options}}
 				<option value="{{this}}" 
 					{{#equal ../answer this}}
