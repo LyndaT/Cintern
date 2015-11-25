@@ -51,7 +51,12 @@
 		</select>
 	{{/equal}}
 
-	<!-- {{#equal type "check"}}
+	{{#equal type "check"}}
+		<input 
+			type='hidden' 
+			class="form-control"
+			name="{{_id}}"
+			value="no">
 		<input 
 			type="checkbox" 
 			class="form-control" 
@@ -64,11 +69,7 @@
 			{{#equal answer "yes"}}
 				checked
 			{{/equal}}>
-		<input 
-			type='hidden' 
-			class="form-control"
-			name="{{_id}}"
-			value="no">
+		
 		<label>{{question}}</label>
-	{{/equal}} -->
+	{{/equal}}
 </div>

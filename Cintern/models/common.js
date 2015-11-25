@@ -29,7 +29,7 @@ var commonQuestions = [
 	createQuestion("Email", "text", true, null),
 	createQuestion("Name", "text", true, null),
 	createQuestion("University", "dropdown", true, ["Harvard", "MIT", "Caltech"]),
-	//createQuestion("Are you eligible to work in the US", "check", true, null),
+	createQuestion("Are you eligible to work in the US", "check", true, null),
 ];
 
 /**
