@@ -2,6 +2,18 @@ Handlebars.registerPartial('e_dash_page_listing', Handlebars.templates['e_dash_p
 Handlebars.registerPartial('applicant', Handlebars.templates['e_applicants_row']);
 Handlebars.registerPartial('question', Handlebars.templates['question']);
 Handlebars.registerPartial('application', Handlebars.templates['application']);
+Handlebars.registerHelper('equal', function(lvalue, rvalue, options) {
+    console.log(lvalue);
+    console.log(rvalue);
+    
+    if (arguments.length < 3)
+        throw new Error("Handlebars Helper equal needs 2 parameters");
+    if( lvalue!=rvalue ) {
+        return options.inverse(this);
+    } else {
+        return options.fn(this);
+    }
+});
 
 var mainContainer = '#e-main-container';
 
@@ -114,6 +126,9 @@ var loadApplicantsPage = function(listingId) {
 // Loads the Full Application page corresponding to the userId and listingId
 var getFullAppPage = function(userId, listingId) {
 	$.get('/employers/applications/fullapp/' + userId + '/' + listingId, function(response) {
+
+        console.log(response.content.commonApp);
+
     	loadPage(mainContainer, 'e_full_app', {
     		common : response.content.commonApp,
     		custom : response.content.customApp,
