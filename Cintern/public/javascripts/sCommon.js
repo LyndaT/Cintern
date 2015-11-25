@@ -33,8 +33,16 @@ var mainContainer = '#common-main-container';
  */
 var loadHomePage = function() {
 	$.get('/students/applications/common', function(response) {
+        var flaggedQuestions = [];
+        response.content.application.questions.forEach(function(q) {
+            q["isText"] = q.type === "text";
+            q["isCheck"] = q.type === "check";
+            q["isDropdown"] = q.type === "dropdown";
+            flaggedQuestions.push(q);
+        });
+
 		loadPage(mainContainer, 's_common', {
-			questions : response.content.application.questions, 
+			questions : flaggedQuestions, 
             isInProgress : true
 		});
 	});

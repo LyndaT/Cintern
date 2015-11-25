@@ -10,7 +10,7 @@ var _ = require("../helpers/lodash");
 var applicationSchema = mongoose.Schema({
 	questions : [{
 		"question" : { type : String, required : true },
-		"type" : { type : String, required : true, enum : [ "text", "radio", "check" ] },
+		"type" : { type : String, required : true, enum : [ "text", "dropdown", "check" ] },
 		"required" : { type : Boolean, required : true },
 		"answer" : { type : String, default : '' },
 		"options" : [{ type : String }],
@@ -18,18 +18,18 @@ var applicationSchema = mongoose.Schema({
 });
 
 /**
- * Checks that any "radio" typed question has at least 2 options, checks that
- * any non-"radio" typed question have no options and that no wrongly formatted
+ * Checks that any "dropdown" typed question has at least 2 options, checks that
+ * any non-"dropdown" typed question have no options and that no wrongly formatted
  * answer is being saved
  */
 applicationSchema.pre("save", function(next) {
 	// check that each question has the appropriate type options relation
 	this.questions.forEach(function(e) {
-		if (e.type === "radio" && e.options.length < 2) {
-			return next(new Error("radio questions must have at least one option"));
+		if (e.type === "dropdown" && e.options.length < 2) {
+			return next(new Error("dropdown questions must have at least one option"));
 		} 
-		else if (e.type !== "radio" && e.options.length !== 0) {
-			return next(new Error("non radio questions don't have options"));
+		else if (e.type !== "dropdown" && e.options.length !== 0) {
+			return next(new Error("non dropdown questions don't have options"));
 		}
 	});
 
@@ -219,8 +219,8 @@ var verifyAnsweredQuestionsCorrectly = function(questions) {
 		if (question.type === "check" && question.answer) {
 			if (question.answer !== "yes" && question.answer !== "no") verified = false;
 		}
-		// check that if type is "radio", answer is in options or empty
-		if (question.type === "radio" && question.answer) {
+		// check that if type is "dropdown", answer is in options or empty
+		if (question.type === "dropdown" && question.answer) {
 			if (question.options.indexOf(question.answer) < 0) verified = false;
 		}
 	});

@@ -147,11 +147,20 @@ var loadCustomAppPage = function(userId, listingId) {
 		type: "GET",
 		url: "/students/applications/custom/" + listingId
 	}).done(function(response) {
+
+		var flaggedQuestions = [];
+		response.content.application.questions.forEach(function(q) {
+			q["isText"] = q.type === "text";
+			q["isCheck"] = q.type === "check";
+			q["isDropdown"] = q.type === "dropdown";
+			flaggedQuestions.push(q);
+		});
+
 		var data = {
 	      title : response.content.listing.title,
 	      listing : listingId, 
 	      owner : userId,
-	      questions : response.content.application.questions, 
+	      questions : flaggedQuestions, 
 	      customId : response.content._id, 
 	      isCommon : false,
 	      isInProgress : response.content.state === "save",

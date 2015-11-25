@@ -11,7 +11,7 @@
  * getCustomsForStudentDash
  * getCustomsForListingDash
  * getIfOwner
- * getStarOrSubmCustomForListing
+ * getStarOrSubmCustomIfListing
  * getListingTemplate
  * getByOwnerAndListing
  * withdraw
@@ -68,11 +68,11 @@ describe('Custom', function() {
    *    a question in questions is missing the answer field : should not create
    *    a question in questions has the answer field : should create
    *    a question in questions is missing the required field : should not create
-   *    1 question of type radio with options : should create
+   *    1 question of type dropdown with options : should create
    *    1 question of type check with no options : should create
    *    1 question of type text with no options : should create
-   *    1 question of type radio with no options : should not create
-   *    1 question of type radio with 1 option : should not create
+   *    1 question of type dropdown with no options : should not create
+   *    1 question of type dropdown with 1 option : should not create
    *    1 question of type check with options : should not create
    *    1 question of type text with options : should not create
    *    one poorly formatted question : should not create
@@ -176,10 +176,10 @@ describe('Custom', function() {
       }); 
     });
 
-    it('should create template, type radio, with options', function(done) {
+    it('should create template, type dropdown, with options', function(done) {
       var questions = [{
         "question" : "Email",
-        "type" : "radio",
+        "type" : "dropdown",
         "required" : true,
         "options" : ["a", "b", "c"]
       }];
@@ -240,10 +240,10 @@ describe('Custom', function() {
       }); 
     });
 
-    it('should not create template, type radio, no options', function(done) {
+    it('should not create template, type dropdown, no options', function(done) {
       var questions = [{
         "question" : "Email",
-        "type" : "radio",
+        "type" : "dropdown",
         "required" : true,
       }];
       Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
@@ -260,10 +260,10 @@ describe('Custom', function() {
       }); 
     });
 
-    it('should not create template, type radio, 1 options', function(done) {
+    it('should not create template, type dropdown, 1 options', function(done) {
       var questions = [{
         "question" : "Email",
-        "type" : "radio",
+        "type" : "dropdown",
         "required" : true,
         "options" : ["a"]
       }];
@@ -326,7 +326,7 @@ describe('Custom', function() {
     it('should not create template, one poorly formatted', function(done) {
       var questions = [{
         "question" : "Email",
-        "type" : "radio",
+        "type" : "dropdown",
         "required" : true,
       }, {
         "question" : "Email",
@@ -358,7 +358,7 @@ describe('Custom', function() {
         "required" : true,
       }, {
         "question" : "Email",
-        "type" : "radio",
+        "type" : "dropdown",
         "required" : true,
         "options" : ["a", "b", "c"]
       }, {
@@ -726,13 +726,13 @@ describe('Custom', function() {
 
   /**
    * input: ownerId, listingId
-   *    ownerId does not match listingId : get none
-   *    ownerId does match listingId state is not subm or star : get none
-   *    ownerId does match listingId state is subm : get custom
-   *    ownerId does match listingId state is star : get custom
+   *    customId does not match listingId : get none
+   *    customId does match listingId state is not subm or star : get none
+   *    customId does match listingId state is subm : get custom
+   *    customId does match listingId state is star : get custom
    */
-  describe('#getStarOrSubmCustomForListing', function() {
-    it('should not get if listing does not match owner', function(done) {
+  describe('#getStarOrSubmCustomIfListing', function() {
+    it('should not get if listing does not match customId', function(done) {
       var questions = [];
       Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
         Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
@@ -740,7 +740,7 @@ describe('Custom', function() {
             Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, temp) {
               User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
-                  Custom.getStarOrSubmCustomForListing("2", listings[0]._id, function(e, custom) {
+                  Custom.getStarOrSubmCustomIfListing("2", listings[0]._id, function(e, custom) {
                     assert.notEqual(null, e);
                     done();
                   });
@@ -752,7 +752,7 @@ describe('Custom', function() {
       });
     });
 
-    it('should not get if listing match owner but state not subm or save', function(done) {
+    it('should not get if listing match customId but state not subm or save', function(done) {
       var questions = [];
       Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
         Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
@@ -760,7 +760,7 @@ describe('Custom', function() {
             Custom.createTemplate(listings[0]._id, questions, emp.user, function(e, temp) {
               User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
-                  Custom.getStarOrSubmCustomForListing(user2._id, listings[0]._id, function(e, custom) {
+                  Custom.getStarOrSubmCustomIfListing(c1._id, listings[0]._id, function(e, custom) {
                     assert.notEqual(null, e);
                     done();
                   });
@@ -772,7 +772,7 @@ describe('Custom', function() {
       });
     });
 
-    it('should get if listing does match owner and state subm', function(done) {
+    it('should get if listing does match customId and state subm', function(done) {
       var questions = [];
       Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
         Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
@@ -781,7 +781,7 @@ describe('Custom', function() {
               User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
                   Custom.update(c1._id, [], true, function(e, c1) {
-                    Custom.getStarOrSubmCustomForListing(user2._id, listings[0]._id, function(e, custom) {
+                    Custom.getStarOrSubmCustomIfListing(c1._id, listings[0]._id, function(e, custom) {
                       assert.equal("subm", custom.state);
                       assert.equal(user2._id.toString(), custom.owner.toString());
                       assert.equal(listings[0]._id.toString(), custom.listing.toString());
@@ -796,7 +796,7 @@ describe('Custom', function() {
       });
     });
 
-    it('should get if listing does match owner and state star', function(done) {
+    it('should get if listing does match customId and state star', function(done) {
       var questions = [];
       Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
         Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
@@ -806,7 +806,9 @@ describe('Custom', function() {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
                   Custom.update(c1._id, [], true, function(e, c1) {
                     Custom.star(c1._id, function(e, c1) {
-                      Custom.getStarOrSubmCustomForListing(user2._id, listings[0]._id, function(e, custom) {
+                      assert.equal("star", c1.state);  
+                      Custom.getStarOrSubmCustomIfListing(c1._id, listings[0]._id, function(e, custom) {
+                        console.log("here");
                         assert.equal("star", custom.state);
                         assert.equal(user2._id.toString(), custom.owner.toString());
                         assert.equal(listings[0]._id.toString(), custom.listing.toString());
