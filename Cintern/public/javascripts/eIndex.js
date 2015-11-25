@@ -114,33 +114,11 @@ var loadApplicantsPage = function(listingId) {
 var getFullAppPage = function(userId, listingId) {
 	$.get('/employers/applications/fullapp/' + userId + '/' + listingId, function(response) {
 
-        var flaggedCommonQuestions = [];
-        response.content.commonApp.questions.forEach(function(q) {
-            q["isText"] = q.type === "text";
-            q["isCheck"] = q.type === "check";
-            q["isDropdown"] = q.type === "dropdown";
-            flaggedCommonQuestions.push(q);
-        });
-
-        console.log(flaggedCommonQuestions);
-
-        var flaggedCustomQuestions = [];
-        response.content.customApp.questions.forEach(function(q) {
-            q["isText"] = q.type === "text";
-            q["isCheck"] = q.type === "check";
-            q["isDropdown"] = q.type === "dropdown";
-            flaggedCustomQuestions.push(q);
-        });
-
-        var newCommon = response.content.commonApp;
-        newCommon.questions = flaggedCommonQuestions;
-
-        var newCustom = response.content.customApp;
-        newCustom.questions = flaggedCustomQuestions;
+        console.log(response.content.commonApp);
 
     	loadPage(mainContainer, 'e_full_app', {
-    		common : newCommon,
-    		custom : newCustom,
+    		common : response.content.commonApp,
+    		custom : response.content.customApp,
     		customId : response.content.customId,
     		listing : response.content.listing,
     		owner : response.content.owner,

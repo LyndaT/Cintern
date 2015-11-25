@@ -1,6 +1,6 @@
 <!-- author: Jennifer Wu -->
 
-<div class="question">
+<div class="question" id="{{_id}}" data-type="{{type}}"> 
 	{{#equal type "text"}}
 		<label class="control-label">{{question}}</label>
 		
@@ -18,9 +18,9 @@
 			class="form-control" name="{{_id}}">{{answer}}</textarea>
 	{{/equal}}
 
-	{{#equal type "dropdown"}}
-		{{question}}
+	{{#equal type "dropdown"}} {{question}}
 		<select name="{{_id}}"
+			class="form-control"
 			{{#if required}}
 				required
 			{{else}}
@@ -31,18 +31,20 @@
 			{{/if}}>
 			
 			{{#each options}}
-				<option value="{{this}}"
+				<option value="{{this}}" 
 					{{#equal ../answer this}}
 						selected
 					{{/equal}}
-				>{{this}}</option>
+				>
+					{{this}}
+				</option>
 			{{else}}
 			{{/each}}
 
 		</select>
 	{{/equal}}
 
-	{{#equal type "check"}}
+	<!-- {{#equal type "check"}}
 		<input 
 			type="checkbox" 
 			class="form-control" 
@@ -61,5 +63,5 @@
 			name="{{_id}}"
 			value="no">
 		<label>{{question}}</label>
-	{{/equal}}
+	{{/equal}} -->
 </div>
