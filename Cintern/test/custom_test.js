@@ -11,7 +11,7 @@
  * createTemplate
  * copyTemplateToSave
  * getCustomsForStudentDash
- * getCustomsForListingDash
+ * getOwnersOfCustomsForListingDash
  * getIfOwner
  * getStarOrSubmCustomIfListing
  * getListingTemplate
@@ -582,18 +582,18 @@ describe('Custom', function() {
 
   /**
    * input: listingId
-   *    listing has no customs
-   *    custom under listing, not subm or star : no customs
-   *    custom under listing, subm : 1 custom
-   *    custom under listing, star : 1 custom
+   *    listing has no customs : no owners
+   *    custom under listing, not subm or star : no owners
+   *    custom under listing, subm : 1 owner
+   *    custom under listing, star : 1 owner
    */
-  describe('#getCustomsForListingDash', function() {
-    it('should get no customs', function(done) {
+  describe('#getOwnersOfCustomsForListingDash', function() {
+    it('should get no owners', function(done) {
       Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
         Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
           Listing.find({}, function(e, listings) {
-            Custom.getCustomsForListingDash(listings[0]._id, function(e, customs) {
-              assert.equal(0, customs.length);
+            Custom.getOwnersOfCustomsForListingDash(listings[0]._id, function(e, owners) {
+              assert.equal(0, owners.length);
               done();
             });
           });
@@ -610,8 +610,8 @@ describe('Custom', function() {
               User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
                   assert.equal("save", c1.state);
-                  Custom.getCustomsForListingDash(listings[0]._id, function(e, customs) {
-                    assert.equal(0, customs.length);
+                  Custom.getOwnersOfCustomsForListingDash(listings[0]._id, function(e, owners) {
+                    assert.equal(0, owners.length);
                     done();
                   });
                 });
@@ -632,10 +632,9 @@ describe('Custom', function() {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
                   assert.equal("save", c1.state);
                   Custom.update(c1._id, [], true, function(e, c1) {
-                    Custom.getCustomsForListingDash(listings[0]._id, function(e, customs) {
-                      assert.equal(1, customs.length);
-                      assert.equal("subm", customs[0].state);
-                      assert.equal(listings[0]._id.toString(), customs[0].listing.toString());
+                    Custom.getOwnersOfCustomsForListingDash(listings[0]._id, function(e, owners) {
+                      assert.equal(1, owners.length);
+                      assert.equal(user2._id.toString(), owners[0].toString());
                       done();
                     });                    
                   });
@@ -659,10 +658,9 @@ describe('Custom', function() {
                   Custom.update(c1._id, [], true, function(e, c1) {
                     assert.equal("subm", c1.state);
                     Custom.star(c1._id, function(e, c2) {
-                      Custom.getCustomsForListingDash(listings[0]._id, function(e, customs) {
-                        assert.equal(1, customs.length);
-                        assert.equal("star", customs[0].state);
-                        assert.equal(listings[0]._id.toString(), customs[0].listing.toString());
+                      Custom.getOwnersOfCustomsForListingDash(listings[0]._id, function(e, owners) {
+                        assert.equal(1, owners.length);
+                        assert.equal(user2._id.toString(), owners[0].toString());
                         done();
                       });                    
                     });

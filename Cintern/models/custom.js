@@ -135,13 +135,22 @@ customSchema.statics.getCustomsForStudentDash = function(ownerId, callback) {
  * @param{ObjectId} listingId
  * @param{Function} callback(err, [Custom])
  */
-customSchema.statics.getCustomsForListingDash = function(listingId, callback) {
+customSchema.statics.getOwnersOfCustomsForListingDash = function(listingId, callback) {
 	Custom.find({
 		"listing" : listingId, 
 		"state" : { $in : ["subm", "star"]} 
-	}).populate("owner").exec(function(err, customs) {
+	}, {
+		'_id' : 0,
+		'owner' : 1
+	}, function(err, owners) {
 		if (err) callback(err.message);
-		else callback(null, customs);
+		else {
+			var ownerArr = [];
+			owners.forEach(function(e,i) {
+				ownerArr.push(owners[i].owner);
+			});
+			callback(null, ownerArr);
+		}
 	});
 };
 

@@ -16,7 +16,7 @@
     
     <tbody>
       {{#each applicants}}
-        {{> applicant}}
+        {{> applicant this listing=../listingId headers=../headers}}
       {{else}}
         <tr>
           <td>No applicants have applied yet.</td>

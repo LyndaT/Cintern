@@ -29,30 +29,18 @@ exports.getApplicants = function(req, res, next) {
 		else if (!employerOwns) utils.sendErrResponse(res, 403, "Cannot get applicants if you do not own the listing");
 		else {
 			// get the customs for the listing if the employer owns the listing
-			Custom.getCustomsForListingDash(listingId, function(errMsg, customs) {
+			Custom.getOwnersOfCustomsForListingDash(listingId, function(errMsg, owners) {
 				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-				else if (!customs) utils.sendErrResponse(res, 403, "Could not get applications");
 				else {
 					var headers = Common.getHeadersForApplicantList();
 
-					var userIds = [];
-
-					customs.forEach(function(custom) {
-						userIds.push(custom.owner._id);
-					});
-
-					Common.getCommonInfoForApplicantDisplay(userIds, function(errMsg, info) {
+					// get information to display on page according to headers
+					Common.getCommonInfoForApplicantDisplay(owners, function(errMsg, usersCommonInfo) {
 						if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-						else if (!info) utils.sendErrResponse(res, 403, "Could not get applications");
 						else {
-							info.forEach(function(userInfo, i) {
-								customs[i] = customs[i].toJSON();
-								customs[i]["commonInfo"] = userInfo;
-							});
-
 							var content = {
 								headers : headers,
-								applicants : customs
+								applicants : usersCommonInfo
 							};
 							utils.sendSuccessResponse(res, content);
 						}

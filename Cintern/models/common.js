@@ -25,16 +25,18 @@ var createQuestion = function(question, type, required, options) {
 	return q;
 };
 
-var applicantInfo = {
-	email: "Email",
-	name: "Name", 
-	university: "University"
+// maps a header to the question
+// constraints: no two keys can be the same, and no key can be "owner"
+var applicantHeaderInfo = {
+	"Email" : "Email",
+	"Name": "Name", 
+	"University": "University"
 };
 
 var commonQuestions = [
-	createQuestion(applicantInfo.email, "text", true, null),
-	createQuestion(applicantInfo.name, "text", true, null),
-	createQuestion(applicantInfo.university, "dropdown", true, ["Harvard", "MIT", "Caltech"]),
+	createQuestion(applicantHeaderInfo.Email, "text", true, null),
+	createQuestion(applicantHeaderInfo.Name, "text", true, null),
+	createQuestion(applicantHeaderInfo.University, "dropdown", true, ["Harvard", "MIT", "Caltech"]),
 	//createQuestion("Are you eligible to work in the US", "check", true, null),
 ];
 
@@ -44,13 +46,7 @@ var commonQuestions = [
  * @param{callback} callback(err, headers)
  */
 commonSchema.statics.getHeadersForApplicantList = function() {
-	var headers = [];
-
-	forEachKey(applicantInfo, function(header) {
-		headers.push(applicantInfo[header]);
-	});
-
-	return headers;
+	return Object.keys(applicantHeaderInfo);
 };
 
 /**
@@ -67,17 +63,20 @@ commonSchema.statics.getCommonInfoForApplicantDisplay = function(userIds, callba
 		if (err) callback(err.message);
 		else if (!commons) callback("Invalid user");
 		else {
+			// for each common, get the information for the headers supplied in applicantHeader Info
 			commons.forEach(function(common) {
 				var questions = common.application.questions;
-				var commonInfo = [];
+				var commonInfo = {};
 
-				forEachKey(applicantInfo, function(header) {
+				forEachKey(applicantHeaderInfo, function(header) {
 					questions.forEach(function(question) {
-						if (applicantInfo[header] === question.question) {
-							commonInfo.push(question.answer);
+						if (applicantHeaderInfo[header] === question.question) {
+							commonInfo[header] = question.answer;
 						}
 					});
 				});
+
+				commonInfo["owner"] = common.owner;
 
 				info.push(commonInfo);
 			});

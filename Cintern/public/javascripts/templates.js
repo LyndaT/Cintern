@@ -18,40 +18,40 @@ templates['e_applicants'] = template({"1":function(container,depth0,helpers,part
     return "        <th>"
     + container.escapeExpression(container.lambda(blockParams[0][0], depth0))
     + "</th>\n";
-},"3":function(container,depth0,helpers,partials,data) {
+},"3":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1;
 
-  return ((stack1 = container.invokePartial(partials.applicant,depth0,{"name":"applicant","data":data,"indent":"        ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
+  return ((stack1 = container.invokePartial(partials.applicant,depth0,{"name":"applicant","hash":{"headers":(depths[1] != null ? depths[1].headers : depths[1]),"listing":(depths[1] != null ? depths[1].listingId : depths[1])},"data":data,"indent":"        ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
 },"5":function(container,depth0,helpers,partials,data) {
     return "        <tr>\n          <td>No applicants have applied yet.</td>\n        </tr>\n";
-},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams) {
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, alias1=container.escapeExpression, alias2=depth0 != null ? depth0 : {};
 
   return "<div>\n\n  <a href=\"/\" id=\"home-link\">Back to Dash</a>\n\n  <h1>Applicants</h1>\n  \n  <p>Currently "
     + alias1(container.lambda(((stack1 = (depth0 != null ? depth0.applicants : depth0)) != null ? stack1.length : stack1), depth0))
     + " students have applied to this listing.</p>\n\n  <table class=\"table table-hover table-condensed\">\n    \n    <thead>\n"
-    + ((stack1 = helpers.each.call(alias2,(depth0 != null ? depth0.headers : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 1, blockParams),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias2,(depth0 != null ? depth0.headers : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 1, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
     + "    </thead>\n    \n    <tbody>\n"
-    + ((stack1 = helpers.each.call(alias2,(depth0 != null ? depth0.applicants : depth0),{"name":"each","hash":{},"fn":container.program(3, data, 0, blockParams),"inverse":container.program(5, data, 0, blockParams),"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias2,(depth0 != null ? depth0.applicants : depth0),{"name":"each","hash":{},"fn":container.program(3, data, 0, blockParams, depths),"inverse":container.program(5, data, 0, blockParams, depths),"data":data,"blockParams":blockParams})) != null ? stack1 : "")
     + "    </tbody>\n\n  </table>\n\n  <button id=\"delete-listing-btn\" class=\"btn btn-primary\" data-listing-id="
     + alias1(((helper = (helper = helpers.listingId || (depth0 != null ? depth0.listingId : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias2,{"name":"listingId","hash":{},"data":data,"blockParams":blockParams}) : helper)))
     + ">Delete Listing</button>\n</div>\n";
-},"usePartial":true,"useData":true,"useBlockParams":true});
-templates['e_applicants_row'] = template({"1":function(container,depth0,helpers,partials,data,blockParams) {
-    return "        <td>"
-    + container.escapeExpression(container.lambda(blockParams[0][0], depth0))
+},"usePartial":true,"useData":true,"useDepths":true,"useBlockParams":true});
+templates['e_applicants_row'] = template({"1":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    return "    <td>"
+    + container.escapeExpression((helpers.getValue || (depth0 && depth0.getValue) || helpers.helperMissing).call(depth0 != null ? depth0 : {},depths[1],depth0,{"name":"getValue","hash":{},"data":data}))
     + "</td>\n";
-},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams) {
-    var stack1, helper, alias1=container.escapeExpression, alias2=depth0 != null ? depth0 : {};
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
-  return "<div class=\"e-applicant-row\">\n    <tr class=\"clickable applicant-row\" data-applicant-id="
-    + alias1(container.lambda(((stack1 = (depth0 != null ? depth0.owner : depth0)) != null ? stack1._id : stack1), depth0))
+  return "<tr class=\"clickable applicant-row\" data-applicant-id="
+    + alias4(((helper = (helper = helpers.owner || (depth0 != null ? depth0.owner : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"owner","hash":{},"data":data}) : helper)))
     + " data-listing-id="
-    + alias1(((helper = (helper = helpers.listing || (depth0 != null ? depth0.listing : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias2,{"name":"listing","hash":{},"data":data,"blockParams":blockParams}) : helper)))
+    + alias4(((helper = (helper = helpers.listing || (depth0 != null ? depth0.listing : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"listing","hash":{},"data":data}) : helper)))
     + ">\n"
-    + ((stack1 = helpers.each.call(alias2,(depth0 != null ? depth0.commonInfo : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 1, blockParams),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
-    + "    </tr>\n</div>\n";
-},"useData":true,"useBlockParams":true});
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.headers : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "</tr>\n";
+},"useData":true,"useDepths":true});
 templates['e_create_listing'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     return "<!-- author: Lynda Tang -->\n<a href=\"/\" id=\"home-link\">Back to Dash</a>\n  \n<form id=\"create-listing\">\n	Create a listing here!\n	\n	<br>\n\n	Position Title: <input type=\"text\" name=\"title\">\n	\n	<div>\n		Description\n		<br>\n		<textarea \n			rows=\"8\" \n			cols=\"50\" \n			name=\"description\" \n			form=\"create-listing\" \n			placeholder=\"Enter description here...\"></textarea>\n	</div>\n\n	<br>\n\n	<div>\n		Requirements\n		<br>\n		<textarea \n			rows=\"8\" \n			cols=\"50\" \n			name=\"requirements\" \n			form=\"create-listing\"\n			placeholder=\"Enter requirements here...\"></textarea>\n	</div>\n\n	<br>\n\n	<div>\n		Questions:\n		<div id=\"question-list\"></div>\n		<button class=\"btn btn-primary\" id=\"add-question\">Add Question</button>\n	</div>\n\n	<br>\n	<button type=\"submit\" class=\"btn btn-primary\">Submit</button>\n</form>\n";
 },"useData":true});

@@ -3,9 +3,6 @@ Handlebars.registerPartial('applicant', Handlebars.templates['e_applicants_row']
 Handlebars.registerPartial('question', Handlebars.templates['question']);
 Handlebars.registerPartial('application', Handlebars.templates['application']);
 Handlebars.registerHelper('equal', function(lvalue, rvalue, options) {
-    console.log(lvalue);
-    console.log(rvalue);
-    
     if (arguments.length < 3)
         throw new Error("Handlebars Helper equal needs 2 parameters");
     if( lvalue!=rvalue ) {
@@ -13,6 +10,10 @@ Handlebars.registerHelper('equal', function(lvalue, rvalue, options) {
     } else {
         return options.fn(this);
     }
+});
+
+Handlebars.registerHelper('getValue', function(obj, key) {
+    return (obj[key]);
 });
 
 var mainContainer = '#e-main-container';

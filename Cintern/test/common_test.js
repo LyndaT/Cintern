@@ -3,6 +3,8 @@
  *
  * Test file for the common model
  */
+
+ // TODO test getCommonInfoForApplicantDisplay
 var assert = require("assert");
 var Common = require('../models/common');
 var User = require('../models/User');
