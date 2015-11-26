@@ -5,6 +5,7 @@
  */
 
  // TODO: update tests after new commons done
+ // TODO test getCommonInfoForApplicantDisplay
 var assert = require("assert");
 var Common = require('../models/common');
 var User = require('../models/User');
