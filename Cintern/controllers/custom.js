@@ -2,6 +2,7 @@
  * @author: Maddie Dawson and Jennifer Wu
  */
 var Custom = require('../models/custom.js');
+var Common = require('../models/common.js');
 var Listing = require('../models/listing.js');
 var utils = require('../utils/utils');
 
@@ -32,10 +33,25 @@ exports.getApplicants = function(req, res, next) {
 				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 				else if (!customs) utils.sendErrResponse(res, 403, "Could not get applications");
 				else {
-					var content = {
-						applicants : customs
-					};
-					utils.sendSuccessResponse(res, content);
+					var headers = Common.getHeadersForApplicantList();
+
+					var userIds = [];
+
+					customs.forEach(function(custom) {
+						userIds.push(custom.owner._id);
+					});
+
+					Common.getCommonsForApplicantDisplay(userIds, function(err, info) {
+						info.forEach(function(userInfo, i) {
+							customs[i].commonInfo = userInfo;
+						});
+
+						var content = {
+							headers : headers,
+							applicants : customs
+						};
+						utils.sendSuccessResponse(res, content);
+					});
 				}
 			});
 		}

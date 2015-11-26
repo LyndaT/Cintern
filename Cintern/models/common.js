@@ -25,12 +25,67 @@ var createQuestion = function(question, type, required, options) {
 	return q;
 };
 
+var applicantInfo = {
+	email: "Email",
+	name: "Name", 
+	university: "University"
+};
+
 var commonQuestions = [
-	createQuestion("Email", "text", true, null),
-	createQuestion("Name", "text", true, null),
-	createQuestion("University", "dropdown", true, ["Harvard", "MIT", "Caltech"]),
+	createQuestion(applicantInfo.email, "text", true, null),
+	createQuestion(applicantInfo.name, "text", true, null),
+	createQuestion(applicantInfo.university, "dropdown", true, ["Harvard", "MIT", "Caltech"]),
 	//createQuestion("Are you eligible to work in the US", "check", true, null),
 ];
+
+/**
+ * Return the headers for the applicant listing page
+ *
+ * @param{callback} callback(err, headers)
+ */
+commonSchema.statics.getHeadersForApplicantList = function() {
+	var headers = [];
+
+	forEachKey(applicantInfo, function(header) {
+		headers.push(applicantInfo[header]);
+	});
+
+	return headers;
+};
+
+/**
+ * Returns common app info for each user specified in the given
+ * list of user IDs
+ *
+ * @param{userIds} a list of user IDs
+ * @param{callback} callback(err, commons)
+ */
+commonSchema.statics.getCommonsForApplicantDisplay = function(userIds, callback) {
+	var applicantInfo = [];
+
+	Common.find({ 'owner': { $in: userIds } }).populate("application").exec(function(err, commons) {
+		if (err) callback(err.message);
+		else if (!commons) callback("Invalid user");
+		else {
+			commons.forEach(function(common) {
+				var questions = common.application.questions;
+				var commonInfo = [];
+
+				forEachKey(applicantInfo, function(header) {
+					questions.forEach(function(question) {
+						if (applicantInfo[header] === question.question) {
+							commonInfo.push(question.answer);
+						}
+					});
+				});
+
+				applicantInfo.push(commonInfo);
+			});
+		}
+	});
+
+	return applicantInfo;
+};
 
 /**
  * @param{ObjectId} ownerId
@@ -107,6 +162,14 @@ commonSchema.methods.populateCommon = function(callback) {
 		else callback(null, common);
 	})
 }
+
+var forEachKey = function(obj, fn) {
+  Object.keys(obj).forEach(function(key) {
+    if (obj.hasOwnProperty(key)) {
+      fn(key);
+    }
+  });
+};
 
 var Common = mongoose.model("Common", commonSchema);
 module.exports = Common;

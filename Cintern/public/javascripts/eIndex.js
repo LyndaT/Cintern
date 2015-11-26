@@ -119,7 +119,9 @@ var loadCreateListingPage = function() {
 // Loads the applicant page corresponding to the listingId
 var loadApplicantsPage = function(listingId) {
 	$.get('/employers/applications/listings/' + listingId, function(response) {
-		loadPage(mainContainer, 'e_applicants', {applicants: response.content.applicants, listingId: listingId});
+		loadPage(mainContainer, 'e_applicants', 
+            {applicants: response.content.applicants,
+                headers: response.content.headers, listingId: listingId});
 	});
 };
 

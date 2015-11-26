@@ -9,10 +9,9 @@
   <table class="table table-hover table-condensed">
     
     <thead>
-      <th>Name</th>
-      <th>Email</th>
-      <th>School</th>
-      <th>Date submitted</th>
+      {{#each headers as |h|}}
+        <th>{{h}}</th>
+      {{/each}}
     </thead>
     
     <tbody>

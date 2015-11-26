@@ -1,5 +1,7 @@
 <div class="e-applicant-row">
     <tr class="clickable applicant-row" data-applicant-id={{owner._id}} data-listing-id={{listing}}>
-      <td>{{owner.email}}</td>
+      {{#each commonInfo as |i|}}
+        <td>{{i}}</td>
+      {{/each}}
     </tr>
 </div>
