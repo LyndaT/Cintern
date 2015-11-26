@@ -41,16 +41,21 @@ exports.getApplicants = function(req, res, next) {
 						userIds.push(custom.owner._id);
 					});
 
-					Common.getCommonsForApplicantDisplay(userIds, function(err, info) {
-						info.forEach(function(userInfo, i) {
-							customs[i].commonInfo = userInfo;
-						});
+					Common.getCommonInfoForApplicantDisplay(userIds, function(errMsg, info) {
+						if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+						else if (!info) utils.sendErrResponse(res, 403, "Could not get applications");
+						else {
+							info.forEach(function(userInfo, i) {
+								customs[i] = customs[i].toJSON();
+								customs[i]["commonInfo"] = userInfo;
+							});
 
-						var content = {
-							headers : headers,
-							applicants : customs
-						};
-						utils.sendSuccessResponse(res, content);
+							var content = {
+								headers : headers,
+								applicants : customs
+							};
+							utils.sendSuccessResponse(res, content);
+						}
 					});
 				}
 			});

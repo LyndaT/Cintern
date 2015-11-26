@@ -60,8 +60,8 @@ commonSchema.statics.getHeadersForApplicantList = function() {
  * @param{userIds} a list of user IDs
  * @param{callback} callback(err, commons)
  */
-commonSchema.statics.getCommonsForApplicantDisplay = function(userIds, callback) {
-	var applicantInfo = [];
+commonSchema.statics.getCommonInfoForApplicantDisplay = function(userIds, callback) {
+	var info = [];
 
 	Common.find({ 'owner': { $in: userIds } }).populate("application").exec(function(err, commons) {
 		if (err) callback(err.message);
@@ -79,12 +79,12 @@ commonSchema.statics.getCommonsForApplicantDisplay = function(userIds, callback)
 					});
 				});
 
-				applicantInfo.push(commonInfo);
+				info.push(commonInfo);
 			});
+
+			callback(null, info);
 		}
 	});
-
-	return applicantInfo;
 };
 
 /**
