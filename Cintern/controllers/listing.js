@@ -137,7 +137,7 @@ exports.getEmployerListings = function(req, res, next) {
 		else if (!listings) utils.sendErrResponse(res, 403, "No listings");
 		else {
 			var content = {
-				"listings" : listings,
+				"listings" : listings
 			};
 			utils.sendSuccessResponse(res, content);
 		};

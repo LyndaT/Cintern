@@ -18,13 +18,8 @@
   	</thead>
 
     <tbody>
-      {{#each apps as |a|}}
-        {{> s_dash_page_app 
-        company=a.listing.employer.company 
-        title=a.listing.title 
-        state=a.state
-        listingid=a.listing._id
-        userid=a.owner._id}}
+      {{#each apps}}
+        {{> s_dash_page_app }} 
       {{else}}
         <tr>
         	<td>No applications yet!</td>

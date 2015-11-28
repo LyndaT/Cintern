@@ -152,13 +152,13 @@ exports.getAllStudentCustoms = function(req, res, next) {
 				});
 				Listing.passedDeadlineListings(listingIds, function(errMsg, passedListingIds) {
 					if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+
 					else {
 						// change any starred custom states to normal submitted
 						customs.forEach(function(custom) {
 							custom.state = (custom.state === "star") ? "subm" : custom.state;
-							custom.passedDeadline = (passedListingIds.indexOf(custom.listing) > -1);
 						});
-						
+
 						var content = {
 							applications : customs
 						};

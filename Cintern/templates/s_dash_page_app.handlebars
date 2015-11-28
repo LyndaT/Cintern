@@ -1,9 +1,14 @@
 <!-- author: Maddie Dawson -->
 
 <div class="student-dash-app">
-  <tr class="clickable student-custom" data-listing-id={{listingid}} data-user-id={{userid}}>
-  	<td>{{company}}</td>
-  	<td>{{title}}</td>
+  {{#deadlineNotPassed listing.deadline}}  
+  	<tr class="clickable student-custom" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
+  {{else}}
+  	<tr class="clickable student-custom" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}" style="color:red">
+  {{/deadlineNotPassed}}
+  
+  	<td>{{listing.employer.company}}</td>
+  	<td>{{listing.title}}</td>
   	<td>{{interpretState state}}</td>
   </tr>
 </div>

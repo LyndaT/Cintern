@@ -23,6 +23,18 @@ Handlebars.registerHelper('equal', function(lvalue, rvalue, options) {
     }
 });
 
+Handlebars.registerHelper('deadlineNotPassed', function(time, options) {
+	console.log("time" + time);
+	console.log("date " + new Date());
+	if (arguments.length < 2)
+        throw new Error("Handlebars Helper equal needs 1 parameter");
+    if( new Date(time) > new Date() ) {
+        return options.inverse(this);
+    } else {
+        return options.fn(this);
+    }
+});
+
 var mainContainer = '#s-main-container';
 
 
@@ -132,6 +144,7 @@ var loadDashPage = function() {
 	$.get('/students/applications', function(response) {
 		console.log(response);
 		loadPage(mainContainer, 's_dash_page', { apps: response.content.applications });
+		console.log(response.content.applications);
 	});
 };
 
