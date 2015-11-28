@@ -23,6 +23,7 @@ var applicationSchema = mongoose.Schema({
  * answer is being saved
  */
 applicationSchema.pre("save", function(next) {
+	console.log("started");
 	// check that each question has the appropriate type options relation
 	this.questions.forEach(function(e) {
 		if (e.type === "dropdown" && e.options.length < 2) {
@@ -32,12 +33,16 @@ applicationSchema.pre("save", function(next) {
 			return next(new Error("non dropdown questions don't have options"));
 		}
 		if (e.type === "radio" && e.required !== true) {
+			console.log("here")
 			return next(new Error("radio type questions must be required"));
 		}
 	});
 
 	// check that all answers are correctly formatted
-	if(!verifyAnsweredQuestionsCorrectly(this.questions)) next(new Error("answer is wrongly formatted"));
+	if(!verifyAnsweredQuestionsCorrectly(this.questions)) {
+		console.log("failed here");
+		next(new Error("answer is wrongly formatted"));
+	}
 	
 	next(null, this);
 });
@@ -55,9 +60,11 @@ applicationSchema.statics.createApplication = function(questions, callback) {
 		"questions" : questions,
 	};
 	var newApp = new Application(app);
+	console.log(newApp);
 
 	// save the new app in the DB
 	newApp.save(function(err, newApp) {
+		console.log(err.message);
 		if (err) callback(err.message);
 		else callback(null, newApp);
 	});
