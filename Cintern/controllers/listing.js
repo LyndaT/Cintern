@@ -7,20 +7,6 @@ var Listing = require('../models/listing.js');
 var Employer = require('../models/Employer.js');
 var Custom = require('../models/custom.js');
 
-/*
- * Require authentication on ALL access to /listings/*
- * Clients which are not logged in will receive a 403 error code.
- * MAY ALSO NEED TO CHECK WHETHER STUDENT OR EMPLOYER!!!
- * CURRENTLY UNUSED
- */
-/*var requireAuthentication = function(req, res, next) {
-  if (!req.session.user) {
-    utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
-  } else {
-    next();
-  }
-};*/
-
 /**
  * POST employers/listings
  * 
@@ -46,13 +32,15 @@ exports.createListing = function(req, res, next) {
 	var reqs = req.body.requirements;
 	var deadline = req.body.deadline;
 	var questions = req.body.questions;
+
+	// TODO: clean up deadline so that it's a uniform time somehow
 		
 	var questionList = [];
 	questions.forEach(function(question) {
 		questionList.push({
-			"question" : question.question,
-			"type" : question.type,
-			"required" : question.required
+			"question" : question,
+			"type" : "text",
+			"required" : true
 		})
 	});
 
@@ -83,20 +71,6 @@ exports.createListing = function(req, res, next) {
  *  - err: if failed to retrieve
  */
 exports.getAllListings = function(req, res, next) {
-	// if (!req.session.user.studentInfo.commonFilled){
-	// 	utils.sendErrResponse(res, 403, "Common application not filled");
-	// } else {
-	// 	Listing.getAllListings(function(errMsg, listings) {
-	// 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-	// 		else if (!listings) utils.sendErrResponse(res, 403, "No listings");
-	// 		else {
-	// 			var content = {
-	// 				"listings" : listings,
-	// 			};
-	// 			utils.sendSuccessResponse(res, content);
-	// 		}
-	// 	});
-	// }
 	if (!req.session.user.studentInfo.commonFilled){
 		utils.sendErrResponse(res, 403, "Common application not filled");
 	} else {
@@ -137,7 +111,7 @@ exports.getEmployerListings = function(req, res, next) {
 		else if (!listings) utils.sendErrResponse(res, 403, "No listings");
 		else {
 			var content = {
-				"listings" : listings,
+				"listings" : listings
 			};
 			utils.sendSuccessResponse(res, content);
 		};
@@ -191,12 +165,10 @@ exports.getListing = function(req, res, next) {
  *  - err: if failed to delete
  */
 exports.deleteListing = function(req, res, next) {
-	console.log("here");
 	var listingId = req.body.listingId;
 	var currentUser = req.session.user;
 	// check that the listing belongs to the employer
 	Listing.doesEmployerOwnListing(currentUser.employerInfo._id, listingId, function(errMsg, employerOwns) {
-		console.log("made it", employerOwns);
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 		else if (!employerOwns) utils.sendErrResponse(res, 403, "This listing does not belong to you");
 		else {

@@ -27,7 +27,7 @@ var listingSchema = mongoose.Schema({
  * @param{Function} callback(err, listing) 
  */
 listingSchema.statics.createListing = function(currEmployerId, title, desc, reqs, deadline, callback) {
-	if(deadline < new Date()) {
+	if(deadline < Date.now()) {
 		callback("Deadline has passed");
 	}
 	else {

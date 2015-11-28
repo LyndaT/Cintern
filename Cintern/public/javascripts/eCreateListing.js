@@ -1,57 +1,21 @@
 /**
  * @author Lynda Tang
  */
-
 var questionNum = 0;
 
 $(document).on('click', '#add-text-question', function(evt) {
 	evt.preventDefault();
-	var textQuestion = document.createElement("div");
-	var newId = "newq" + questionNum;
+	var question = createNewQuestion(questionNum, true);
 	questionNum += 1;
-	textQuestion.setAttribute("id", newId);
-	textQuestion.setAttribute("data-type", "text");
-	$("<span>Text Question</span>").appendTo(textQuestion);
-	$('<button class="delete-question btn btn-primary" data-question=' + newId + '>Delete</buttton>').appendTo(textQuestion);
-	$('<br>').appendTo(textQuestion);
-	$('<textarea/>').attr({ form: 'create-listing', cols: '50', name: newId, required : true}).appendTo(textQuestion);
-	$('<br>').appendTo(textQuestion);
-	$('<br>').appendTo(textQuestion);
-	$('#question-list').append(textQuestion);
+	$('#question-list').append(question);
 });
 
-/*$(document).on('click', '#add-dropdown-question', function(evt) {
+$(document).on('click', '#add-radio-question', function(evt) {
 	evt.preventDefault();
-	var dropdownQuestion = document.createElement("div");
-	var newId = "newq" + questionNum;
+	var question = createNewQuestion(questionNum, false);
 	questionNum += 1;
-	dropdownQuestion.setAttribute("id", newId);
-	dropdownQuestion.setAttribute("data-type", "dropdown");
-	$("<span>Dropdown Question</span>").appendTo(dropdownQuestion);
-	$('<button class="delete-question btn btn-primary" data-question=' + newId + '>Delete</buttton>').appendTo(dropdownQuestion);
-	$('<br>').appendTo(dropdownQuestion);
-	$('<textarea/>').attr({ form: 'create-listing', cols: '50', name: newId, required : true}).appendTo(dropdownQuestion);
-	$('<br>').appendTo(dropdownQuestion);
-	$('<br>').appendTo(dropdownQuestion);
-	$('#question-list').append(dropdownQuestion);
-});*/
-
-$(document).on('click', '#add-check-question', function(evt) {
-	evt.preventDefault();
-	var checkQuestion = document.createElement("div");
-	var newId = "newq" + questionNum;
-	questionNum += 1;
-	checkQuestion.setAttribute("id", newId);
-	checkQuestion.setAttribute("data-type", "check");
-	$("<span>Checkbox Question</span>").appendTo(checkQuestion);
-	$('<button class="delete-question btn btn-primary" data-question=' + newId + '>Delete</buttton>').appendTo(checkQuestion);
-	$('<br>').appendTo(checkQuestion);
-	$('<textarea/>').attr({ form: 'create-listing', cols: '50', name: newId, required : true}).appendTo(checkQuestion);
-	$('<br>').appendTo(checkQuestion);
-	$('<br>').appendTo(checkQuestion);
-	$('#question-list').append(checkQuestion);
+	$('#question-list').append(question);
 });
-
 
 $(document).on('click', '.delete-question', function(evt) {
 	evt.preventDefault();
@@ -70,11 +34,10 @@ $(document).on('submit', '#create-listing', function(evt) {
 			questionList.push({
 	        	"question" : data[id],
 	        	"type" : $('#' + id).data('type'),
-	        	"required" : true
+	        	"required" : data['optional-' + id] !== "yes"
 	        });
         }
 	});
-	console.log(data.deadline);
 	
 	var content = {
 		title : data.title,
@@ -94,5 +57,47 @@ $(document).on('submit', '#create-listing', function(evt) {
  	}).fail(function(responseObject) {
     	var response = $.parseJSON(responseObject.responseText);
       	$('.error').text(response.err);
-  	});;
+  	});
 });
+
+/**
+ * Creates the HTML div for the appropriate type of question
+ *
+ * @param{Integer} qNum
+ * @param{isTextQuestion} true if a text question, false if a radio question
+ * @return HTML div element for the appropriate type of question
+ */
+var createNewQuestion = function(qNum, isTextQuestion) {
+	var question = document.createElement("div");
+	var newId = "newq" + qNum;
+	var optId = "optional-newq" + qNum;
+	question.setAttribute("id", newId);
+	if (isTextQuestion) {
+		question.setAttribute("data-type", "text");
+		$("<span>Text Question</span>").appendTo(question);
+	} else {
+		question.setAttribute("data-type", "radio");
+		$("<span>Yes or No Question</span>").appendTo(question);
+	} 
+	// delete button for user to remove question
+	var deleteBtn = $('<button/>').attr({"class":"delete-question btn btn-primary", "data-question": newId});
+	$("<span class='glyphicon glyphicon-trash center'></span>").appendTo(deleteBtn);
+	deleteBtn.appendTo(question);
+
+	// creating checkbox if question is optional
+	$('<input/>').attr({"type": 'hidden', "name": optId, "value": 'no'}).appendTo(question);
+	if (isTextQuestion) {
+		$("<span>Optional</span>").appendTo(question);
+		$('<input/>').attr({"type": 'checkbox', "name": optId, "value":'yes'}).appendTo(question);
+	} else {
+		// TODO: add a class??
+		$("<span><i>Yes or No questions cannnot be optional</i></span>").appendTo(question);
+		$('<br>').appendTo(question);
+	}
+
+	// space for question
+	$('<textarea/>').attr({"form": 'create-listing', "cols": '50', "name": newId, "required" : true}).appendTo(question);
+	$('<br>').appendTo(question);
+	$('<br>').appendTo(question);
+	return question;
+}

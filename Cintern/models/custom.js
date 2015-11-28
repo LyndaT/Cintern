@@ -246,17 +246,17 @@ customSchema.statics.withdraw = function(customId, callback) {
  * @param{ObjectId} customId
  * @param{Function} callback(err)
  */
-customSchema.statics.deleteCustom = function(customId, callback) {
+customSchema.statics.deleteSavedCustom = function(customId, callback) {
 	Custom.findOne({ "_id" : customId, "state" : "save" }, function(err, custom) {
 		if (err) callback(err.message);
 		else if (!custom) callback("Invalid custom");
 		else {
-			var applicationId = custom.applicationId;
+			var applicationId = custom.application;
 			// remove the Custom from the DB
 			Custom.remove({ "_id" : custom._id }, function(err) {
 				if (err) callback(err.message);
 				// delete the Application associated with the Custom from the DB
-				else Application.deleteApplication(applicationId, callback);
+				else Application.deleteApplications([applicationId], callback);
 			});
 		}
 	});
@@ -270,10 +270,15 @@ customSchema.statics.deleteCustom = function(customId, callback) {
  * @param{Function} callback(err)
  */
 customSchema.statics.deleteByListing = function(listingId, callback) {
-	Custom.remove({"listing": listingId}, function(err, result) {
+	Custom.find({ "listing": listingId }, function(err, customs) {
 		if (err) callback(err.message);
 		else {
-			callback(null);
+			var applications = [];
+			customs.forEach(function(custom) {applications.push(custom.application);})
+			Custom.remove({"listing": listingId}, function(err, result) {
+				if (err) callback(err.message);
+				else Application.deleteApplications(applications, callback);
+			});
 		}
 	});
 };
@@ -330,7 +335,9 @@ customSchema.statics.update = function(customId, answers, isSubmission, callback
 		else if (!custom) callback("Invalid custom");
 		else {
 			Listing.getByListingId(custom.listing, function(err, listing) {
-				if (listing.deadline > new Date()) {
+				if (listing.deadline < new Date()) {
+					callback("You cannot update your application because the deadline has passed");
+				} else {
 					Application.updateAnswers(custom.application, answers, isSubmission, function(errMsg, app) {
 						if (errMsg) callback(errMsg);
 						else if (!isSubmission) callback(null, custom)
@@ -350,28 +357,32 @@ customSchema.statics.update = function(customId, answers, isSubmission, callback
 						}
 					});
 				}
-				else {
-					callback("You cannot update your application because the deadline has passed");
-				}
 			});
 		}
 	});
 };
 
-
-/*customSchema.methods.formatForShow = function(callback) {
-	Application.formatForShow(this.application, function(errMsg, formattedApp) {
-		if (errMsg) callback(errMsg);
-		else { 
-			var formattedCustom = {
-
-				"application" : formattedApp,
-				"state" : state,
-				"submitTime" : submitTime
-			}
+/** 
+ * Creates a Object mapping each state to the number of customs that
+ * the owner associated with ownerId has that are of that state, then runs
+ * the callback on the Object
+ *
+ * @param{ObjectId} ownerId
+ * @param{Function} callback(err, Object)
+ */
+customSchema.statics.numCustomsPerStateForOwner = function(ownerId, callback) {
+	Custom.find({ "owner" : ownerId, "isTemplate" : false }, { "state" : 1, "_id" : 0 }, function(err, customs) {
+		if (err) callback(err.message);
+		else {
+			var numCustomsPerState = {};
+			Object.keys(stateTable).forEach(function(state) {
+				numCustomsPerState[state] = 0;
+			});
+			customs.forEach(function(custom) { numCustomsPerState[custom.state] += 1; });
+			callback(null, numCustomsPerState);
 		}
 	});
-};*/
+}
 
 
 /**

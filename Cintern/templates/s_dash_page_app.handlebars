@@ -2,9 +2,9 @@
 
 <div class="student-dash-app">
   	{{#deadlineNotPassed listing.deadline}}  
-  		<tr class="clickable student-custom" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
+  		<tr class="clickable student-custom" data-listing-id="{{listing._id}}">
   	{{else}}
-  		<tr class="clickable student-custom error" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
+  		<tr class="clickable student-custom error" data-listing-id="{{listing._id}}">
   	{{/deadlineNotPassed}}
 
 	<td>{{listing.employer.company}}</td>

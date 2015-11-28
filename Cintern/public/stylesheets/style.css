@@ -45,3 +45,7 @@ a {
     /** Show dropdown menu */
     display: block;
 }
+
+.required{
+  color: red;
+}

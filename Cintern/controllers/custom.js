@@ -237,18 +237,31 @@ exports.getCustom = function(req, res, next) {
  *	- err: on failure (i.e. server fail, invalid submission, invalid custom)
  */ 
 exports.addCustom = function(req, res, next) {
+	var maxNumSubmitsForStudent = 40;
+
 	if (!req.session.user.studentInfo.commonFilled){
 		utils.sendErrResponse(res, 403, "Common application not filled");
 	} else {
 
 		var userId = req.session.user.userId;
 		var listingId = req.body.listingId;
-	
-		Custom.copyTemplateToSave(listingId, userId, function(errMsg, custom) {
+
+		// TODO : temporary... should be in submit, and also set a variable for maxNumSubmits
+		Custom.numCustomsPerStateForOwner(userId, function(errMsg, numPerState) {
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-			else if (!custom) utils.sendErrResponse(res, 403, "Could not save application");
 			else {
-				utils.sendSuccessResponse(res);
+				// check that max number of submissions hasn't been reached
+				if (numPerState.subm + numPerState.star >= maxNumSubmitsForStudent) {
+					utils.sendErrResponse(res, 403, "Reached max number of save and submissions");
+				} else {
+					Custom.copyTemplateToSave(listingId, userId, function(errMsg, custom) {
+						if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+						else if (!custom) utils.sendErrResponse(res, 403, "Could not save application");
+						else {
+							utils.sendSuccessResponse(res);
+						}
+					});
+				}
 			}
 		});
 	}
@@ -393,7 +406,7 @@ exports.deleteCustom = function(req, res, next) {
 		var customId = req.body.customId;
 	
 		checkIfCustomOfUser(userId, customId, function() {
-			Custom.deleteCustom(customId, function(errMsg, custom) {
+			Custom.deleteSavedCustom(customId, function(errMsg, custom) {
 				if (errMsg) utils.sendErrRsponse(res, 403, errMsg);
 				else utils.sendSuccessResponse(res);
 			});
