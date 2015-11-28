@@ -1,7 +1,6 @@
 /**
  * @author Lynda Tang
  */
-
 var questionNum = 0;
 
 $(document).on('click', '#add-text-question', function(evt) {
