@@ -78,7 +78,7 @@ router.post('/login', globalBruteforce.prevent, userBruteforce.getMiddleware({
             // prevent too many attempts for the same username 
             next(req.body.email);
         }
-    }),user.login);
+    }), user.login);
 
 /* POST logout */
 router.post('/logout', user.logout);

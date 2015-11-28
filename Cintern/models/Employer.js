@@ -18,25 +18,31 @@ var EmployerSchema = mongoose.Schema({
  * 								(err, Employer)
  */
 EmployerSchema.statics.createEmployer = function(email, password, companyName, callback){	
-	User.addUser(email, password, false, function(errMsg, user){
-		if (errMsg){
-			callback(errMsg);
-		} else {
-			Employer.create({user: user._id, 
-	                company: companyName}, 
-			function(err, employer) {
-			  if (err) {
-			    callback(err.message);
-			  } else {
-			  	callback(null, employer);
-			  }
+	companyEmployerDoesntExist(companyName, function(err, result){
+		if (result){
+			User.addUser(email, password, false, function(errMsg, user){
+				if (errMsg){
+					callback(errMsg);
+				} else {
+					Employer.create({user: user._id, 
+			                company: companyName}, 
+					function(err, employer) {
+					  if (err) {
+					    callback(err.message);
+					  } else {
+					  	callback(null, employer);
+					  }
+					});
+				}
 			});
+		} else {
+			callback("An employer for this company already exists");
 		}
 	});
 };
 
 /**
- * Finds the Employer associaed with the userId
+ * Finds the Employer associated with the userId
  * @param{ObjectId} userId
  * @param{Function} callback(err, Employer)
  */
@@ -48,7 +54,20 @@ EmployerSchema.statics.findByUserId = function(userId, callback) {
 			callback(null, employer);
 		}
 	});
-}
+};
+
+/**
+ * Finds the Employer associated with the company
+ */
+var companyEmployerDoesntExist = function(company, callback){
+	Employer.find({"company": company}, function(err, employer){
+		if (employer.length > 0) {
+			callback(null, false);
+		} else {
+			callback(null, true);
+		}
+	});
+};
 
 var Employer = mongoose.model('Employer', EmployerSchema);
 module.exports = mongoose.model("Employer", EmployerSchema);
