@@ -44,7 +44,7 @@ exports.createListing = function(req, res, next) {
 	var title = req.body.title;
 	var desc = req.body.description;
 	var reqs = req.body.requirements;
-	var deadline = undefined;
+	var deadline = req.body.deadline;
 	var questions = req.body.questions;
 		
 	var questionList = [];
@@ -83,10 +83,24 @@ exports.createListing = function(req, res, next) {
  *  - err: if failed to retrieve
  */
 exports.getAllListings = function(req, res, next) {
+	// if (!req.session.user.studentInfo.commonFilled){
+	// 	utils.sendErrResponse(res, 403, "Common application not filled");
+	// } else {
+	// 	Listing.getAllListings(function(errMsg, listings) {
+	// 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+	// 		else if (!listings) utils.sendErrResponse(res, 403, "No listings");
+	// 		else {
+	// 			var content = {
+	// 				"listings" : listings,
+	// 			};
+	// 			utils.sendSuccessResponse(res, content);
+	// 		}
+	// 	});
+	// }
 	if (!req.session.user.studentInfo.commonFilled){
 		utils.sendErrResponse(res, 403, "Common application not filled");
 	} else {
-		Listing.getAllListings(function(errMsg, listings) {
+		Listing.getStudentViewListings(function(errMsg, listings) {
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 			else if (!listings) utils.sendErrResponse(res, 403, "No listings");
 			else {
@@ -98,6 +112,7 @@ exports.getAllListings = function(req, res, next) {
 		});
 	}
 };
+
 
 /**
  * GET /employers/listings and GET users/students/listings

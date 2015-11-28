@@ -12,7 +12,7 @@ var listingSchema = mongoose.Schema({
 	title: {type: String, required: true},
 	description: String,
 	requirements: String,
-	deadline: Date
+	deadline: {type: Date}
 });
 
 
@@ -67,6 +67,43 @@ listingSchema.statics.deleteListing = function(listingId, callback) {
 listingSchema.statics.getAllListings = function(callback) {
 	getListings({}, callback);
 };
+
+
+/**
+ * Retrieve all listings that students can view (i.e. the ones whose deadlines 
+ * haven't passed yetand pass them to the provided callback.
+ *
+ * @param{Function} callback: a function to pass the listing info to. The
+ *					callback takes in an error and the list of listings
+ */
+listingSchema.statics.getStudentViewListings = function(callback) {
+	getListings({deadline: {$gte : new Date()}}, callback);
+};
+
+
+
+/**
+ * Given the list of listingIds, returns all the ones whose deadlines have passed
+ *
+ * @param{[listingIds]} listingIds, the list of listingIds to filter through
+ * @param{Function} callback: a function to pass the listing info to. The
+ *					callback takes in an error and the list of listings
+ */
+listingSchema.statics.passedDeadlineListings = function(listingIds, callback) {
+	var passedListingIds = [];
+	console.log("reached here")
+	Listing.find({"_id": {$in: listingIds}, "deadline" : {$gt: new Date()}, function(err, passedDeadlines) {
+		console.log("doing stuff")
+			if(err) {
+				callback(err.message);
+			}
+			else {
+				callback(null, passedDeadlines);
+			}
+		}
+	});
+};
+
 
 /**
  * Retrieve listings that match the given query and pass them to

@@ -142,17 +142,29 @@ exports.getAllStudentCustoms = function(req, res, next) {
 		var userId = req.session.user.userId;
 		
 		Custom.getCustomsForStudentDash(userId, function(errMsg, customs) {
+
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 			else if (!customs) utils.sendErrResponse(res, 403, "Could not get applications");
 			else {
-				// change any starred custom states to normal submitted
+				var listingIds = [];
 				customs.forEach(function(custom) {
-					custom.state = (custom.state === "star") ? "subm" : custom.state;
+					listingIds.push(custom.listing);
 				});
-				var content = {
-					applications : customs
-				};
-				utils.sendSuccessResponse(res, content);
+				Listing.passedDeadlineListings(listingIds, function(errMsg, passedListingIds) {
+					if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+					else {
+						// change any starred custom states to normal submitted
+						customs.forEach(function(custom) {
+							custom.state = (custom.state === "star") ? "subm" : custom.state;
+							custom.passedDeadline = (passedListingIds.indexOf(custom.listing) > -1);
+						});
+						
+						var content = {
+							applications : customs
+						};
+						utils.sendSuccessResponse(res, content);
+					}					
+				});
 			}
 		});
 	}

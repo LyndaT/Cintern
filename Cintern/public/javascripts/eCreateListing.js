@@ -28,7 +28,8 @@ $(document).on('submit', '#create-listing', function(evt) {
 		title : data.title,
 		description : data.description,
 		requirements : data.requirements,
-		questions: questionList,
+		questions : questionList,
+		deadline : data.deadline
 	};
 
    $.ajax({

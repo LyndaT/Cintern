@@ -320,24 +320,41 @@ customSchema.statics.update = function(customId, answers, isSubmission, callback
 		if (err) callback(err.message);
 		else if (!custom) callback("Invalid custom");
 		else {
-			Application.updateAnswers(custom.application, answers, isSubmission, function(errMsg, app) {
-				if (errMsg) callback(errMsg);
-				else if (!isSubmission) callback(null, custom)
-				else {
-					changeState(custom._id, ["save"], "subm", function(errMsg, custom) {
+			console.log("updating...")
+			
+			Listing.getByListingId(custom.listing, function(err, listing) {
+				console.log("listing is " +listing)
+				console.log("deadlien" + listing.deadline)
+				if (listing.deadline > new Date()) {
+					console.log("checking deadline")
+
+					Application.updateAnswers(custom.application, answers, isSubmission, function(errMsg, app) {
 						if (errMsg) callback(errMsg);
-						else if (!custom) callback("Invalid state change");
-						else { 
-							// finding to get the actual updated version of Custom (we found that
-							// the custom in the callback of findOneAndUpdate isn't updated yet)
-							Custom.findOneAndUpdate({ "_id" : custom._id }, { $set : { submitTime : new Date() } }, function(err, custom) {
-								if (err) callback(err.message);
-								else callback(null, custom);
+						else if (!isSubmission) callback(null, custom)
+						else {
+							changeState(custom._id, ["save"], "subm", function(errMsg, custom) {
+								if (errMsg) callback(errMsg);
+								else if (!custom) callback("Invalid state change");
+								else { 
+									// finding to get the actual updated version of Custom (we found that
+									// the custom in the callback of findOneAndUpdate isn't updated yet)
+									Custom.findOneAndUpdate({ "_id" : custom._id }, { $set : { submitTime : new Date() } }, function(err, custom) {
+										if (err) callback(err.message);
+										else callback(null, custom);
+									});
+								}
 							});
 						}
 					});
 				}
+				else {
+					callback("Deadline has passed");
+				}
+
 			});
+			
+			
+			
 		}
 	});
 };

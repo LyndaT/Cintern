@@ -23,7 +23,7 @@ templates['e_applicants'] = template({"1":function(container,depth0,helpers,part
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=container.escapeExpression, alias2=depth0 != null ? depth0 : {};
 
-  return "<div>\n\n  <a href=\"/\" id=\"home-link\">Back to Dash</a>\n\n  <h1>Applicants</h1>\n  \n  <p>Currently "
+  return "<!-- author: Heeyoon Kim -->\n\n<div>\n  <a href=\"/\" id=\"home-link\">Back to Dash</a>\n\n  <h1>Applicants</h1>\n  \n  <p>Currently "
     + alias1(container.lambda(((stack1 = (depth0 != null ? depth0.applicants : depth0)) != null ? stack1.length : stack1), depth0))
     + " students have applied to this listing.</p>\n\n  <table class=\"table table-hover table-condensed\">\n    \n    <thead>\n      <th>Name</th>\n      <th>Email</th>\n      <th>School</th>\n      <th>Date submitted</th>\n    </thead>\n    \n    <tbody>\n"
     + ((stack1 = helpers.each.call(alias2,(depth0 != null ? depth0.applicants : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
@@ -34,7 +34,7 @@ templates['e_applicants'] = template({"1":function(container,depth0,helpers,part
 templates['e_applicants_row'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=container.lambda, alias2=container.escapeExpression;
 
-  return "<div class=\"e-applicant-row\">\n    <tr class=\"clickable applicant-row\" data-applicant-id="
+  return "<!-- author: Heeyoon Kim -->\n\n<div class=\"e-applicant-row\">\n    <tr class=\"clickable applicant-row\" data-applicant-id="
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.owner : depth0)) != null ? stack1._id : stack1), depth0))
     + " data-listing-id="
     + alias2(((helper = (helper = helpers.listing || (depth0 != null ? depth0.listing : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"listing","hash":{},"data":data}) : helper)))
@@ -43,7 +43,7 @@ templates['e_applicants_row'] = template({"compiler":[7,">= 4.0.0"],"main":funct
     + "</td>\n    </tr>\n</div>\n";
 },"useData":true});
 templates['e_create_listing'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    return "<!-- author: Lynda Tang -->\n<a href=\"/\" id=\"home-link\">Back to Dash</a>\n  \n<form id=\"create-listing\">\n	Create a listing here!\n	\n	<br>\n\n	Position Title: <input type=\"text\" name=\"title\">\n	\n	<div>\n		Description\n		<br>\n		<textarea \n			rows=\"8\" \n			cols=\"50\" \n			name=\"description\" \n			form=\"create-listing\" \n			placeholder=\"Enter description here...\"></textarea>\n	</div>\n\n	<br>\n\n	<div>\n		Requirements\n		<br>\n		<textarea \n			rows=\"8\" \n			cols=\"50\" \n			name=\"requirements\" \n			form=\"create-listing\"\n			placeholder=\"Enter requirements here...\"></textarea>\n	</div>\n\n	<br>\n\n	<div>\n		Questions:\n		<div id=\"question-list\"></div>\n		<button class=\"btn btn-primary\" id=\"add-question\">Add Question</button>\n	</div>\n\n	<br>\n	<button type=\"submit\" class=\"btn btn-primary\">Submit</button>\n</form>\n";
+    return "<!-- author: Lynda Tang -->\n<a href=\"/\" id=\"home-link\">Back to Dash</a>\n  \n<form id=\"create-listing\">\n	Create a listing here!\n	\n	<br>\n\n	Position Title: <input type=\"text\" name=\"title\">\n	\n	<div>\n		Description\n		<br>\n		<textarea \n			rows=\"8\" \n			cols=\"50\" \n			name=\"description\" \n			form=\"create-listing\" \n			placeholder=\"Enter description here...\"></textarea>\n	</div>\n\n	<br>\n\n	<div>\n		Requirements\n		<br>\n		<textarea \n			rows=\"8\" \n			cols=\"50\" \n			name=\"requirements\" \n			form=\"create-listing\"\n			placeholder=\"Enter requirements here...\"></textarea>\n	</div>\n\n	<br>\n\n	<div>\n		Questions:\n		<div id=\"question-list\"></div>\n		<button class=\"btn btn-primary\" id=\"add-question\">Add Question</button>\n	</div>\n\n	<br>\n\n	<div>\n		Deadline:\n		<br>\n		<p>Date: <input type=\"text\" id=\"datepicker\"></p>\n	</div>\n\n	<br>\n	<button type=\"submit\" class=\"btn btn-primary\">Submit</button>\n</form>\n";
 },"useData":true});
 templates['e_dash_page'] = template({"1":function(container,depth0,helpers,partials,data,blockParams) {
     var stack1;
@@ -305,7 +305,7 @@ templates['s_listing'] = template({"compiler":[7,">= 4.0.0"],"main":function(con
 templates['s_listing_row'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 
-  return "<div>\n    <tr class=\"clickable s-listing\" data-listing-id="
+  return "<!-- author: Heeyoon Kim -->\n\n<div>\n    <tr class=\"clickable s-listing\" data-listing-id="
     + alias4(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"_id","hash":{},"data":data}) : helper)))
     + " data-listing-company="
     + alias4(alias5(((stack1 = (depth0 != null ? depth0.employer : depth0)) != null ? stack1.company : stack1), depth0))
@@ -326,7 +326,7 @@ templates['s_listings'] = template({"1":function(container,depth0,helpers,partia
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "<div>\n  <a href=\"/\" id=\"home-link\">Back to Dash</a>\n\n  <h1>Current available listings</h1>\n  <p>Click on a listing for more detailed information.</p>\n  <br>\n\n  <table class=\"table table-hover table-condensed row-clickable\">\n\n    <thead>\n      <th>Company</th>\n      <th>Position</th>\n      <th>Deadline</th>\n    </thead>\n\n    <tbody>\n"
+  return "<!-- author: Heeyoon Kim -->\n\n<div>\n  <a href=\"/\" id=\"home-link\">Back to Dash</a>\n\n  <h1>Current available listings</h1>\n  <p>Click on a listing for more detailed information.</p>\n  <br>\n\n  <table class=\"table table-hover table-condensed row-clickable\">\n\n    <thead>\n      <th>Company</th>\n      <th>Position</th>\n      <th>Deadline</th>\n    </thead>\n\n    <tbody>\n"
     + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.listings : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + "    </tbody>\n\n  </table>\n</div>\n";
 },"usePartial":true,"useData":true});
