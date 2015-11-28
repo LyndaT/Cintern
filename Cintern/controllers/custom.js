@@ -237,8 +237,6 @@ exports.getCustom = function(req, res, next) {
  *	- err: on failure (i.e. server fail, invalid submission, invalid custom)
  */ 
 exports.addCustom = function(req, res, next) {
-	var maxNumSubmitsForStudent = 40;
-
 	if (!req.session.user.studentInfo.commonFilled){
 		utils.sendErrResponse(res, 403, "Common application not filled");
 	} else {
@@ -246,22 +244,11 @@ exports.addCustom = function(req, res, next) {
 		var userId = req.session.user.userId;
 		var listingId = req.body.listingId;
 
-		// TODO : temporary... should be in submit, and also set a variable for maxNumSubmits
-		Custom.numCustomsPerStateForOwner(userId, function(errMsg, numPerState) {
+		Custom.copyTemplateToSave(listingId, userId, function(errMsg, custom) {
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+			else if (!custom) utils.sendErrResponse(res, 403, "Could not save application");
 			else {
-				// check that max number of submissions hasn't been reached
-				if (numPerState.subm + numPerState.star >= maxNumSubmitsForStudent) {
-					utils.sendErrResponse(res, 403, "Reached max number of save and submissions");
-				} else {
-					Custom.copyTemplateToSave(listingId, userId, function(errMsg, custom) {
-						if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-						else if (!custom) utils.sendErrResponse(res, 403, "Could not save application");
-						else {
-							utils.sendSuccessResponse(res);
-						}
-					});
-				}
+				utils.sendSuccessResponse(res);
 			}
 		});
 	}
@@ -282,6 +269,8 @@ exports.addCustom = function(req, res, next) {
  *	- err: on failure (i.e. server fail, invalid submission, invalid custom)
  */ 
 exports.submitCustom = function(req, res, next) {
+	var maxNumSubmitsForStudent = 5;
+
 	if (!req.session.user.studentInfo.commonFilled){
 		utils.sendErrResponse(res, 403, "Common application not filled");
 	} else {
@@ -300,11 +289,22 @@ exports.submitCustom = function(req, res, next) {
 	
 		// check that the current user is the owner of the application
 		checkIfCustomOfUser(userId, customId, function() {
-			Custom.update(customId, answerArray, true, function(errMsg, custom) {
+			// check that current user hasn't exceeded the maximum number of submits allowed
+			Custom.numCustomsPerStateForOwner(userId, function(errMsg, numPerState) {
 				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-				else if (!custom) utils.sendErrResponse(res, 403, "Could not submit custom application");
 				else {
-					utils.sendSuccessResponse(res);
+					// check that max number of submissions hasn't been reached
+					if (numPerState.subm + numPerState.star >= maxNumSubmitsForStudent) {
+						utils.sendErrResponse(res, 403, "Reached max number of submissions");
+					} else {
+						Custom.update(customId, answerArray, true, function(errMsg, custom) {
+							if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+							else if (!custom) utils.sendErrResponse(res, 403, "Could not submit custom application");
+							else {
+								utils.sendSuccessResponse(res);
+							}
+						});
+					}
 				}
 			});
 		});

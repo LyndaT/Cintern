@@ -119,6 +119,7 @@ $(document).on('submit', '#submit-custom-form', function(evt) {
         loadDashPage();
     }).fail(function(responseObject) {
         var response = $.parseJSON(responseObject.responseText);
+        console.log(JSON.parse(responseObject.responseText).err);
     });
 });
 
