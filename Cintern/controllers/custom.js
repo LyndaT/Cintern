@@ -2,6 +2,7 @@
  * @author: Maddie Dawson and Jennifer Wu
  */
 var Custom = require('../models/custom.js');
+var Common = require('../models/common.js');
 var Listing = require('../models/listing.js');
 var utils = require('../utils/utils');
 
@@ -28,14 +29,22 @@ exports.getApplicants = function(req, res, next) {
 		else if (!employerOwns) utils.sendErrResponse(res, 403, "Cannot get applicants if you do not own the listing");
 		else {
 			// get the customs for the listing if the employer owns the listing
-			Custom.getCustomsForListingDash(listingId, function(errMsg, customs) {
+			Custom.getOwnersOfCustomsForListingDash(listingId, function(errMsg, owners) {
 				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-				else if (!customs) utils.sendErrResponse(res, 403, "Could not get applications");
 				else {
-					var content = {
-						applicants : customs
-					};
-					utils.sendSuccessResponse(res, content);
+					var headers = Common.getHeadersForApplicantList();
+
+					// get information to display on page according to headers
+					Common.getCommonInfoForApplicantDisplay(owners, function(errMsg, usersCommonInfo) {
+						if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+						else {
+							var content = {
+								headers : headers,
+								applicants : usersCommonInfo
+							};
+							utils.sendSuccessResponse(res, content);
+						}
+					});
 				}
 			});
 		}
@@ -150,21 +159,19 @@ exports.getAllStudentCustoms = function(req, res, next) {
 				customs.forEach(function(custom) {
 					listingIds.push(custom.listing);
 				});
-				Listing.passedDeadlineListings(listingIds, function(errMsg, passedListingIds) {
-					if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-					else {
-						// change any starred custom states to normal submitted
-						customs.forEach(function(custom) {
-							custom.state = (custom.state === "star") ? "subm" : custom.state;
-							custom.passedDeadline = (passedListingIds.indexOf(custom.listing) > -1);
-						});
-						
-						var content = {
-							applications : customs
-						};
-						utils.sendSuccessResponse(res, content);
-					}					
-				});
+				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+
+				else {
+					// change any starred custom states to normal submitted
+					customs.forEach(function(custom) {
+						custom.state = (custom.state === "star") ? "subm" : custom.state;
+					});
+
+					var content = {
+						applications : customs
+					};
+					utils.sendSuccessResponse(res, content);
+				}					
 			}
 		});
 	}

@@ -135,13 +135,22 @@ customSchema.statics.getCustomsForStudentDash = function(ownerId, callback) {
  * @param{ObjectId} listingId
  * @param{Function} callback(err, [Custom])
  */
-customSchema.statics.getCustomsForListingDash = function(listingId, callback) {
+customSchema.statics.getOwnersOfCustomsForListingDash = function(listingId, callback) {
 	Custom.find({
 		"listing" : listingId, 
 		"state" : { $in : ["subm", "star"]} 
-	}).populate("owner").exec(function(err, customs) {
+	}, {
+		'_id' : 0,
+		'owner' : 1
+	}, function(err, owners) {
 		if (err) callback(err.message);
-		else callback(null, customs);
+		else {
+			var ownerArr = [];
+			owners.forEach(function(e,i) {
+				ownerArr.push(owners[i].owner);
+			});
+			callback(null, ownerArr);
+		}
 	});
 };
 
@@ -320,14 +329,8 @@ customSchema.statics.update = function(customId, answers, isSubmission, callback
 		if (err) callback(err.message);
 		else if (!custom) callback("Invalid custom");
 		else {
-			console.log("updating...")
-			
 			Listing.getByListingId(custom.listing, function(err, listing) {
-				console.log("listing is " +listing)
-				console.log("deadlien" + listing.deadline)
 				if (listing.deadline > new Date()) {
-					console.log("checking deadline")
-
 					Application.updateAnswers(custom.application, answers, isSubmission, function(errMsg, app) {
 						if (errMsg) callback(errMsg);
 						else if (!isSubmission) callback(null, custom)
@@ -348,13 +351,9 @@ customSchema.statics.update = function(customId, answers, isSubmission, callback
 					});
 				}
 				else {
-					callback("Deadline has passed");
+					callback("You cannot update your application because the deadline has passed");
 				}
-
 			});
-			
-			
-			
 		}
 	});
 };

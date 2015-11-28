@@ -12,7 +12,7 @@ var listingSchema = mongoose.Schema({
 	title: {type: String, required: true},
 	description: String,
 	requirements: String,
-	deadline: {type: Date}
+	deadline: {type: Date, required: true}
 });
 
 
@@ -27,19 +27,24 @@ var listingSchema = mongoose.Schema({
  * @param{Function} callback(err, listing) 
  */
 listingSchema.statics.createListing = function(currEmployerId, title, desc, reqs, deadline, callback) {
-	Listing.create({
-		employer: currEmployerId,
-		title: title,
-		description: desc,
-		requirements: reqs,
-		deadline: deadline
-	}, function(err, listing) {
-	      if (err) {
-	        callback(err.message);
-	      } else {
-	        callback(null, listing);
-	      }
-    });
+	if(deadline < new Date()) {
+		callback("Deadline has passed");
+	}
+	else {
+		Listing.create({
+			employer: currEmployerId,
+			title: title,
+			description: desc,
+			requirements: reqs,
+			deadline: deadline
+		}, function(err, listing) {
+		    if (err) {
+		    	callback(err.message);
+		    } else {
+		        callback(null, listing);
+		    }
+	    });
+	}
 };
 
 /**
@@ -79,31 +84,6 @@ listingSchema.statics.getAllListings = function(callback) {
 listingSchema.statics.getStudentViewListings = function(callback) {
 	getListings({deadline: {$gte : new Date()}}, callback);
 };
-
-
-
-/**
- * Given the list of listingIds, returns all the ones whose deadlines have passed
- *
- * @param{[listingIds]} listingIds, the list of listingIds to filter through
- * @param{Function} callback: a function to pass the listing info to. The
- *					callback takes in an error and the list of listings
- */
-listingSchema.statics.passedDeadlineListings = function(listingIds, callback) {
-	var passedListingIds = [];
-	console.log("reached here")
-	Listing.find({"_id": {$in: listingIds}, "deadline" : {$gt: new Date()}, function(err, passedDeadlines) {
-		console.log("doing stuff")
-			if(err) {
-				callback(err.message);
-			}
-			else {
-				callback(null, passedDeadlines);
-			}
-		}
-	});
-};
-
 
 /**
  * Retrieve listings that match the given query and pass them to
