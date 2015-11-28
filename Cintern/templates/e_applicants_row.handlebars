@@ -1,7 +1,5 @@
-<!-- author: Heeyoon Kim -->
-
-<div class="e-applicant-row">
-    <tr class="clickable applicant-row" data-applicant-id={{owner._id}} data-listing-id={{listing}}>
-      <td>{{owner.email}}</td>
-    </tr>
-</div>
+<tr class="clickable applicant-row" data-applicant-id="{{owner}}" data-listing-id="{{listing}}">
+  {{#each headers}}
+    <td>{{getValue ../this this}}</td>
+  {{/each}}
+</tr>

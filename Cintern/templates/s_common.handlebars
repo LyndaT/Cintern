@@ -6,7 +6,10 @@
 
 	<form id="submit-common-form">
 		{{> application this}}
-		<input type="submit" class="btn btn-primary"/>
+		{{#if isInProgress}}
+			<input type="submit" class="btn btn-primary"/>
+		{{else}}
+		{{/if}}
 	</form>
 	
 </div>

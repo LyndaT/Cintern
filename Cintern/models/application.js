@@ -10,7 +10,7 @@ var _ = require("../helpers/lodash");
 var applicationSchema = mongoose.Schema({
 	questions : [{
 		"question" : { type : String, required : true },
-		"type" : { type : String, required : true, enum : [ "text", "dropdown", "check" ] },
+		"type" : { type : String, required : true, enum : [ "text", "dropdown", "radio" ] },
 		"required" : { type : Boolean, required : true },
 		"answer" : { type : String, default : '' },
 		"options" : [{ type : String }],
@@ -31,10 +31,15 @@ applicationSchema.pre("save", function(next) {
 		else if (e.type !== "dropdown" && e.options.length !== 0) {
 			return next(new Error("non dropdown questions don't have options"));
 		}
+		if (e.type === "radio" && e.required !== true) {
+			return next(new Error("radio type questions must be required"));
+		}
 	});
 
 	// check that all answers are correctly formatted
-	if(!verifyAnsweredQuestionsCorrectly(this.questions)) next(new Error("answer is wrongly formatted"));
+	if(!verifyAnsweredQuestionsCorrectly(this.questions)) {
+		next(new Error("answer is wrongly formatted"));
+	}
 	
 	next(null, this);
 });
@@ -44,13 +49,14 @@ applicationSchema.pre("save", function(next) {
  * and then runs the callback on the new Application
  *
  * @param{Array} questions is an Array of Objects with keys that are "question",
- * "type", "required", "options" and/or "answer"
+ * 		"type", "required", "options" and/or "answer"
  * @param{Function} callback(err, Application)
  */
 applicationSchema.statics.createApplication = function(questions, callback) {
 	var app = { 
 		"questions" : questions,
 	};
+
 	var newApp = new Application(app);
 
 	// save the new app in the DB
@@ -61,13 +67,13 @@ applicationSchema.statics.createApplication = function(questions, callback) {
 };
 
 /**
- * Deletes the application associated with the appId and runs the callback
+ * Deletes the applications associated with the appIds and runs the callback
  *
- * @param{ObjectId} appId
+ * @param{Array} appIds is an Array of ObjectIds
  * @param{Function} callback(err)
  */
-applicationSchema.statics.deleteApplication = function(appId, callback) {
-	Application.remove({ "_id" : appId }, function(err) {
+applicationSchema.statics.deleteApplications = function(appIds, callback) {
+	Application.remove({ "_id" : { $in : appIds } }, function(err) {
 		if (err) callback(err.message);
 		else callback(null);
 	});
@@ -215,8 +221,8 @@ var verifyForUpdate = function(origQuestions, answers) {
 var verifyAnsweredQuestionsCorrectly = function(questions) {
 	var verified = true
 	questions.forEach(function(question) {
-		// check that if type is "check", answer is "yes" or "no" or empty
-		if (question.type === "check" && question.answer) {
+		// check that if type is "radio", answer is "yes" or "no" or empty
+		if (question.type === "radio" && question.answer) {
 			if (question.answer !== "yes" && question.answer !== "no") verified = false;
 		}
 		// check that if type is "dropdown", answer is in options or empty

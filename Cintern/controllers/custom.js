@@ -2,6 +2,7 @@
  * @author: Maddie Dawson and Jennifer Wu
  */
 var Custom = require('../models/custom.js');
+var Common = require('../models/common.js');
 var Listing = require('../models/listing.js');
 var utils = require('../utils/utils');
 
@@ -28,14 +29,22 @@ exports.getApplicants = function(req, res, next) {
 		else if (!employerOwns) utils.sendErrResponse(res, 403, "Cannot get applicants if you do not own the listing");
 		else {
 			// get the customs for the listing if the employer owns the listing
-			Custom.getCustomsForListingDash(listingId, function(errMsg, customs) {
+			Custom.getOwnersOfCustomsForListingDash(listingId, function(errMsg, owners) {
 				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-				else if (!customs) utils.sendErrResponse(res, 403, "Could not get applications");
 				else {
-					var content = {
-						applicants : customs
-					};
-					utils.sendSuccessResponse(res, content);
+					var headers = Common.getHeadersForApplicantList();
+
+					// get information to display on page according to headers
+					Common.getCommonInfoForApplicantDisplay(owners, function(errMsg, usersCommonInfo) {
+						if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+						else {
+							var content = {
+								headers : headers,
+								applicants : usersCommonInfo
+							};
+							utils.sendSuccessResponse(res, content);
+						}
+					});
 				}
 			});
 		}
@@ -150,21 +159,20 @@ exports.getAllStudentCustoms = function(req, res, next) {
 				customs.forEach(function(custom) {
 					listingIds.push(custom.listing);
 				});
-				Listing.passedDeadlineListings(listingIds, function(errMsg, passedListingIds) {
-					if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 
-					else {
-						// change any starred custom states to normal submitted
-						customs.forEach(function(custom) {
-							custom.state = (custom.state === "star") ? "subm" : custom.state;
-						});
+				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 
-						var content = {
-							applications : customs
-						};
-						utils.sendSuccessResponse(res, content);
-					}					
-				});
+				else {
+					// change any starred custom states to normal submitted
+					customs.forEach(function(custom) {
+						custom.state = (custom.state === "star") ? "subm" : custom.state;
+					});
+
+					var content = {
+						applications : customs
+					};
+					utils.sendSuccessResponse(res, content);
+				}					
 			}
 		});
 	}
@@ -236,7 +244,7 @@ exports.addCustom = function(req, res, next) {
 
 		var userId = req.session.user.userId;
 		var listingId = req.body.listingId;
-	
+
 		Custom.copyTemplateToSave(listingId, userId, function(errMsg, custom) {
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 			else if (!custom) utils.sendErrResponse(res, 403, "Could not save application");
@@ -262,6 +270,8 @@ exports.addCustom = function(req, res, next) {
  *	- err: on failure (i.e. server fail, invalid submission, invalid custom)
  */ 
 exports.submitCustom = function(req, res, next) {
+	var maxNumSubmitsForStudent = 5;
+
 	if (!req.session.user.studentInfo.commonFilled){
 		utils.sendErrResponse(res, 403, "Common application not filled");
 	} else {
@@ -280,11 +290,22 @@ exports.submitCustom = function(req, res, next) {
 	
 		// check that the current user is the owner of the application
 		checkIfCustomOfUser(userId, customId, function() {
-			Custom.update(customId, answerArray, true, function(errMsg, custom) {
+			// check that current user hasn't exceeded the maximum number of submits allowed
+			Custom.numCustomsPerStateForOwner(userId, function(errMsg, numPerState) {
 				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-				else if (!custom) utils.sendErrResponse(res, 403, "Could not submit custom application");
 				else {
-					utils.sendSuccessResponse(res);
+					// check that max number of submissions hasn't been reached
+					if (numPerState.subm + numPerState.star >= maxNumSubmitsForStudent) {
+						utils.sendErrResponse(res, 403, "Reached max number of submissions");
+					} else {
+						Custom.update(customId, answerArray, true, function(errMsg, custom) {
+							if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+							else if (!custom) utils.sendErrResponse(res, 403, "Could not submit custom application");
+							else {
+								utils.sendSuccessResponse(res);
+							}
+						});
+					}
 				}
 			});
 		});
@@ -386,7 +407,7 @@ exports.deleteCustom = function(req, res, next) {
 		var customId = req.body.customId;
 	
 		checkIfCustomOfUser(userId, customId, function() {
-			Custom.deleteCustom(customId, function(errMsg, custom) {
+			Custom.deleteSavedCustom(customId, function(errMsg, custom) {
 				if (errMsg) utils.sendErrRsponse(res, 403, errMsg);
 				else utils.sendSuccessResponse(res);
 			});

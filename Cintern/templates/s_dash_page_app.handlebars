@@ -1,6 +1,7 @@
 <!-- author: Maddie Dawson -->
 
 <div class="student-dash-app">
+<<<<<<< HEAD
   {{#deadlineNotPassed listing.deadline}}  
   	<tr class="clickable student-custom" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
   {{else}}
@@ -10,5 +11,16 @@
   	<td>{{listing.employer.company}}</td>
   	<td>{{listing.title}}</td>
   	<td>{{interpretState state}}</td>
+=======
+  	{{#deadlineNotPassed listing.deadline}}  
+  		<tr class="clickable student-custom" data-listing-id="{{listing._id}}">
+  	{{else}}
+  		<tr class="clickable student-custom error" data-listing-id="{{listing._id}}">
+  	{{/deadlineNotPassed}}
+
+	<td>{{listing.employer.company}}</td>
+	<td>{{listing.title}}</td>
+	<td>{{interpretState state}}</td>
+>>>>>>> c7eb687eb6027e78339a43ccb1e3718dd4cd296e
   </tr>
 </div>

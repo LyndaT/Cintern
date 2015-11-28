@@ -3,9 +3,6 @@ Handlebars.registerPartial('applicant', Handlebars.templates['e_applicants_row']
 Handlebars.registerPartial('question', Handlebars.templates['question']);
 Handlebars.registerPartial('application', Handlebars.templates['application']);
 Handlebars.registerHelper('equal', function(lvalue, rvalue, options) {
-    console.log(lvalue);
-    console.log(rvalue);
-    
     if (arguments.length < 3)
         throw new Error("Handlebars Helper equal needs 2 parameters");
     if( lvalue!=rvalue ) {
@@ -13,6 +10,10 @@ Handlebars.registerHelper('equal', function(lvalue, rvalue, options) {
     } else {
         return options.fn(this);
     }
+});
+
+Handlebars.registerHelper('getValue', function(obj, key) {
+    return (obj[key]);
 });
 
 var mainContainer = '#e-main-container';
@@ -23,9 +24,9 @@ $(document).ready(function() {
 });
 
 
-$(document).on('click', '#new-listing-btn', function(evt) {
+/*$(document).on('click', '#new-listing-btn', function(evt) {
 	loadCreateListingPage();
-});
+});*/
 
 $(document).on('click', '.listing-row', function(evt) {
 	var item = $(this);
@@ -108,18 +109,23 @@ $(document).on('click', '#reject-custom-btn', function(evt) {
 var loadDashPage = function() {
 	$.get('/employers/listings', function(response) {
 		loadPage(mainContainer, 'e_dash_page', { listings: response.content.listings });
+        loadModal('#new-listing-modal-content', 'e_create_listing');
 	});
 };
 
 // Loads the page to create a listing
-var loadCreateListingPage = function() {
+/*var loadCreateListingPage = function() {
 	loadPage(mainContainer, 'e_create_listing');
-};
+};*/
 
 // Loads the applicant page corresponding to the listingId
 var loadApplicantsPage = function(listingId) {
 	$.get('/employers/applications/listings/' + listingId, function(response) {
-		loadPage(mainContainer, 'e_applicants', {applicants: response.content.applicants, listingId: listingId});
+        console.log(response.content.applicants);
+		loadPage(mainContainer, 'e_applicants', {
+            applicants: response.content.applicants,
+            headers: response.content.headers, listingId: listingId
+        });
 	});
 };
 

@@ -1,8 +1,6 @@
 <!-- author: Maddie Dawson -->
 
 <div>
-  <button class="btn btn-primary" id="s-view-listings">View Listings</button>
-  
   <h1>Welcome!</h1>
   Here are your applications:
 
@@ -19,7 +17,12 @@
 
     <tbody>
       {{#each apps}}
+<<<<<<< HEAD
         {{> s_dash_page_app }} 
+=======
+        {{> s_dash_page_app this }} 
+   
+>>>>>>> c7eb687eb6027e78339a43ccb1e3718dd4cd296e
       {{else}}
         <tr>
         	<td>No applications yet!</td>

@@ -12,7 +12,7 @@ var listingSchema = mongoose.Schema({
 	title: {type: String, required: true},
 	description: String,
 	requirements: String,
-	deadline: {type: Date}
+	deadline: {type: Date, required: true}
 });
 
 
