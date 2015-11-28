@@ -11,6 +11,11 @@ var loadPage = function(container, template, data) {
 	$(container).html(Handlebars.templates[template](data));
 };
 
+var loadModal = function(container, template, data){
+  data = data || {};
+  $(container).html(Handlebars.templates[template](data));
+};
+
 // When the logout button has been clicked, logout the user
 $(document).on('click', '#logout-btn', function(evt){
 	console.log("logout clickedd");

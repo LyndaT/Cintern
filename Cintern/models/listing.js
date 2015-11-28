@@ -12,7 +12,7 @@ var listingSchema = mongoose.Schema({
 	title: {type: String, required: true},
 	description: String,
 	requirements: String,
-	deadline: Date
+	deadline: {type: Date, required: true}
 });
 
 
@@ -34,11 +34,11 @@ listingSchema.statics.createListing = function(currEmployerId, title, desc, reqs
 		requirements: reqs,
 		deadline: deadline
 	}, function(err, listing) {
-	      if (err) {
-	        callback(err.message);
-	      } else {
+	    if (err) {
+	    	callback(err.message);
+	    } else {
 	        callback(null, listing);
-	      }
+	    }
     });
 };
 
@@ -66,6 +66,18 @@ listingSchema.statics.deleteListing = function(listingId, callback) {
  */
 listingSchema.statics.getAllListings = function(callback) {
 	getListings({}, callback);
+};
+
+
+/**
+ * Retrieve all listings that students can view (i.e. the ones whose deadlines 
+ * haven't passed yetand pass them to the provided callback.
+ *
+ * @param{Function} callback: a function to pass the listing info to. The
+ *					callback takes in an error and the list of listings
+ */
+listingSchema.statics.getStudentViewListings = function(callback) {
+	getListings({deadline: {$gte : new Date()}}, callback);
 };
 
 /**

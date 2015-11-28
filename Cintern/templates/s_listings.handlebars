@@ -1,5 +1,6 @@
+<!-- author: Heeyoon Kim -->
+
 <div>
-  <a href="/" id="home-link">Back to Dash</a>
 
   <h1>Current available listings</h1>
   <p>Click on a listing for more detailed information.</p>
@@ -15,7 +16,7 @@
 
     <tbody>
       {{#each listings}}
-        {{> listing}}
+        {{> listing this }}
       {{else}}
         <tr>
           <td>No listings available</td>

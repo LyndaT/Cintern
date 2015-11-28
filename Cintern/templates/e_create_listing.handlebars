@@ -1,21 +1,19 @@
 <!-- author: Lynda Tang -->
-<a href="/" id="home-link">Back to Dash</a>
   
 <form id="create-listing">
 	Create a listing here!
 	
 	<br>
 
-	Position Title: <input type="text" name="title">
+	Position Title: <input type="text" name="title" required>
 	
 	<div>
 		Description
 		<br>
 		<textarea 
 			rows="8" 
-			cols="50" 
 			name="description" 
-			form="create-listing" 
+			class="form-control"
 			placeholder="Enter description here..."></textarea>
 	</div>
 
@@ -26,20 +24,59 @@
 		<br>
 		<textarea 
 			rows="8" 
-			cols="50" 
 			name="requirements" 
-			form="create-listing"
+			class="form-control"
 			placeholder="Enter requirements here..."></textarea>
 	</div>
+
+	<div>
+        Deadline
+        <br>
+        <div class="form-group">
+            <div class='input-group date' id='datetimepicker1'>
+                <input type='text' class="form-control" name="deadline" required/>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                var date = new Date();
+	            var currentMonth = date.getUTCMonth();
+	            var currentDate = date.getUTCDate();
+	            var currentYear = date.getUTCFullYear();
+            	$('#datetimepicker1').datetimepicker({
+                	format: 'MM/DD/YYYY',
+                	minDate: new Date(currentYear, currentMonth, currentDate)
+                });
+            });
+        </script>
+    </div>
 
 	<br>
 
 	<div>
 		Questions:
 		<div id="question-list"></div>
-		<button class="btn btn-primary" id="add-question">Add Question</button>
+		<div class="dropdown-hover">
+
+		    <!-- trigger button -->
+		    <button type="button" class="btn btn-primary">Add Question</button>
+
+		    <!-- dropdown menu -->
+		    <ul class="dropdown-menu">
+		        <li class="clickable"><a id="add-text-question">Text Question</a></li>
+		        <!-- <li class="clickable"><a id="add-dropdown-question">Dropdown Question</a></li> -->
+		        <li class="clickable"><a id="add-radio-question">Yes or No Question</a></li>
+		    </ul>
+		</div>
 	</div>
 
 	<br>
+
+	<br>
 	<button type="submit" class="btn btn-primary">Submit</button>
+
 </form>

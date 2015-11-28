@@ -24,9 +24,9 @@ $(document).ready(function() {
 });
 
 
-$(document).on('click', '#new-listing-btn', function(evt) {
+/*$(document).on('click', '#new-listing-btn', function(evt) {
 	loadCreateListingPage();
-});
+});*/
 
 $(document).on('click', '.listing-row', function(evt) {
 	var item = $(this);
@@ -109,20 +109,23 @@ $(document).on('click', '#reject-custom-btn', function(evt) {
 var loadDashPage = function() {
 	$.get('/employers/listings', function(response) {
 		loadPage(mainContainer, 'e_dash_page', { listings: response.content.listings });
+        loadModal('#new-listing-modal-content', 'e_create_listing');
 	});
 };
 
 // Loads the page to create a listing
-var loadCreateListingPage = function() {
+/*var loadCreateListingPage = function() {
 	loadPage(mainContainer, 'e_create_listing');
-};
+};*/
 
 // Loads the applicant page corresponding to the listingId
 var loadApplicantsPage = function(listingId) {
 	$.get('/employers/applications/listings/' + listingId, function(response) {
-		loadPage(mainContainer, 'e_applicants', 
-            {applicants: response.content.applicants,
-                headers: response.content.headers, listingId: listingId});
+        console.log(response.content.applicants);
+		loadPage(mainContainer, 'e_applicants', {
+            applicants: response.content.applicants,
+            headers: response.content.headers, listingId: listingId
+        });
 	});
 };
 

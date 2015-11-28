@@ -1,9 +1,13 @@
 <!-- author: Jennifer Wu -->
 
 <div class="question" id="{{_id}}" data-type="{{type}}"> 
-	{{#equal type "text"}}
-		<label class="control-label">{{question}}</label>
-		
+	<label class="control-label">{{question}}</label>
+	{{#if required}}
+		<span class="required">*</span>
+	{{else}}
+	{{/if}}
+
+	{{#equal type "text"}}	
 		<textarea 
 			{{#if isInProgress}} 
 			{{else}}
@@ -18,7 +22,7 @@
 			class="form-control" name="{{_id}}">{{answer}}</textarea>
 	{{/equal}}
 
-	{{#equal type "dropdown"}} {{question}}
+	{{#equal type "dropdown"}}
 		<select name="{{_id}}"
 			class="form-control"
 			{{#if required}}
@@ -51,24 +55,25 @@
 		</select>
 	{{/equal}}
 
-	<!-- {{#equal type "check"}}
+	{{#equal type "radio"}}
 		<input 
-			type="checkbox" 
-			class="form-control" 
-			name="{{_id}}" 
-			value="yes"
+			type="radio" name="{{_id}}" value="yes"
 			{{#if isInProgress}} 
 			{{else}}
 				disabled
 			{{/if}}
 			{{#equal answer "yes"}}
 				checked
-			{{/equal}}>
+			{{/equal}}>Yes
 		<input 
-			type='hidden' 
-			class="form-control"
-			name="{{_id}}"
-			value="no">
-		<label>{{question}}</label>
-	{{/equal}} -->
+			type="radio" name="{{_id}}" value="no"
+			{{#if isInProgress}} 
+			{{else}}
+				disabled
+			{{/if}}
+			{{#equal answer "no"}}
+				checked
+			{{/equal}}>No
+		
+	{{/equal}}
 </div>

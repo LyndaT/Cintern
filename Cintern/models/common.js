@@ -37,7 +37,7 @@ var commonQuestions = [
 	createQuestion(applicantHeaderInfo.Email, "text", true, null),
 	createQuestion(applicantHeaderInfo.Name, "text", true, null),
 	createQuestion(applicantHeaderInfo.University, "dropdown", true, ["Harvard", "MIT", "Caltech"]),
-	//createQuestion("Are you eligible to work in the US", "check", true, null),
+	createQuestion("Are you eligible to work in the US", "radio", true, null),
 ];
 
 /**
