@@ -57,7 +57,7 @@
 
 	{{#equal type "radio"}}
 		<input 
-			type="radio" class="form-control" name="{{_id}}" value="yes"
+			type="radio" name="{{_id}}" value="yes"
 			{{#if isInProgress}} 
 			{{else}}
 				disabled
@@ -66,7 +66,7 @@
 				checked
 			{{/equal}}>Yes
 		<input 
-			type="radio" class="form-control" name="{{_id}}" value="no"
+			type="radio" name="{{_id}}" value="no"
 			{{#if isInProgress}} 
 			{{else}}
 				disabled
