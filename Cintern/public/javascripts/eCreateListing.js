@@ -74,6 +74,7 @@ $(document).on('submit', '#create-listing', function(evt) {
 	        });
         }
 	});
+	console.log(data.deadline);
 	
 	var content = {
 		title : data.title,
