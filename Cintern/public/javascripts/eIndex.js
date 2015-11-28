@@ -2,6 +2,19 @@ Handlebars.registerPartial('e_dash_page_listing', Handlebars.templates['e_dash_p
 Handlebars.registerPartial('applicant', Handlebars.templates['e_applicants_row']);
 Handlebars.registerPartial('question', Handlebars.templates['question']);
 Handlebars.registerPartial('application', Handlebars.templates['application']);
+Handlebars.registerHelper('equal', function(lvalue, rvalue, options) {
+    if (arguments.length < 3)
+        throw new Error("Handlebars Helper equal needs 2 parameters");
+    if( lvalue!=rvalue ) {
+        return options.inverse(this);
+    } else {
+        return options.fn(this);
+    }
+});
+
+Handlebars.registerHelper('getValue', function(obj, key) {
+    return (obj[key]);
+});
 
 var mainContainer = '#e-main-container';
 
@@ -19,6 +32,19 @@ $(document).on('click', '.listing-row', function(evt) {
 	var item = $(this);
     var listingId = item.data('listing-id');
     loadApplicantsPage(listingId);
+});
+
+$(document).on('click', '#delete-listing-btn', function(evt) {
+    var listingId = $(this).data('listing-id');
+    $.ajax({
+        type: 'DELETE',
+        url: '/employers/listings/' + listingId,
+        contentType: 'application/json'
+    }).done(function(response) {
+        loadDashPage();
+    }).fail(function(responseObject) {
+        var response = $.parseJSON(responseObject.responseText);
+    });
 });
 
 $(document).on('click', '.applicant-row', function(evt) {
@@ -94,13 +120,18 @@ var loadCreateListingPage = function() {
 // Loads the applicant page corresponding to the listingId
 var loadApplicantsPage = function(listingId) {
 	$.get('/employers/applications/listings/' + listingId, function(response) {
-		loadPage(mainContainer, 'e_applicants', {applicants: response.content.applicants});
+		loadPage(mainContainer, 'e_applicants', 
+            {applicants: response.content.applicants,
+                headers: response.content.headers, listingId: listingId});
 	});
 };
 
 // Loads the Full Application page corresponding to the userId and listingId
 var getFullAppPage = function(userId, listingId) {
 	$.get('/employers/applications/fullapp/' + userId + '/' + listingId, function(response) {
+
+        console.log(response.content.commonApp);
+
     	loadPage(mainContainer, 'e_full_app', {
     		common : response.content.commonApp,
     		custom : response.content.customApp,

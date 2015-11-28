@@ -4,17 +4,19 @@
 
   <h1>Applicants</h1>
   
-  <p>Currently {{applicants.length}} students have applied to this listing</p>
+  <p>Currently {{applicants.length}} students have applied to this listing.</p>
 
   <table class="table table-hover table-condensed">
     
     <thead>
-      <th>Email</th>
+      {{#each headers as |h|}}
+        <th>{{h}}</th>
+      {{/each}}
     </thead>
     
     <tbody>
       {{#each applicants}}
-        {{> applicant}}
+        {{> applicant this listing=../listingId headers=../headers}}
       {{else}}
         <tr>
           <td>No applicants have applied yet.</td>
@@ -24,4 +26,5 @@
 
   </table>
 
+  <button id="delete-listing-btn" class="btn btn-primary" data-listing-id={{listingId}}>Delete Listing</button>
 </div>

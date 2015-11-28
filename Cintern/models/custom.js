@@ -135,13 +135,22 @@ customSchema.statics.getCustomsForStudentDash = function(ownerId, callback) {
  * @param{ObjectId} listingId
  * @param{Function} callback(err, [Custom])
  */
-customSchema.statics.getCustomsForListingDash = function(listingId, callback) {
+customSchema.statics.getOwnersOfCustomsForListingDash = function(listingId, callback) {
 	Custom.find({
 		"listing" : listingId, 
 		"state" : { $in : ["subm", "star"]} 
-	}).populate("owner").exec(function(err, customs) {
+	}, {
+		'_id' : 0,
+		'owner' : 1
+	}, function(err, owners) {
 		if (err) callback(err.message);
-		else callback(null, customs);
+		else {
+			var ownerArr = [];
+			owners.forEach(function(e,i) {
+				ownerArr.push(owners[i].owner);
+			});
+			callback(null, ownerArr);
+		}
 	});
 };
 
@@ -232,7 +241,7 @@ customSchema.statics.withdraw = function(customId, callback) {
 };
 
 /**
- * Deletes the Custom from the db if the Custom has the saved state, then runs calblack
+ * Deletes the Custom from the db if the Custom has the saved state, then runs callback
  *
  * @param{ObjectId} customId
  * @param{Function} callback(err)
@@ -249,6 +258,22 @@ customSchema.statics.deleteCustom = function(customId, callback) {
 				// delete the Application associated with the Custom from the DB
 				else Application.deleteApplication(applicationId, callback);
 			});
+		}
+	});
+};
+
+/**
+ * Deletes all the Customs with a particular listingId, then runs the callback
+ * Used in Listing model for deleting listing.
+ *
+ * @param{ObjectId} listingId
+ * @param{Function} callback(err)
+ */
+customSchema.statics.deleteByListing = function(listingId, callback) {
+	Custom.remove({"listing": listingId}, function(err, result) {
+		if (err) callback(err.message);
+		else {
+			callback(null);
 		}
 	});
 };

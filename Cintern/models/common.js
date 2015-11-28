@@ -25,20 +25,72 @@ var createQuestion = function(question, type, required, options) {
 	return q;
 };
 
+// maps a header to the question
+// constraints: no two keys can be the same, and no key can be "owner"
+var applicantHeaderInfo = {
+	"Email" : "Email",
+	"Name": "Name", 
+	"University": "University"
+};
+
 var commonQuestions = [
-	createQuestion("Email", "text", true, null),
-	createQuestion("Name", "text", true, null)
+	createQuestion(applicantHeaderInfo.Email, "text", true, null),
+	createQuestion(applicantHeaderInfo.Name, "text", true, null),
+	createQuestion(applicantHeaderInfo.University, "dropdown", true, ["Harvard", "MIT", "Caltech"]),
+	//createQuestion("Are you eligible to work in the US", "check", true, null),
 ];
+
+/**
+ * Return the headers for the applicant listing page
+ *
+ * @param{callback} callback(err, headers)
+ */
+commonSchema.statics.getHeadersForApplicantList = function() {
+	return Object.keys(applicantHeaderInfo);
+};
+
+/**
+ * Returns common app info for each user specified in the given
+ * list of user IDs
+ *
+ * @param{userIds} a list of user IDs
+ * @param{callback} callback(err, commons)
+ */
+commonSchema.statics.getCommonInfoForApplicantDisplay = function(userIds, callback) {
+	var info = [];
+
+	Common.find({ 'owner': { $in: userIds } }).populate("application").exec(function(err, commons) {
+		if (err) callback(err.message);
+		else if (!commons) callback("Invalid user");
+		else {
+			// for each common, get the information for the headers supplied in applicantHeader Info
+			commons.forEach(function(common) {
+				var questions = common.application.questions;
+				var commonInfo = {};
+
+				forEachKey(applicantHeaderInfo, function(header) {
+					questions.forEach(function(question) {
+						if (applicantHeaderInfo[header] === question.question) {
+							commonInfo[header] = question.answer;
+						}
+					});
+				});
+
+				commonInfo["owner"] = common.owner;
+
+				info.push(commonInfo);
+			});
+
+			callback(null, info);
+		}
+	});
+};
 
 /**
  * @param{ObjectId} ownerId
  * @param{Function} callback(err, Common);
  */
 commonSchema.statics.createCommon = function(ownerId, callback){
-	var commonQuestions = [
-		createQuestion("Email", "text", true, null),
-		createQuestion("Name", "text", true, null)
-	];
 	Application.createApplication(commonQuestions, function(errMsg, app) {
 		if (errMsg) callback(errMsg);
 		else if (!app) callback("No app");
@@ -109,6 +161,14 @@ commonSchema.methods.populateCommon = function(callback) {
 		else callback(null, common);
 	})
 }
+
+var forEachKey = function(obj, fn) {
+  Object.keys(obj).forEach(function(key) {
+    if (obj.hasOwnProperty(key)) {
+      fn(key);
+    }
+  });
+};
 
 var Common = mongoose.model("Common", commonSchema);
 module.exports = Common;

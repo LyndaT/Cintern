@@ -4,7 +4,15 @@
  
 Handlebars.registerPartial('application', Handlebars.templates['application']);
 Handlebars.registerPartial('question', Handlebars.templates['question']);
-
+Handlebars.registerHelper('equal', function(lvalue, rvalue, options) {
+    if (arguments.length < 3)
+        throw new Error("Handlebars Helper equal needs 2 parameters");
+    if( lvalue!=rvalue ) {
+        return options.inverse(this);
+    } else {
+        return options.fn(this);
+    }
+});
 // load the home page
 $(document).ready(function() {
 	loadHomePage();
@@ -13,7 +21,7 @@ $(document).ready(function() {
 $(document).on('submit', '#submit-common-form', function(evt) {
     evt.preventDefault();
     var formData = helpers.getFormData(this);
-    
+
     $.ajax({
         type: 'PUT', 
         url: '/students/applications/common',
@@ -33,7 +41,7 @@ var mainContainer = '#common-main-container';
  */
 var loadHomePage = function() {
 	$.get('/students/applications/common', function(response) {
-		loadPage(mainContainer, 's_common', {
+      	loadPage(mainContainer, 's_common', {
 			questions : response.content.application.questions, 
             isInProgress : true
 		});
