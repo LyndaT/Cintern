@@ -32,7 +32,9 @@
 			placeholder="Enter requirements here..."></textarea>
 	</div>
 
-	<br>
+    <div>
+        <input id="datetimepicker" name="deadline"/>
+    </div>
 
 	<div>
 		Questions:
@@ -55,3 +57,12 @@
 	<button type="submit" class="btn btn-primary">Submit</button>
 
 </form>
+
+<script>
+    $(document).ready(function() {
+        // create DateTimePicker from input HTML element
+        $("#datetimepicker").kendoDateTimePicker({
+            value:new Date()
+        });
+    });
+</script>
