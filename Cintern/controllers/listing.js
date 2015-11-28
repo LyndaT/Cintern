@@ -38,9 +38,9 @@ exports.createListing = function(req, res, next) {
 	var questionList = [];
 	questions.forEach(function(question) {
 		questionList.push({
-			"question" : question,
-			"type" : "text",
-			"required" : true
+			"question" : question.question,
+			"type" : question.type,
+			"required" : question.required
 		})
 	});
 
