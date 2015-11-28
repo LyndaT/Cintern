@@ -32,7 +32,6 @@ applicationSchema.pre("save", function(next) {
 			return next(new Error("non dropdown questions don't have options"));
 		}
 		if (e.type === "radio" && e.required !== true) {
-			console.log("here")
 			return next(new Error("radio type questions must be required"));
 		}
 	});
@@ -58,10 +57,7 @@ applicationSchema.statics.createApplication = function(questions, callback) {
 		"questions" : questions,
 	};
 
-	console.log(questions);
 	var newApp = new Application(app);
-
-	console.log(verifyAnsweredQuestionsCorrectly(questions));
 
 	// save the new app in the DB
 	newApp.save(function(err, newApp) {

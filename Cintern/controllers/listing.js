@@ -106,7 +106,6 @@ exports.getAllListings = function(req, res, next) {
 exports.getEmployerListings = function(req, res, next) {
 	var currentUser = req.session.user;
 	var employerId = currentUser.employerInfo._id;
-	console.log(employerId);
 		
 	Listing.getAllEmployerListings(employerId, function(errMsg, listings) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
