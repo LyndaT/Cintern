@@ -79,8 +79,3 @@ var loadHomePage = function() {
   loadModal('#employer-signup-modal', 'e_signup');
   loadModal('#student-signup-modal', 's_signup');
 };
-
-var loadModal = function(container, template, data){
-  data = data || {};
-  $(container).html(Handlebars.templates[template](data));
-};

@@ -109,6 +109,7 @@ $(document).on('click', '#reject-custom-btn', function(evt) {
 var loadDashPage = function() {
 	$.get('/employers/listings', function(response) {
 		loadPage(mainContainer, 'e_dash_page', { listings: response.content.listings });
+        loadModal('#new-listing-modal', 'e_create_listing');
 	});
 };
 
