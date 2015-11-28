@@ -64,13 +64,13 @@ applicationSchema.statics.createApplication = function(questions, callback) {
 };
 
 /**
- * Deletes the application associated with the appId and runs the callback
+ * Deletes the applications associated with the appIds and runs the callback
  *
- * @param{ObjectId} appId
+ * @param{Array} appIds is an Array of ObjectIds
  * @param{Function} callback(err)
  */
-applicationSchema.statics.deleteApplication = function(appId, callback) {
-	Application.remove({ "_id" : appId }, function(err) {
+applicationSchema.statics.deleteApplications = function(appIds, callback) {
+	Application.remove({ "_id" : { $in : appIds } }, function(err) {
 		if (err) callback(err.message);
 		else callback(null);
 	});

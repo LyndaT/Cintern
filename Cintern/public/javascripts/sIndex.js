@@ -57,7 +57,8 @@ $(document).on('click', '#add-custom', function(evt) {
 	}).done(function(response) {
 		loadAllListingsPage();
 	}).fail(function(response) {
-		console.log('Error');
+		// example of how we might want to display error message
+		console.log(JSON.parse(response.responseText).err);
 	});
 });
 

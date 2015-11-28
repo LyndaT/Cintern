@@ -321,17 +321,54 @@ describe('Application', function() {
   });
 
   /**
-   * Input : appId
-   *    appId is in DB : should delete
-   *    appId is not in DB : should not delete
+   * Input : appIds
+   *    multiple appIds, all appIds are in DB : should delete all
+   *    multiple apps, one appId : should delete 1
+   *    one appId, appIds are in DB : should delete
+   *    appIds are not in DB : should not delete
    */
-  describe('#deleteApplication', function() {
-    it('should delete application', function(done) {
+  describe('#deleteApplications', function() {
+    it('should delete application multiple', function(done) {
+      var questions = [];
+      Application.createApplication(questions, function(e, app1) {
+        Application.createApplication(questions, function(e, app2) {
+          Application.find({}, function(err, apps) {
+            assert.equal(2, apps.length);
+            Application.deleteApplications([apps[0]._id, apps[1]._id], function(e) {
+              Application.find({}, function(err, apps2) {
+                assert.equal(0, apps2.length);
+                done();
+              });
+            });
+          });
+        }); 
+      });
+    });
+
+    it('should delete application single with multiple apps', function(done) {
+      var questions = [];
+      Application.createApplication(questions, function(e, app1) {
+        Application.createApplication(questions, function(e, app2) {
+          Application.find({}, function(err, apps) {
+            assert.equal(2, apps.length);
+            Application.deleteApplications([apps[0]._id], function(e) {
+              Application.find({}, function(err, apps2) {
+                assert.equal(1, apps2.length);
+                done();
+              });
+            });
+          });
+        }); 
+      });
+    });
+
+
+    it('should delete application single', function(done) {
       var questions = [];
       Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(1, apps.length);
-          Application.deleteApplication(apps[0]._id, function(e) {
+          Application.deleteApplications([apps[0]._id], function(e) {
             Application.find({}, function(err, apps2) {
               assert.equal(0, apps2.length);
               done();
@@ -347,7 +384,7 @@ describe('Application', function() {
         Application.find({}, function(err, apps) {
           assert.equal(1, apps.length);
           if(apps[0]._id !== 0) {
-            Application.deleteApplication(1, function(e) {
+            Application.deleteApplications([1], function(e) {
               Application.find({}, function(err, apps2) {
                 assert.equal(1, apps2.length);
                 done();

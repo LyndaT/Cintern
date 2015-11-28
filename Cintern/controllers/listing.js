@@ -181,7 +181,6 @@ exports.deleteListing = function(req, res, next) {
 	var currentUser = req.session.user;
 	// check that the listing belongs to the employer
 	Listing.doesEmployerOwnListing(currentUser.employerInfo._id, listingId, function(errMsg, employerOwns) {
-		console.log("made it", employerOwns);
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 		else if (!employerOwns) utils.sendErrResponse(res, 403, "This listing does not belong to you");
 		else {

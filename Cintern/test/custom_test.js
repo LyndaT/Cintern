@@ -4,8 +4,6 @@
  * Test file for the custom model
  */
 
-
-//TODO: test deleteByListingId
 /**
  * Functions tested
  * createTemplate
@@ -17,11 +15,13 @@
  * getListingTemplate
  * getByOwnerAndListing
  * withdraw
- * deleteCustom
+ * deleteSavedCustom
+ * deleteByListing
  * star
  * unstar
  * reject
  * update
+ * numCustomsPerStateForOwner
  */
 var assert = require("assert");
 var Custom = require('../models/custom');
@@ -808,7 +808,6 @@ describe('Custom', function() {
                     Custom.star(c1._id, function(e, c1) {
                       assert.equal("star", c1.state);  
                       Custom.getStarOrSubmCustomIfListing(c1._id, listings[0]._id, function(e, custom) {
-                        console.log("here");
                         assert.equal("star", custom.state);
                         assert.equal(user2._id.toString(), custom.owner.toString());
                         assert.equal(listings[0]._id.toString(), custom.listing.toString());
@@ -1125,8 +1124,8 @@ describe('Custom', function() {
    *    custom is in state rej : cannot delete
    *    custom is a template : cannot reject
    */
-  describe('#deleteCustom', function() {
-    it('cannot delete, custom state save', function(done) {
+  describe('#deleteSavedCustom', function() {
+    it('can delete, custom state save', function(done) {
       var questions = [];
       Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
         Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
@@ -1136,11 +1135,11 @@ describe('Custom', function() {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
                   assert.equal("save", c1.state);
                   var appId = c1.application;
-                  Custom.deleteCustom(c1._id, function(e) {
+                  Custom.deleteSavedCustom(c1._id, function(e) {
                     Custom.find({ "_id" : c1._id }, function(e, customs) {
                       assert.equal(0, customs.length);
                       Application.find({ "_id" : appId }, function(e, applications) {
-                        assert.equal(0, customs.length);
+                        assert.equal(0, applications.length);
                         done();
                       });
                     });
@@ -1165,11 +1164,11 @@ describe('Custom', function() {
                   Custom.update(c1._id, [], true, function(e, c1) {
                     assert.equal("subm", c1.state);
                     var appId = c1.application;
-                    Custom.deleteCustom(c1._id, function(e) {
+                    Custom.deleteSavedCustom(c1._id, function(e) {
                       Custom.find({ "_id" : c1._id }, function(e, customs) {
                         assert.equal(1, customs.length);
                         Application.find({ "_id" : appId }, function(e, applications) {
-                          assert.equal(1, customs.length);
+                          assert.equal(1, applications.length);
                           done();
                         });
                       });
@@ -1197,11 +1196,11 @@ describe('Custom', function() {
                     Custom.star(c1._id, function(e, c1) {
                       assert.equal("star", c1.state);
                       var appId = c1.application;
-                      Custom.deleteCustom(c1._id, function(e) {
+                      Custom.deleteSavedCustom(c1._id, function(e) {
                         Custom.find({ "_id" : c1._id }, function(e, customs) {
                           assert.equal(1, customs.length);
                           Application.find({ "_id" : appId }, function(e, applications) {
-                            assert.equal(1, customs.length);
+                            assert.equal(1, applications.length);
                             done();
                           });
                         });
@@ -1230,11 +1229,11 @@ describe('Custom', function() {
                     Custom.withdraw(c1._id, function(e, custom) {
                       assert.equal("with", custom.state);
                       var appId = c1.application;
-                      Custom.deleteCustom(c1._id, function(e) {
+                      Custom.deleteSavedCustom(c1._id, function(e) {
                         Custom.find({ "_id" : c1._id }, function(e, customs) {
                           assert.equal(1, customs.length);
                           Application.find({ "_id" : appId }, function(e, applications) {
-                            assert.equal(1, customs.length);
+                            assert.equal(1, applications.length);
                             done();
                           });
                         });
@@ -1263,11 +1262,11 @@ describe('Custom', function() {
                     Custom.reject(c1._id, function(e, c1) {
                       assert.equal("rej", c1.state);
                       var appId = c1.application;
-                      Custom.deleteCustom(c1._id, function(e) {
+                      Custom.deleteSavedCustom(c1._id, function(e) {
                         Custom.find({ "_id" : c1._id }, function(e, customs) {
                           assert.equal(1, customs.length);
                           Application.find({ "_id" : appId }, function(e, applications) {
-                            assert.equal(1, customs.length);
+                            assert.equal(1, applications.length);
                             done();
                           });
                         });
@@ -1289,12 +1288,232 @@ describe('Custom', function() {
           Listing.find({}, function(e, listings) {
             Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {        
               var appId = t1.application;
-              Custom.deleteCustom(t1._id, function(e) {
+              Custom.deleteSavedCustom(t1._id, function(e) {
                 Custom.find({ "_id" : t1._id }, function(e, customs) {
                   assert.equal(1, customs.length);
                   Application.find({ "_id" : appId }, function(e, applications) {
-                    assert.equal(1, customs.length);
+                    assert.equal(1, applications.length);
                     done();
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+
+  /**
+   * input: customId
+   *    one template with listing, one custom is in state save : delete both
+   *    one template with listing, one custom is in state subm : delete both
+   *    one template with listing, one custom is in state star : delete both
+   *    one template with listing, one custom is in state with : delete both
+   *    one template with listing, one custom is in state rej : delete both
+   *    one template with listing, no other customs : delete template
+   *    two listings, one copy of template, delete by listing that is not copy : delete only one template
+   */
+  describe('#deleteByListing', function() {
+    it('delete all, one custom state save', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  assert.equal("save", c1.state);
+                  var appId = c1.application;
+                  Custom.deleteByListing(listings[0]._id, function(e) {
+                    Custom.find({ "listing" : listings[0]._id }, function(e, customs) {
+                      assert.equal(0, customs.length);
+                      Application.find({}, function(e, applications) {
+                        assert.equal(0, applications.length);
+                        done();
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('delete all, one custom state subm', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  assert.equal("save", c1.state);
+                  Custom.update(c1._id, [], true, function(e, c1) {
+                    assert.equal("subm", c1.state);
+                    var appId = c1.application;
+                    Custom.deleteByListing(listings[0]._id, function(e) {
+                      Custom.find({ "listing" : listings[0]._id }, function(e, customs) {
+                        assert.equal(0, customs.length);
+                        Application.find({}, function(e, applications) {
+                          assert.equal(0, applications.length);
+                          done();
+                        });
+                      });
+                    });                 
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('delete all, one custom state star', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  assert.equal("save", c1.state);
+                  Custom.update(c1._id, [], true, function(e, c1) {
+                    assert.equal("subm", c1.state);
+                    Custom.star(c1._id, function(e, c1) {
+                      assert.equal("star", c1.state);
+                      var appId = c1.application;
+                      Custom.deleteByListing(listings[0]._id, function(e) {
+                        Custom.find({ "listing" : listings[0]._id }, function(e, customs) {
+                          assert.equal(0, customs.length);
+                          Application.find({}, function(e, applications) {
+                            assert.equal(0, applications.length);
+                            done();
+                          });
+                        });
+                      });                   
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('delete all, one custom state with', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  assert.equal("save", c1.state);
+                  Custom.update(c1._id, [], true, function(e, c1) {
+                    assert.equal("subm", c1.state);
+                    Custom.withdraw(c1._id, function(e, custom) {
+                      assert.equal("with", custom.state);
+                      var appId = c1.application;
+                      Custom.deleteByListing(listings[0]._id, function(e) {
+                        Custom.find({ "listing" : listings[0]._id }, function(e, customs) {
+                          assert.equal(0, customs.length);
+                          Application.find({}, function(e, applications) {
+                            assert.equal(0, applications.length);
+                            done();
+                          });
+                        });
+                      });
+                    });                    
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('delete all, one custom state reject', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  assert.equal("save", c1.state);
+                  Custom.update(c1._id, [], true, function(e, c1) {
+                    assert.equal("subm", c1.state);
+                    Custom.reject(c1._id, function(e, c1) {
+                      assert.equal("rej", c1.state);
+                      var appId = c1.application;
+                      Custom.deleteByListing(listings[0]._id, function(e) {
+                        Custom.find({ "listing" : listings[0]._id }, function(e, customs) {
+                          assert.equal(0, customs.length);
+                          Application.find({ "_id" : appId }, function(e, applications) {
+                            assert.equal(0, applications.length);
+                            done();
+                          });
+                        });
+                      });                    
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('cannot delete, template', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {        
+              var appId = t1.application;
+              Custom.deleteByListing(listings[0]._id, function(e) {
+                Custom.find({}, function(e, customs) {
+                  assert.equal(0, customs.length);
+                  Application.find({}, function(e, applications) {
+                    assert.equal(0, applications.length);
+                    done();
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('delete one, multiple listings', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+            Listing.find({}, function(e, listings) {
+              assert.equal(2, listings.length);
+              Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {
+                User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                  Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                    assert.equal("save", c1.state);
+                    var appId = c1.application;
+                    Custom.deleteByListing(listings[1]._id, function(e) {
+                      Custom.find({ "listing" : listings[1]._id }, function(e, customs) {
+                        assert.equal(0, customs.length);
+                        Application.find({}, function(e, applications) {
+                          assert.equal(2, applications.length);
+                          done();
+                        });
+                      });
+                    });
                   });
                 });
               });
@@ -2003,6 +2222,253 @@ describe('Custom', function() {
                 });
               });
             });
+          });
+        });
+      });
+    });
+  });
+
+  /**
+   * input: ownerId
+   *    owner has custom of state save
+   *    owner has custom of state subm
+   *    owner has custom of state star
+   *    owner has custom of state with
+   *    owner has custom of state rej
+   *    owner has custom that is template
+   *    owner has 2 customs of state save
+   *    owner has 2 customs of different states
+   */
+  describe('#numCustomsPerStateForOwner', function() {
+    it('owner has custom of state save', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  Custom.numCustomsPerStateForOwner(user2._id, function(e, numCustoms) {
+                    assert.equal(1, numCustoms.save);
+                    assert.equal(0, numCustoms.subm);
+                    assert.equal(0, numCustoms.star);
+                    assert.equal(0, numCustoms.with);
+                    assert.equal(0, numCustoms.rej);
+                    done();
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('owner has custom of state subm', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  assert.equal("save", c1.state);
+                  Custom.update(c1._id, [], true, function(e, c1) {
+                    assert.equal("subm", c1.state);
+                    Custom.numCustomsPerStateForOwner(user2._id, function(e, numCustoms) {
+                      assert.equal(0, numCustoms.save);
+                      assert.equal(1, numCustoms.subm);
+                      assert.equal(0, numCustoms.star);
+                      assert.equal(0, numCustoms.with);
+                      assert.equal(0, numCustoms.rej);
+                      done();
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('owner has custom of state star', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  assert.equal("save", c1.state);
+                  Custom.update(c1._id, [], true, function(e, c1) {
+                    assert.equal("subm", c1.state);
+                    Custom.star(c1._id, function(e, c1) {
+                      assert.equal("star", c1.state);
+                      Custom.numCustomsPerStateForOwner(user2._id, function(e, numCustoms) {
+                        assert.equal(0, numCustoms.save);
+                        assert.equal(0, numCustoms.subm);
+                        assert.equal(1, numCustoms.star);
+                        assert.equal(0, numCustoms.with);
+                        assert.equal(0, numCustoms.rej);
+                        done();
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('owner has custom of state with', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  assert.equal("save", c1.state);
+                  Custom.update(c1._id, [], true, function(e, c1) {
+                    assert.equal("subm", c1.state);
+                    Custom.withdraw(c1._id, function(e, custom) {
+                      assert.equal("with", custom.state);
+                      Custom.numCustomsPerStateForOwner(user2._id, function(e, numCustoms) {
+                        assert.equal(0, numCustoms.save);
+                        assert.equal(0, numCustoms.subm);
+                        assert.equal(0, numCustoms.star);
+                        assert.equal(1, numCustoms.with);
+                        assert.equal(0, numCustoms.rej);
+                        done();
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('owner has custom of state rej', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  assert.equal("save", c1.state);
+                  Custom.update(c1._id, [], true, function(e, c1) {
+                    assert.equal("subm", c1.state);
+                    Custom.reject(c1._id, function(e, c1) {
+                      assert.equal("rej", c1.state);
+                      Custom.numCustomsPerStateForOwner(user2._id, function(e, numCustoms) {
+                        assert.equal(0, numCustoms.save);
+                        assert.equal(0, numCustoms.subm);
+                        assert.equal(0, numCustoms.star);
+                        assert.equal(0, numCustoms.with);
+                        assert.equal(1, numCustoms.rej);
+                        done();
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('owner has custom that is template', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {        
+              Custom.numCustomsPerStateForOwner(emp.user, function(e, numCustoms) {
+                assert.equal(0, numCustoms.save);
+                assert.equal(0, numCustoms.subm);
+                assert.equal(0, numCustoms.star);
+                assert.equal(0, numCustoms.with);
+                assert.equal(0, numCustoms.rej);
+                done();
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('owner has 2 customs of same state', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+            Listing.find({}, function(e, listings) {
+              assert.equal(2, listings.length);
+              Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {
+                Custom.createTemplate(listings[1]._id, questions, emp._id, function(e, t1) {
+                  User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                    Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                      Custom.copyTemplateToSave(listings[1]._id, user2._id, function(e, c2) {
+                        assert.equal("save", c1.state);
+                        assert.equal("save", c2.state);
+                        Custom.numCustomsPerStateForOwner(user2._id, function(e, numCustoms) {
+                          assert.equal(2, numCustoms.save);
+                          assert.equal(0, numCustoms.subm);
+                          assert.equal(0, numCustoms.star);
+                          assert.equal(0, numCustoms.with);
+                          assert.equal(0, numCustoms.rej);
+                          done();
+                        });
+                      });
+                    });
+                  });
+                });
+              });
+            }); 
+          });
+        });
+      });
+    });
+
+    it('owner has 2 customs of different states', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+            Listing.find({}, function(e, listings) {
+              assert.equal(2, listings.length);
+              Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {
+                Custom.createTemplate(listings[1]._id, questions, emp._id, function(e, t1) {
+                  User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                    Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                      Custom.copyTemplateToSave(listings[1]._id, user2._id, function(e, c2) {
+                        assert.equal("save", c1.state);
+                        assert.equal("save", c2.state);
+                        Custom.update(c1._id, [], true, function(e, c1) {
+                          assert.equal("subm", c1.state);
+                          Custom.numCustomsPerStateForOwner(user2._id, function(e, numCustoms) {
+                            assert.equal(1, numCustoms.save);
+                            assert.equal(1, numCustoms.subm);
+                            assert.equal(0, numCustoms.star);
+                            assert.equal(0, numCustoms.with);
+                            assert.equal(0, numCustoms.rej);
+                            done();
+                          });
+                        });
+                      });
+                    });
+                  });
+                });
+              });
+            }); 
           });
         });
       });
