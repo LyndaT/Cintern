@@ -32,12 +32,15 @@ applicationSchema.pre("save", function(next) {
 			return next(new Error("non dropdown questions don't have options"));
 		}
 		if (e.type === "radio" && e.required !== true) {
+			console.log("here")
 			return next(new Error("radio type questions must be required"));
 		}
 	});
 
 	// check that all answers are correctly formatted
-	if(!verifyAnsweredQuestionsCorrectly(this.questions)) next(new Error("answer is wrongly formatted"));
+	if(!verifyAnsweredQuestionsCorrectly(this.questions)) {
+		next(new Error("answer is wrongly formatted"));
+	}
 	
 	next(null, this);
 });
