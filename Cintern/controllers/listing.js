@@ -34,28 +34,30 @@ exports.createListing = function(req, res, next) {
 	var questions = req.body.questions;
 
 	// TODO: clean up deadline so that it's a uniform time somehow
-		
-	var questionList = [];
-	questions.forEach(function(question) {
-		questionList.push({
-			"question" : question,
-			"type" : "text",
-			"required" : true
-		})
-	});
+	if(deadline < Date.now()) utils.sendErrResponse(res, 403, "Selected deadline has passed");
+	else {
+		var questionList = [];
+		questions.forEach(function(question) {
+			questionList.push({
+				"question" : question,
+				"type" : "text",
+				"required" : true
+			})
+		});
 
-	Listing.createListing(employerId, title, desc, reqs, deadline, function(errMsg, listing) {
-		
-		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-		else if (!listing) utils.sendErrResponse(res, 403, "No listing");
-		else {
-			Custom.createTemplate(listing._id, questionList, currentUser.userId, function(errMsg, template) {
-				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-				else if (!template) utils.sendErrResponse(res, 403, "No template");
-				else utils.sendSuccessResponse(res);
-			});
-		}
-	});	
+		Listing.createListing(employerId, title, desc, reqs, deadline, function(errMsg, listing) {
+			
+			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+			else if (!listing) utils.sendErrResponse(res, 403, "No listing");
+			else {
+				Custom.createTemplate(listing._id, questionList, currentUser.userId, function(errMsg, template) {
+					if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+					else if (!template) utils.sendErrResponse(res, 403, "No template");
+					else utils.sendSuccessResponse(res);
+				});
+			}
+		});	
+	}
 };
 
 /**

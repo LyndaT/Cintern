@@ -27,24 +27,19 @@ var listingSchema = mongoose.Schema({
  * @param{Function} callback(err, listing) 
  */
 listingSchema.statics.createListing = function(currEmployerId, title, desc, reqs, deadline, callback) {
-	if(deadline < Date.now()) {
-		callback("Deadline has passed");
-	}
-	else {
-		Listing.create({
-			employer: currEmployerId,
-			title: title,
-			description: desc,
-			requirements: reqs,
-			deadline: deadline
-		}, function(err, listing) {
-		    if (err) {
-		    	callback(err.message);
-		    } else {
-		        callback(null, listing);
-		    }
-	    });
-	}
+	Listing.create({
+		employer: currEmployerId,
+		title: title,
+		description: desc,
+		requirements: reqs,
+		deadline: deadline
+	}, function(err, listing) {
+	    if (err) {
+	    	callback(err.message);
+	    } else {
+	        callback(null, listing);
+	    }
+    });
 };
 
 /**
