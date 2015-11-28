@@ -1,7 +1,3 @@
-/**
- * @author Jennifer Wu
- */
- 
 Handlebars.registerPartial('application', Handlebars.templates['application']);
 Handlebars.registerPartial('question', Handlebars.templates['question']);
 Handlebars.registerHelper('equal', function(lvalue, rvalue, options) {
@@ -13,7 +9,13 @@ Handlebars.registerHelper('equal', function(lvalue, rvalue, options) {
         return options.fn(this);
     }
 });
+
+/**
+ * @author Jennifer Wu
+ */
 // load the home page
+var mainContainer = '#common-main-container';
+
 $(document).ready(function() {
 	loadHomePage();
 });
@@ -33,8 +35,6 @@ $(document).on('submit', '#submit-common-form', function(evt) {
         var response = $.parseJSON(responseObject.responseText);
     });
 });
-
-var mainContainer = '#common-main-container';
 
 /**
  * This function loads the home page Handlebar template
