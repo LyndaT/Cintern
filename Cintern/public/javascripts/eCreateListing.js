@@ -38,8 +38,6 @@ $(document).on('submit', '#create-listing', function(evt) {
 	        });
         }
 	});
-
-	console.log(questionList);
 	
 	var content = {
 		title : data.title,
@@ -55,6 +53,9 @@ $(document).on('submit', '#create-listing', function(evt) {
    		contentType: 'application/json',
    		data: JSON.stringify(content)
    	}).done(function(response) {
+        $('#new-listing-modal').modal('hide');
+        // TODO : may need timeout
+        //setTimeout(function() { loadDashPage(); }, 1000);
         loadDashPage();
  	}).fail(function(responseObject) {
  		console.log(responseObject);
