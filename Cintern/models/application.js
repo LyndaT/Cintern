@@ -31,6 +31,9 @@ applicationSchema.pre("save", function(next) {
 		else if (e.type !== "dropdown" && e.options.length !== 0) {
 			return next(new Error("non dropdown questions don't have options"));
 		}
+		if (e.type === "check" && e.required !== true) {
+			return next(new Error("checkbox type questions must be required"));
+		}
 	});
 
 	// check that all answers are correctly formatted

@@ -32,16 +32,47 @@
 			placeholder="Enter requirements here..."></textarea>
 	</div>
 
+	<div>
+        Deadline
+        <br>
+        <div class="form-group">
+            <div class='input-group date' id='datetimepicker1'>
+                <input type='text' class="form-control" name="deadline" required/>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $('#datetimepicker1').datetimepicker();
+            });
+        </script>
+    </div>
+
 	<br>
 
 	<div>
 		Questions:
 		<div id="question-list"></div>
-		<button class="btn btn-primary" id="add-question">Add Question</button>
+		<div class="dropdown-hover">
+
+		    <!-- trigger button -->
+		    <button type="button" class="btn btn-primary">Add Question</button>
+
+		    <!-- dropdown menu -->
+		    <ul class="dropdown-menu">
+		        <li class="clickable"><a id="add-text-question">Text Question</a></li>
+		        <!-- <li class="clickable"><a id="add-dropdown-question">Dropdown Question</a></li> -->
+		        <li class="clickable"><a id="add-check-question">Checkbox Question</a></li>
+		    </ul>
+		</div>
 	</div>
 
 	<br>
 
 	<br>
 	<button type="submit" class="btn btn-primary">Submit</button>
+
 </form>

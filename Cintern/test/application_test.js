@@ -31,6 +31,7 @@ describe('Application', function() {
    *    a question in questions is missing the required field : should not create
    *    1 question of type dropdown with options : should create
    *    1 question of type check with no options : should create
+   *    1 question of type check not required : should not create
    *    1 question of type text with no options : should create
    *    1 question of type dropdown with no options : should not create
    *    1 question of type dropdown with 1 option : should not create
@@ -130,6 +131,20 @@ describe('Application', function() {
       Application.createApplication(questions, function(e, app) {
         Application.find({}, function(err, apps) {
           assert.equal(1, apps.length);
+          done();
+        });
+      });
+    });
+
+    it('should not create app, type check, not required', function(done) {
+      var questions = [{
+        "question" : "Email",
+        "type" : "check",
+        "required" : false
+      }];
+      Application.createApplication(questions, function(e, app) {
+        Application.find({}, function(err, apps) {
+          assert.equal(0, apps.length);
           done();
         });
       });
