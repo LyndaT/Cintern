@@ -30,16 +30,16 @@ describe('Application', function() {
    *    a question in questions is missing the answer field : should create
    *    a question in questions is missing the required field : should not create
    *    1 question of type dropdown with options : should create
-   *    1 question of type check with no options : should create
-   *    1 question of type check not required : should not create
+   *    1 question of type radio with no options : should create
+   *    1 question of type radio not required : should not create
    *    1 question of type text with no options : should create
    *    1 question of type dropdown with no options : should not create
    *    1 question of type dropdown with 1 option : should not create
-   *    1 question of type check with options : should not create
+   *    1 question of type radio with options : should not create
    *    1 question of type text with options : should not create
    *    1 question of type dropdown with options but wrong answer : should not create
-   *    1 question of type check with wrong answer : should not create
-   *    1 question of type check with right answer : should create
+   *    1 question of type radio with wrong answer : should not create
+   *    1 question of type radio with right answer : should create
    *    one poorly formatted question : should not create
    *    all correctly formatted questions : should create
    */
@@ -122,10 +122,10 @@ describe('Application', function() {
       });
     });
 
-    it('should create app, type check, no options', function(done) {
+    it('should create app, type radio, no options', function(done) {
       var questions = [{
         "question" : "Email",
-        "type" : "check",
+        "type" : "radio",
         "required" : true
       }];
       Application.createApplication(questions, function(e, app) {
@@ -136,10 +136,10 @@ describe('Application', function() {
       });
     });
 
-    it('should not create app, type check, not required', function(done) {
+    it('should not create app, type radio, not required', function(done) {
       var questions = [{
         "question" : "Email",
-        "type" : "check",
+        "type" : "radio",
         "required" : false
       }];
       Application.createApplication(questions, function(e, app) {
@@ -193,10 +193,10 @@ describe('Application', function() {
       });
     });
 
-    it('should not create app, type check, options', function(done) {
+    it('should not create app, type radio, options', function(done) {
       var questions = [{
         "question" : "Email",
-        "type" : "check",
+        "type" : "radio",
         "required" : true,
         "options" : ["a"]
       }];
@@ -239,10 +239,10 @@ describe('Application', function() {
       });
     });
 
-    it('should not create app, type check, wrong answer', function(done) {
+    it('should not create app, type radio, wrong answer', function(done) {
       var questions = [{
         "question" : "Email",
-        "type" : "check",
+        "type" : "radio",
         "required" : true,
         "answer" : "yum",
       }];
@@ -254,10 +254,10 @@ describe('Application', function() {
       });
     });
 
-    it('should create app, type check, right answer', function(done) {
+    it('should create app, type radio, right answer', function(done) {
       var questions = [{
         "question" : "Email",
-        "type" : "check",
+        "type" : "radio",
         "required" : true,
         "answer" : "yes",
       }];
@@ -272,12 +272,12 @@ describe('Application', function() {
     it('should not create app, one poorly formatted', function(done) {
       var questions = [{
         "question" : "Email",
-        "type" : "check",
+        "type" : "radio",
         "required" : true,
         "answer" : "yes",
       }, {
         "question" : "Email",
-        "type" : "check",
+        "type" : "radio",
         "required" : true,
         "answer" : "yum",
       }, {
@@ -296,7 +296,7 @@ describe('Application', function() {
     it('should create app, many', function(done) {
       var questions = [{
         "question" : "Email",
-        "type" : "check",
+        "type" : "radio",
         "required" : true,
         "answer" : "yes",
       }, {
@@ -365,8 +365,8 @@ describe('Application', function() {
    *    appId is not valid : should error
    *    wrong answer field for dropdown : should error
    *    right answer field for dropdown : should update
-   *    wrong answer field for check : should error
-   *    right answer field for check : should update
+   *    wrong answer field for radio : should error
+   *    right answer field for radio : should update
    *    update an already filled answer : should update
    *    isSubmission is false, not all required filled : should update
    *    isSubmission is true, but not all required filled : should error
@@ -477,10 +477,10 @@ describe('Application', function() {
       });
     });
 
-    it('should not update if wrong answer field, check', function(done) {
+    it('should not update if wrong answer field, radio', function(done) {
       var questions = [{
         "question" : "Email",
-        "type" : "check",
+        "type" : "radio",
         "required" : true,
       }];
       Application.createApplication(questions, function(e, app) {
@@ -499,10 +499,10 @@ describe('Application', function() {
       });
     });
 
-    it('should update if right answer field, check', function(done) {
+    it('should update if right answer field, radio', function(done) {
       var questions = [{
         "question" : "Email",
-        "type" : "check",
+        "type" : "radio",
         "required" : true,
       }];
       Application.createApplication(questions, function(e, app) {

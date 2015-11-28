@@ -71,11 +71,11 @@ describe('Custom', function() {
    *    a question in questions has the answer field : should create
    *    a question in questions is missing the required field : should not create
    *    1 question of type dropdown with options : should create
-   *    1 question of type check with no options : should create
+   *    1 question of type radio with no options : should create
    *    1 question of type text with no options : should create
    *    1 question of type dropdown with no options : should not create
    *    1 question of type dropdown with 1 option : should not create
-   *    1 question of type check with options : should not create
+   *    1 question of type radio with options : should not create
    *    1 question of type text with options : should not create
    *    one poorly formatted question : should not create
    *    all correctly formatted questions : should create
@@ -200,10 +200,10 @@ describe('Custom', function() {
       }); 
     });
 
-    it('should create template, type check, no options', function(done) {
+    it('should create template, type radio, no options', function(done) {
       var questions = [{
         "question" : "Email",
-        "type" : "check",
+        "type" : "radio",
         "required" : true
       }];
       Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
@@ -283,10 +283,10 @@ describe('Custom', function() {
       }); 
     });
 
-    it('should not create template, type check, options', function(done) {
+    it('should not create template, type radio, options', function(done) {
       var questions = [{
         "question" : "Email",
-        "type" : "check",
+        "type" : "radio",
         "required" : true,
         "options" : ["a"]
       }];
@@ -332,7 +332,7 @@ describe('Custom', function() {
         "required" : true,
       }, {
         "question" : "Email",
-        "type" : "check",
+        "type" : "radio",
         "required" : true,
       }, {
         "question" : "Email",
@@ -356,7 +356,7 @@ describe('Custom', function() {
     it('should create template, many', function(done) {
       var questions = [{
         "question" : "Email",
-        "type" : "check",
+        "type" : "radio",
         "required" : true,
       }, {
         "question" : "Email",
@@ -1756,7 +1756,7 @@ describe('Custom', function() {
     it('cannot update, custom state save isSubmission true wrong format', function(done) { 
       var questions = [{
         "question" : "abc",
-        "type" : "check",
+        "type" : "radio",
         "required" : true,
       }];
       Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {

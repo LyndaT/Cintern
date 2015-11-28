@@ -53,7 +53,7 @@ templates['e_applicants_row'] = template({"1":function(container,depth0,helpers,
     + "</tr>";
 },"useData":true,"useDepths":true});
 templates['e_create_listing'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    return "<!-- author: Lynda Tang -->\n<a href=\"/\" id=\"home-link\">Back to Dash</a>\n  \n<form id=\"create-listing\">\n	Create a listing here!\n	\n	<br>\n\n	Position Title: <input type=\"text\" name=\"title\">\n	\n	<div>\n		Description\n		<br>\n		<textarea \n			rows=\"8\" \n			cols=\"50\" \n			name=\"description\" \n			form=\"create-listing\" \n			placeholder=\"Enter description here...\"></textarea>\n	</div>\n\n	<br>\n\n	<div>\n		Requirements\n		<br>\n		<textarea \n			rows=\"8\" \n			cols=\"50\" \n			name=\"requirements\" \n			form=\"create-listing\"\n			placeholder=\"Enter requirements here...\"></textarea>\n	</div>\n\n	<br>\n\n	<div>\n		Questions:\n		<div id=\"question-list\"></div>\n		<div class=\"dropdown-hover\">\n\n		    <!-- trigger button -->\n		    <button type=\"button\" class=\"btn btn-primary\">Add Question</button>\n\n		    <!-- dropdown menu -->\n		    <ul class=\"dropdown-menu\">\n		        <li class=\"clickable\"><a id=\"add-text-question\">Text Question</a></li>\n		        <!-- <li class=\"clickable\"><a id=\"add-dropdown-question\">Dropdown Question</a></li> -->\n		        <li class=\"clickable\"><a id=\"add-check-question\">Checkbox Question</a></li>\n		    </ul>\n		</div>\n	</div>\n\n	<br>\n	<button type=\"submit\" class=\"btn btn-primary\">Submit</button>\n\n</form>\n";
+    return "<!-- author: Lynda Tang -->\n<a href=\"/\" id=\"home-link\">Back to Dash</a>\n  \n<form id=\"create-listing\">\n	Create a listing here!\n	\n	<br>\n\n	Position Title: <input type=\"text\" name=\"title\" required>\n	\n	<div>\n		Description\n		<br>\n		<textarea \n			rows=\"8\" \n			cols=\"50\" \n			name=\"description\" \n			form=\"create-listing\" \n			placeholder=\"Enter description here...\"></textarea>\n	</div>\n\n	<br>\n\n	<div>\n		Requirements\n		<br>\n		<textarea \n			rows=\"8\" \n			cols=\"50\" \n			name=\"requirements\" \n			form=\"create-listing\"\n			placeholder=\"Enter requirements here...\"></textarea>\n	</div>\n\n	<br>\n\n	<div>\n		Questions:\n		<div id=\"question-list\"></div>\n		<div class=\"dropdown-hover\">\n\n		    <!-- trigger button -->\n		    <button type=\"button\" class=\"btn btn-primary\">Add Question</button>\n\n		    <!-- dropdown menu -->\n		    <ul class=\"dropdown-menu\">\n		        <li class=\"clickable\"><a id=\"add-text-question\">Text Question</a></li>\n		        <!-- <li class=\"clickable\"><a id=\"add-dropdown-question\">Dropdown Question</a></li> -->\n		        <li class=\"clickable\"><a id=\"add-radio-question\">Yes or No Question</a></li>\n		    </ul>\n		</div>\n	</div>\n\n	<br>\n	<button type=\"submit\" class=\"btn btn-primary\">Submit</button>\n\n</form>\n";
 },"useData":true});
 templates['e_dash_page'] = template({"1":function(container,depth0,helpers,partials,data,blockParams) {
     var stack1;
@@ -146,64 +146,69 @@ templates['login'] = template({"1":function(container,depth0,helpers,partials,da
     + "  </div>\n  <br>\n  \n  <form id=\"login-form\" class=\"form-horizontal\">\n\n    <div class=\"form-group\">\n      <label class=\"control-label col-xs-2\">Email:</label>\n      <div class=\"col-xs-6\">\n        <input class=\"form-control\" type=\"text\" name=\"email\" required placeholder=\"Email\"/>\n      </div>\n    </div>\n\n    <div class = \"form-group\">\n      <label class=\"control-label col-xs-2\">Password:</label>\n      <div class=\"col-xs-6\">\n        <input class=\"form-control\" type=\"password\" name=\"password\" required placeholder=\"Password\"/>\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-offset-2 col-xs-6\">\n        <input class=\"btn btn-primary\" type=\"submit\" />\n      </div>\n    </div> \n\n  </form>\n\n</div>\n";
 },"useData":true});
 templates['question'] = template({"1":function(container,depth0,helpers,partials,data) {
+    return "		<span class=\"required\">*</span>\n";
+},"3":function(container,depth0,helpers,partials,data) {
+    return "";
+},"5":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
   return "		<textarea \n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isInProgress : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.program(4, data, 0),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isInProgress : depth0),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.program(6, data, 0),"data":data})) != null ? stack1 : "")
     + "			\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.required : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.program(2, data, 0),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.required : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + "			\n			class=\"form-control\" name=\""
     + alias4(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"_id","hash":{},"data":data}) : helper)))
     + "\">"
     + alias4(((helper = (helper = helpers.answer || (depth0 != null ? depth0.answer : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"answer","hash":{},"data":data}) : helper)))
     + "</textarea>\n";
-},"2":function(container,depth0,helpers,partials,data) {
-    return "";
-},"4":function(container,depth0,helpers,partials,data) {
-    return "				disabled\n";
 },"6":function(container,depth0,helpers,partials,data) {
+    return "				disabled\n";
+},"8":function(container,depth0,helpers,partials,data) {
     return "				required\n";
-},"8":function(container,depth0,helpers,partials,data,blockParams,depths) {
+},"10":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing;
 
   return "		<select name=\""
     + container.escapeExpression(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"_id","hash":{},"data":data}) : helper)))
     + "\"\n			class=\"form-control\"\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.required : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0, blockParams, depths),"inverse":container.program(2, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isInProgress : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.program(9, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.required : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0, blockParams, depths),"inverse":container.program(3, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isInProgress : depth0),{"name":"if","hash":{},"fn":container.program(3, data, 0, blockParams, depths),"inverse":container.program(11, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
     + ">\n			\n			<option\n"
-    + ((stack1 = (helpers.equal || (depth0 && depth0.equal) || alias2).call(alias1,(depth0 != null ? depth0.answer : depth0),"",{"name":"equal","hash":{},"fn":container.program(11, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = (helpers.equal || (depth0 && depth0.equal) || alias2).call(alias1,(depth0 != null ? depth0.answer : depth0),"",{"name":"equal","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "			>\n				\n			</option>\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.options : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.program(2, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.options : depth0),{"name":"each","hash":{},"fn":container.program(15, data, 0, blockParams, depths),"inverse":container.program(3, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
     + "\n		</select>\n";
-},"9":function(container,depth0,helpers,partials,data) {
-    return "				disabled\n			";
 },"11":function(container,depth0,helpers,partials,data) {
+    return "				disabled\n			";
+},"13":function(container,depth0,helpers,partials,data) {
     return "					selected\n";
-},"13":function(container,depth0,helpers,partials,data,blockParams,depths) {
+},"15":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, alias1=container.lambda, alias2=container.escapeExpression;
 
   return "				<option value=\""
     + alias2(alias1(depth0, depth0))
     + "\" \n"
-    + ((stack1 = (helpers.equal || (depth0 && depth0.equal) || helpers.helperMissing).call(depth0 != null ? depth0 : {},(depths[1] != null ? depths[1].answer : depths[1]),depth0,{"name":"equal","hash":{},"fn":container.program(14, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = (helpers.equal || (depth0 && depth0.equal) || helpers.helperMissing).call(depth0 != null ? depth0 : {},(depths[1] != null ? depths[1].answer : depths[1]),depth0,{"name":"equal","hash":{},"fn":container.program(16, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "				>\n					"
     + alias2(alias1(depth0, depth0))
     + "\n				</option>\n";
-},"14":function(container,depth0,helpers,partials,data) {
-    return "						selected\n";
 },"16":function(container,depth0,helpers,partials,data) {
+    return "						selected\n";
+},"18":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
-  return "		<input \n			type='hidden' \n			class=\"form-control\"\n			name=\""
+  return "		<input \n			type=\"radio\" class=\"form-control\" name=\""
     + alias4(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"_id","hash":{},"data":data}) : helper)))
-    + "\"\n			value=\"no\">\n		<input \n			type=\"checkbox\" \n			class=\"form-control\" \n			name=\""
+    + "\" value=\"yes\"\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isInProgress : depth0),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.program(6, data, 0),"data":data})) != null ? stack1 : "")
+    + ((stack1 = (helpers.equal || (depth0 && depth0.equal) || alias2).call(alias1,(depth0 != null ? depth0.answer : depth0),"yes",{"name":"equal","hash":{},"fn":container.program(19, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">Yes\n		<input \n			type=\"radio\" class=\"form-control\" name=\""
     + alias4(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"_id","hash":{},"data":data}) : helper)))
-    + "\" \n			value=\"yes\"\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isInProgress : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.program(4, data, 0),"data":data})) != null ? stack1 : "")
-    + ((stack1 = (helpers.equal || (depth0 && depth0.equal) || alias2).call(alias1,(depth0 != null ? depth0.answer : depth0),"yes",{"name":"equal","hash":{},"fn":container.program(17, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ">\n		\n";
-},"17":function(container,depth0,helpers,partials,data) {
+    + "\" value=\"no\"\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isInProgress : depth0),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.program(6, data, 0),"data":data})) != null ? stack1 : "")
+    + ((stack1 = (helpers.equal || (depth0 && depth0.equal) || alias2).call(alias1,(depth0 != null ? depth0.answer : depth0),"no",{"name":"equal","hash":{},"fn":container.program(19, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">No\n		\n";
+},"19":function(container,depth0,helpers,partials,data) {
     return "				checked\n			";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
@@ -215,11 +220,13 @@ templates['question'] = template({"1":function(container,depth0,helpers,partials
     + "\"> \n	<label class=\"control-label\">"
     + alias4(((helper = (helper = helpers.question || (depth0 != null ? depth0.question : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"question","hash":{},"data":data}) : helper)))
     + "</label>\n"
-    + ((stack1 = (helpers.equal || (depth0 && depth0.equal) || alias2).call(alias1,(depth0 != null ? depth0.type : depth0),"text",{"name":"equal","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.required : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.program(3, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
     + "\n"
-    + ((stack1 = (helpers.equal || (depth0 && depth0.equal) || alias2).call(alias1,(depth0 != null ? depth0.type : depth0),"dropdown",{"name":"equal","hash":{},"fn":container.program(8, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = (helpers.equal || (depth0 && depth0.equal) || alias2).call(alias1,(depth0 != null ? depth0.type : depth0),"text",{"name":"equal","hash":{},"fn":container.program(5, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\n"
-    + ((stack1 = (helpers.equal || (depth0 && depth0.equal) || alias2).call(alias1,(depth0 != null ? depth0.type : depth0),"check",{"name":"equal","hash":{},"fn":container.program(16, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = (helpers.equal || (depth0 && depth0.equal) || alias2).call(alias1,(depth0 != null ? depth0.type : depth0),"dropdown",{"name":"equal","hash":{},"fn":container.program(10, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\n"
+    + ((stack1 = (helpers.equal || (depth0 && depth0.equal) || alias2).call(alias1,(depth0 != null ? depth0.type : depth0),"radio",{"name":"equal","hash":{},"fn":container.program(18, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "</div>";
 },"useData":true,"useDepths":true});
 templates['s_common'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {

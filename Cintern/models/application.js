@@ -10,7 +10,7 @@ var _ = require("../helpers/lodash");
 var applicationSchema = mongoose.Schema({
 	questions : [{
 		"question" : { type : String, required : true },
-		"type" : { type : String, required : true, enum : [ "text", "dropdown", "check" ] },
+		"type" : { type : String, required : true, enum : [ "text", "dropdown", "radio" ] },
 		"required" : { type : Boolean, required : true },
 		"answer" : { type : String, default : '' },
 		"options" : [{ type : String }],
@@ -31,8 +31,8 @@ applicationSchema.pre("save", function(next) {
 		else if (e.type !== "dropdown" && e.options.length !== 0) {
 			return next(new Error("non dropdown questions don't have options"));
 		}
-		if (e.type === "check" && e.required !== true) {
-			return next(new Error("checkbox type questions must be required"));
+		if (e.type === "radio" && e.required !== true) {
+			return next(new Error("radio type questions must be required"));
 		}
 	});
 
@@ -218,8 +218,8 @@ var verifyForUpdate = function(origQuestions, answers) {
 var verifyAnsweredQuestionsCorrectly = function(questions) {
 	var verified = true
 	questions.forEach(function(question) {
-		// check that if type is "check", answer is "yes" or "no" or empty
-		if (question.type === "check" && question.answer) {
+		// check that if type is "radio", answer is "yes" or "no" or empty
+		if (question.type === "radio" && question.answer) {
 			if (question.answer !== "yes" && question.answer !== "no") verified = false;
 		}
 		// check that if type is "dropdown", answer is in options or empty
