@@ -47,14 +47,18 @@ applicationSchema.pre("save", function(next) {
  * and then runs the callback on the new Application
  *
  * @param{Array} questions is an Array of Objects with keys that are "question",
- * "type", "required", "options" and/or "answer"
+ * 		"type", "required", "options" and/or "answer"
  * @param{Function} callback(err, Application)
  */
 applicationSchema.statics.createApplication = function(questions, callback) {
 	var app = { 
 		"questions" : questions,
 	};
+
+	console.log(questions);
 	var newApp = new Application(app);
+
+	console.log(verifyAnsweredQuestionsCorrectly(questions));
 
 	// save the new app in the DB
 	newApp.save(function(err, newApp) {
