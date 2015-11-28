@@ -315,7 +315,7 @@ templates['s_dash_page_app'] = template({"1":function(container,depth0,helpers,p
 templates['s_listing'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
-  return "<div>\n	<a href=\"/\" id=\"home-link\">Back to Dash</a>\n</div>\n\n<div class=\"listing\">\n	<label>Company: </label> "
+  return "<div class=\"listing\">\n	<label>Company: </label> "
     + alias4(((helper = (helper = helpers.company || (depth0 != null ? depth0.company : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"company","hash":{},"data":data}) : helper)))
     + "\n	<br>\n	<label>Position Title: </label> "
     + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
