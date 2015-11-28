@@ -20,10 +20,6 @@ $(document).on('click', '#add-text-question', function(evt) {
 	$('#question-list').append(textQuestion);
 });
 
-$(document).ready(function(){
-	$("#timepicker").kendoTimePicker();
-	});
-
 /*$(document).on('click', '#add-dropdown-question', function(evt) {
 	evt.preventDefault();
 	var dropdownQuestion = document.createElement("div");
@@ -67,7 +63,6 @@ $(document).on('click', '.delete-question', function(evt) {
 $(document).on('submit', '#create-listing', function(evt) {
 	evt.preventDefault();
 	var data = helpers.getFormData(this);
-	console.log(data);
 	
 	var questionList = [];
 	Object.keys(data).forEach(function(id) {
