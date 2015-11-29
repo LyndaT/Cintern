@@ -26,39 +26,41 @@ module.exports.login = function(req, res, next){
 		if (errMsg){
 			utils.sendErrResponse(res, 403, errMsg);
 		} else {
-			if (user.isStudent) {
-				Student.findByUserId(user._id, function(errMsg, student) {
-					if (errMsg) {
-						utils.sendErrResponse(res, 403, errMsg);
-					} else {
-						var currUser = {
-							userId : user._id,
-							studentInfo : {
-								commonFilled : student.commonFilled,
-								_id : student._id
-							}
+			req.brute.reset(function () {  
+				if (user.isStudent) {
+					Student.findByUserId(user._id, function(errMsg, student) {
+						if (errMsg) {
+							utils.sendErrResponse(res, 403, errMsg);
+						} else {
+							var currUser = {
+								userId : user._id,
+								studentInfo : {
+									commonFilled : student.commonFilled,
+									_id : student._id
+								}
+							};
+							req.session.user = currUser;
+							utils.sendSuccessResponse(res);
 						}
-						req.session.user = currUser;
-						utils.sendSuccessResponse(res);
-					}
-				});
-			} else {
-				Employer.findByUserId(user._id, function(errMsg, employer) {
-					if (errMsg) {
-						utils.sendErrResponse(res, 403, errMsg);
-					} else {
-						var currUser = {
-							userId : user._id,
-							employerInfo : {
-								company : employer.company,
-								_id : employer._id
-							}
+					});
+				} else {
+					Employer.findByUserId(user._id, function(errMsg, employer) {
+						if (errMsg) {
+							utils.sendErrResponse(res, 403, errMsg);
+						} else {
+							var currUser = {
+								userId : user._id,
+								employerInfo : {
+									company : employer.company,
+									_id : employer._id
+								}
+							};
+							req.session.user = currUser;
+							utils.sendSuccessResponse(res);
 						}
-						req.session.user = currUser;
-						utils.sendSuccessResponse(res);
-					}
-				});
-			}
+					});
+				}
+			});
 		}
 	});
 };

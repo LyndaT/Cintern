@@ -5,6 +5,7 @@
 var assert = require("assert");
 var User = require('../models/User');
 var mongoose = require('mongoose');
+var passwordHash = require('password-hash');
 
 describe('User', function() {
   beforeEach(function(done) {
@@ -25,12 +26,12 @@ describe('User', function() {
     it('should add a User to the database with the correct attributes', function(done) {
       User.addUser('test', 'testpw', false, function(err, user){
       	assert.equal('test', user.email);
-      	assert.equal('testpw', user.password);
+      	assert.equal(true, passwordHash.verify('testpw', user.password));
       	assert.equal(false, user.isStudent);
       	
       	User.addUser('test2', 'test2pw', true, function(err, user){
         	assert.equal('test2', user.email);
-        	assert.equal('test2pw', user.password);
+        	assert.equal(true, passwordHash.verify('test2pw', user.password));
         	assert.equal(true, user.isStudent);
         	done();
         });
@@ -49,12 +50,12 @@ describe('User', function() {
     it('should add a User to the database with the same password but different email', function(done) {
       User.addUser('test', 'testpw', false, function(err, user){
       	assert.equal('test', user.email);
-      	assert.equal('testpw', user.password);
+      	assert.equal(true, passwordHash.verify('testpw', user.password));
       	assert.equal(false, user.isStudent);
       	
       	User.addUser('test2', 'testpw', false, function(err, user){
 	      	assert.equal('test2', user.email);
-	      	assert.equal('testpw', user.password);
+	      	assert.equal(true, passwordHash.verify('testpw', user.password));
 	      	assert.equal(false, user.isStudent);
 	      	done();
       	});
@@ -67,7 +68,7 @@ describe('User', function() {
   		User.addUser('test', 'testpw', false, function(err, user){
   			User.loginUser('test', 'testpw', function(err, res){
   				assert.equal('test', user.email);
-  				assert.equal('testpw', user.password);
+  				assert.equal(true, passwordHash.verify('testpw', user.password));
   				done();
   			});
   		});
