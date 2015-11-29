@@ -6,6 +6,7 @@ var assert = require("assert");
 var Employer = require('../models/Employer');
 var User = require('../models/User');
 var mongoose = require('mongoose');
+var passwordHash = require('password-hash');
 
 
 describe('Employer', function() {
@@ -39,7 +40,7 @@ describe('Employer', function() {
  			    User.findOne({email: 'goog'}, function(err, user){
      				assert.equal(id, user._id.toString());
      				assert.equal('goog', user.email);
-     				assert.equal('googpw', user.password);
+     				assert.equal(true, passwordHash.verify('googpw', user.password));
      				assert.equal(false, user.isStudent);
      				done();
      			});
@@ -51,7 +52,7 @@ describe('Employer', function() {
    		Employer.createEmployer('goog', 'googpw', 'Google', function(errMsg, res){
    			User.findOne({email: 'goog'}, function(err, user){
    				assert.equal('goog', user.email);
-   				assert.equal('googpw', user.password);
+   				assert.equal(true, passwordHash.verify('googpw', user.password));
    				assert.equal(false, user.isStudent);
    				
    				Employer.createEmployer('goog', 'goog1pw', 'Goog', function(errMsg, res){
@@ -66,7 +67,7 @@ describe('Employer', function() {
    		Employer.createEmployer('goog', 'googpw', 'Google', function(errMsg, res){
    			User.findOne({email: 'goog'}, function(err, user){
    				assert.equal('goog', user.email);
-   				assert.equal('googpw', user.password);
+   				assert.equal(true, passwordHash.verify('googpw', user.password));
    				assert.equal(false, user.isStudent);
    				
    				Employer.createEmployer('goog1', 'goog1pw', 'Google', function(errMsg, res){

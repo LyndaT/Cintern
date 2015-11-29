@@ -6,6 +6,7 @@ var assert = require("assert");
 var Student = require('../models/Student');
 var User = require('../models/User');
 var mongoose = require('mongoose');
+var passwordHash = require('password-hash');
 
 
 describe('Student', function() {
@@ -37,7 +38,7 @@ describe('Student', function() {
  			    User.findOne({email: 'jenn'}, function(err, user){
      				assert.equal(id, user._id.toString());
      				assert.equal('jenn', user.email);
-     				assert.equal('jennpw', user.password);
+     				assert.equal(true, passwordHash.verify('jennpw', user.password));
      				assert.equal(true, user.isStudent);
      				done();
      			});
@@ -54,7 +55,7 @@ describe('Student', function() {
    			    
  			    User.findOne({email:'hee'}, function(err, user){
      				assert.equal('hee', user.email);
-     				assert.equal('yoon', user.password);
+     				assert.equal(true, passwordHash.verify('yoon', user.password));
      				assert.equal(true, user.isStudent);
      				
      				Student.createStudent('hee', 'yoon', function(errMsg, res){

@@ -7,6 +7,7 @@ var User = require('../models/User.js');
 var EmployerSchema = mongoose.Schema({
   user: {type: mongoose.Schema.Types.ObjectId , ref: 'User', unique: true, immutable: true},
   company: {type: String, unique: true},
+  verified: {type: Boolean, required: false}
 });
 
 /**
@@ -25,7 +26,8 @@ EmployerSchema.statics.createEmployer = function(email, password, companyName, c
 					callback(errMsg);
 				} else {
 					Employer.create({user: user._id, 
-			                company: companyName}, 
+			                company: companyName,
+			                verified: false}, 
 					function(err, employer) {
 					  if (err) {
 					    callback(err.message);
@@ -56,6 +58,30 @@ EmployerSchema.statics.findByUserId = function(userId, callback) {
 	});
 };
 
+
+/**
+ * Changes employer verification to be true
+ * @param {Object} employerId the ID of the employer
+ * @param {Object} callback the call back in the form (err, updatedemployer)
+ */
+EmployerSchema.statics.verifyEmployer = function(userId, callback){
+	Employer.findOneAndUpdate({user: userId}, {$set: {verified: true}}, function(err, employer){
+		if (err){
+			callback(err.message);
+		} else if (!employer){
+			callback("Invalid Employer");
+		} else {
+			// finding to get the actual updated version of Employer (we found that
+			// the student in the callback of findOneAndUpdate isn't updated yet)
+			Employer.findOne({user : userId}, function(err, employer) {
+				if (err) {
+					callback(err.message);
+				} else callback(null, employer);
+			});
+		}
+	});
+};
+
 /**
  * Finds the Employer associated with the company
  */
@@ -68,6 +94,8 @@ var companyEmployerDoesntExist = function(company, callback){
 		}
 	});
 };
+
+
 
 var Employer = mongoose.model('Employer', EmployerSchema);
 module.exports = mongoose.model("Employer", EmployerSchema);
