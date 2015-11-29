@@ -159,6 +159,7 @@ exports.getAllStudentCustoms = function(req, res, next) {
 				customs.forEach(function(custom) {
 					listingIds.push(custom.listing);
 				});
+
 				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 
 				else {

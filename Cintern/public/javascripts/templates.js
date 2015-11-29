@@ -277,7 +277,7 @@ templates['s_dash_page'] = template({"1":function(container,depth0,helpers,parti
     var stack1;
 
   return ((stack1 = container.invokePartial(partials.s_dash_page_app,depth0,{"name":"s_dash_page_app","data":data,"indent":"        ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
-    + "   \n";
+    + "        \n";
 },"3":function(container,depth0,helpers,partials,data) {
     return "        <tr>\n        	<td>No applications yet!</td>\n        </tr>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
@@ -318,11 +318,11 @@ templates['s_dash_page_app'] = template({"1":function(container,depth0,helpers,p
     + alias4(alias3(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1.title : stack1), depth0))
     + "</td>\n	<td>"
     + alias4((helpers.formatDate || (depth0 && depth0.formatDate) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1.deadline : stack1),{"name":"formatDate","hash":{},"data":data}))
-    + "</td>\n"
+    + "</td>\n  \n"
     + ((stack1 = (helpers.equal || (depth0 && depth0.equal) || alias2).call(alias1,(depth0 != null ? depth0.submitTime : depth0),undefined,{"name":"equal","hash":{},"fn":container.program(5, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
-    + "	<td>"
+    + "  \n	<td>"
     + alias4((helpers.interpretState || (depth0 && depth0.interpretState) || alias2).call(alias1,(depth0 != null ? depth0.state : depth0),{"name":"interpretState","hash":{},"data":data}))
-    + "</td>\n  </tr>\n</div>";
+    + "</td>\n\n  </tr>\n</div>";
 },"useData":true});
 templates['s_listing'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;

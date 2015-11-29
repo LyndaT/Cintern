@@ -166,6 +166,7 @@ $(document).on('click', 'ul.nav-tabs li', function(e){
 var loadDashPage = function() {
 	$.get('/students/applications', function(response) {
 		loadPage(mainContainer, 's_dash_page', { apps: response.content.applications });
+		console.log(response.content.applications);
 	});
 };
 
