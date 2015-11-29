@@ -36,6 +36,36 @@ describe('Common', function() {
     });
   });
 
+  describe('#getCommonInfoForApplicantDisplay', function() {
+    it('should retrieve applicant info', function(done) {
+      User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
+        Common.createCommon(user._id, function(e, common) {
+          var answers = [];
+          var answer_map = {};
+          Application.formatForShow(common.application, function(e, formattedQuestions) {
+            formattedQuestions.forEach(function(question, i) {
+              answers.push({ "_id" : question._id, "answer" : i });
+              var key = question.question;
+              answer_map.key = i;
+            });
+            Common.submitCommon(user._id, answers, function(e, commonSubmitted) {
+              assert.equal(true, commonSubmitted);
+              var headers = Common.getHeadersForApplicantList();
+              Common.getCommonInfoForApplicantDisplay([user._id], function(e, info) {
+                var results = info[0];
+                results.forEach(function(result, i) {
+                  var header = headers[i];
+                  var answer = answer_map[header];
+                  assert.equal(answer, result);
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+
   describe('#createCommon', function() {
     it('should create a common', function(done) {
       User.addUser("jennwu@mit.edu", "asdf123gh", true, function(e, user) {
