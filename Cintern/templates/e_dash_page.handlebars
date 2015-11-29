@@ -30,11 +30,12 @@
 
     <thead>
   	  <th>Title</th>
+      <th>Number of applicants</th>
   	</thead>
 
     <tbody>
       {{#each listings as |l|}}
-        {{> e_dash_page_listing listing=l}}
+        {{> e_dash_page_listing listing=l listingid=l._id map=../map}}
       {{else}}
         <tr>
         	<td>No listings yet!</td>

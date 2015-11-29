@@ -111,10 +111,21 @@ exports.getEmployerListings = function(req, res, next) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 		else if (!listings) utils.sendErrResponse(res, 403, "No listings");
 		else {
-			var content = {
-				"listings" : listings
-			};
-			utils.sendSuccessResponse(res, content);
+			var listingIds = listings.map(function(listing) {
+				return listing._id;
+			});
+
+			Custom.numApplicantsPerListing(listingIds, function(err, map) {
+				if (err) utils.sendErrResponse(res, 403, err);
+				else if (!map) utils.sendErrResponse(res, 403, "No listings");
+				else {
+					var content = {
+						"map" : map,
+						"listings" : listings
+					};
+					utils.sendSuccessResponse(res, content);
+				}
+			});
 		};
 	});
 };

@@ -400,7 +400,7 @@ customSchema.statics.numApplicantsPerListing = function(listingIds, callback) {
 			if (err) asyncCallback(err);
 			else if (!customs) asyncCallback('Invalid listing ID');
 			else {
-				numApplicantMap.listingId = customs.length;
+				numApplicantMap[listingId] = customs.length;
 				asyncCallback();
 			}
 		});
