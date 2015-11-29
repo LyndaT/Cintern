@@ -29,13 +29,22 @@ exports.getApplicants = function(req, res, next) {
 		else if (!employerOwns) utils.sendErrResponse(res, 403, "Cannot get applicants if you do not own the listing");
 		else {
 			// get the customs for the listing if the employer owns the listing
-			Custom.getOwnersOfCustomsForListingDash(listingId, function(errMsg, owners) {
+			Custom.getCustomsForListingDash(listingId, function(errMsg, customs) {
+				var customOwnerInfos = customs.map(function(custom) { 
+					return { 
+						custom.owner : { 
+							"state" : custom.state,
+							"submitTime" : custom.submitTime
+						}
+					}
+				});
+
 				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 				else {
 					var headers = Common.getHeadersForApplicantList();
 
 					// get information to display on page according to headers
-					Common.getCommonInfoForApplicantDisplay(owners, function(errMsg, usersCommonInfo) {
+					Common.getCommonInfoForApplicantDisplay(customOwnerInfos, function(errMsg, usersCommonInfo) {
 						if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 						else {
 							var content = {

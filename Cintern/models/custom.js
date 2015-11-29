@@ -130,27 +130,19 @@ customSchema.statics.getCustomsForStudentDash = function(ownerId, callback) {
 
 /**
  * Gets all the submitted or starred Customs where the listingId is the 
- * listing in the format so that they can be used to generate the listing dash; 
- * then calls the callback on the Customs
+ * listing 
  *
  * @param{ObjectId} listingId
  * @param{Function} callback(err, [Custom])
  */
-customSchema.statics.getOwnersOfCustomsForListingDash = function(listingId, callback) {
+customSchema.statics.getCustomsForListingDash = function(listingId, callback) {
 	Custom.find({
 		"listing" : listingId, 
 		"state" : { $in : ["subm", "star"]} 
-	}, {
-		'_id' : 0,
-		'owner' : 1
-	}, function(err, owners) {
+	}, function(err, customs) {
 		if (err) callback(err.message);
 		else {
-			var ownerArr = [];
-			owners.forEach(function(e,i) {
-				ownerArr.push(owners[i].owner);
-			});
-			callback(null, ownerArr);
+			callback(null, customs);
 		}
 	});
 };
@@ -390,9 +382,8 @@ customSchema.statics.numApplicantsPerListing = function(listingIds, callback) {
 	var numApplicantMap = {};
 
 	async.each(listingIds, function(listingId, asyncCallback) {
-		Custom.getOwnersOfCustomsForListingDash(listingId, function(err, customs) {
+		Custom.getCustomsForListingDash(listingId, function(err, customs) {
 			if (err) asyncCallback(err);
-			else if (!customs) asyncCallback('Invalid listing ID');
 			else {
 				numApplicantMap[listingId] = customs.length;
 				asyncCallback();

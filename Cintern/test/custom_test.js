@@ -10,7 +10,7 @@
  * createTemplate
  * copyTemplateToSave
  * getCustomsForStudentDash
- * getOwnersOfCustomsForListingDash
+ * getCustomsForListingDash
  * getIfOwner
  * getStarOrSubmCustomIfListing
  * getListingTemplate
@@ -589,13 +589,13 @@ describe('Custom', function() {
    *    custom under listing, subm : 1 owner
    *    custom under listing, star : 1 owner
    */
-  describe('#getOwnersOfCustomsForListingDash', function() {
+  describe('#getCustomsForListingDash', function() {
     it('should get no owners', function(done) {
       Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
         Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e, listing) {
           Listing.find({}, function(e, listings) {
-            Custom.getOwnersOfCustomsForListingDash(listings[0]._id, function(e, owners) {
-              assert.equal(0, owners.length);
+            Custom.getCustomsForListingDash(listings[0]._id, function(e, customs) {
+              assert.equal(0, customs.length);
               done();
             });
           });
@@ -612,8 +612,8 @@ describe('Custom', function() {
               User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
                   assert.equal("save", c1.state);
-                  Custom.getOwnersOfCustomsForListingDash(listings[0]._id, function(e, owners) {
-                    assert.equal(0, owners.length);
+                  Custom.getCustomsForListingDash(listings[0]._id, function(e, customs) {
+                    assert.equal(0, customs.length);
                     done();
                   });
                 });
@@ -634,9 +634,9 @@ describe('Custom', function() {
                 Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
                   assert.equal("save", c1.state);
                   Custom.update(c1._id, [], true, function(e, c1) {
-                    Custom.getOwnersOfCustomsForListingDash(listings[0]._id, function(e, owners) {
-                      assert.equal(1, owners.length);
-                      assert.equal(user2._id.toString(), owners[0].toString());
+                    Custom.getCustomsForListingDash(listings[0]._id, function(e, customs) {
+                      assert.equal(1, customs.length);
+                      assert.equal(user2._id.toString(), customs[0].owner.toString());
                       done();
                     });                    
                   });
@@ -660,9 +660,9 @@ describe('Custom', function() {
                   Custom.update(c1._id, [], true, function(e, c1) {
                     assert.equal("subm", c1.state);
                     Custom.star(c1._id, function(e, c2) {
-                      Custom.getOwnersOfCustomsForListingDash(listings[0]._id, function(e, owners) {
-                        assert.equal(1, owners.length);
-                        assert.equal(user2._id.toString(), owners[0].toString());
+                      Custom.getCustomsForListingDash(listings[0]._id, function(e, customs) {
+                        assert.equal(1, customs.length);
+                        assert.equal(user2._id.toString(), customs[0].owner.toString());
                         done();
                       });                    
                     });
@@ -2502,9 +2502,9 @@ describe('Custom', function() {
                   Custom.update(c1._id, [], true, function(e, c1) {
                     assert.equal("subm", c1.state);
                     Custom.numApplicantsPerListing([listings[0]._id], function(err, map) {
-                      assert.equal(err, null);
+                      assert.equal(null, err);
                       var key = listings[0]._id;
-                      assert(_.isEqual(map, {key : 1}));
+                      assert(_.isEqual(map.toString(), ({key : 1}).toString()));
                       done();
                     });
                   });
@@ -2517,6 +2517,7 @@ describe('Custom', function() {
     });
 
     it('should not count saved customs', function(done) {
+      var questions = [];
       Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
         Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
           Listing.find({}, function(e, listings) {
@@ -2527,7 +2528,7 @@ describe('Custom', function() {
                   Custom.numApplicantsPerListing([listings[0]._id], function(err, map) {
                     assert.equal(err, null);
                     var key = listings[0]._id;
-                    assert(_.isEqual(map, {key : 0}));
+                    assert(_.isEqual(map.toString(), ({key : 0}).toString()));
                     done();
                   });
                 });
@@ -2554,7 +2555,7 @@ describe('Custom', function() {
                       Custom.numApplicantsPerListing([listings[0]._id], function(err, map) {
                         assert.equal(err, null);
                         var key = listings[0]._id;
-                        assert(_.isEqual(map, {key : 0}));
+                        assert(_.isEqual(map.toString(), ({key : 0}).toString()));
                         done();
                       });
                     });                    
@@ -2583,7 +2584,7 @@ describe('Custom', function() {
                       Custom.numApplicantsPerListing([listings[0]._id], function(err, map) {
                         assert.equal(err, null);
                         var key = listings[0]._id;
-                        assert(_.isEqual(map, {key : 0}));
+                        assert(_.isEqual(map.toString(), ({key : 0}).toString()));
                         done();
                       });
                     });                    
@@ -2608,11 +2609,11 @@ describe('Custom', function() {
                   Custom.update(c1._id, [], true, function(e, c1) {
                     assert.equal("subm", c1.state);
                     Custom.star(c1._id, function(e, c2) {
-                      assert.equal("star", c1.state);
+                      assert.equal("star", c2.state);
                       Custom.numApplicantsPerListing([listings[0]._id], function(err, map) {
                         assert.equal(err, null);
                         var key = listings[0]._id;
-                        assert(_.isEqual(map, {key : 1}));
+                        assert(_.isEqual(map.toString(), ({key : 1}).toString()));
                         done();
                       });                  
                     });
