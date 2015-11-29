@@ -14,16 +14,21 @@ var ExpressBrute = require('express-brute'),
     MongoClient = require('mongodb').MongoClient,
     moment = require('moment'),
     store;
-    
+  
+// Uncomment this out for final  
 // var store = new MongoStore(function (ready) {
   // MongoClient.connect('mongodb://localhost/cintern', function(err, db) {
     // if (err) throw err;
     // ready(db.collection('bruteforce-store'));
   // });
 // });
+
+//Comment this out for final
 var store = new ExpressBrute.MemoryStore();
 
 var failCallback = function (req, res, next, nextValidRequestDate) {
+	//Not using utils but p much the same thing
+	//Throws errors if using utils/functions
 	res.status(429).json({
 		success: false,
 		err: "You have been locked out due to too many failed login attempts. Please try again later."
