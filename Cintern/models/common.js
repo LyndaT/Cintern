@@ -28,16 +28,18 @@ var createQuestion = function(question, type, required, options) {
 // maps a header to the question
 // constraints: no two keys can be the same, and no key can be "owner"
 var applicantHeaderInfo = {
-	"Email" : "Email",
 	"Name": "Name", 
-	"University": "University"
+	"University": "University",
+	"Graduation Year" : "Graduation Year",
+	"Major" : "Major"
 };
 
 var commonQuestions = [
-	createQuestion(applicantHeaderInfo.Email, "text", true, null),
 	createQuestion(applicantHeaderInfo.Name, "text", true, null),
 	createQuestion(applicantHeaderInfo.University, "dropdown", true, ["Harvard", "MIT", "Caltech"]),
-	createQuestion("Are you eligible to work in the US", "radio", true, null),
+	createQuestion(applicantHeaderInfo["Graduation Year"], "dropdown", true, ["2016", "2017", "2018", "2019", "2020", "other"]),
+	createQuestion(applicantHeaderInfo.Major, "dropdown", true, ["Computer Science", "English", "Mathematics"]),
+	createQuestion("Are you eligible to work in the US", "radio", true, null)
 ];
 
 /**
