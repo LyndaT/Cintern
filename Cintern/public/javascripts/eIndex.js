@@ -124,7 +124,6 @@ var loadApplicantsPage = function(listingId) {
 	$.get('/employers/applications/listings/' + listingId, function(response) {
         console.log(response.content.applicants);
 		loadPage(mainContainer, 'e_applicants', {
-            submitTimes: response.content.submitTimes,
             applicants: response.content.applicants,
             headers: response.content.headers, listingId: listingId
         });

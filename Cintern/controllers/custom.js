@@ -38,17 +38,11 @@ exports.getApplicants = function(req, res, next) {
 					Common.getCommonInfoForApplicantDisplay(owners, function(errMsg, usersCommonInfo) {
 						if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 						else {
-							Custom.getSubmissionDates(listingId, owners, function(errMsg, submissionDates) {
-								if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-								else {
-									var content = {
-										submitTimes : submissionDates,
-										headers : headers,
-										applicants : usersCommonInfo
-									};
-									utils.sendSuccessResponse(res, content);
-								}
-							});
+							var content = {
+								headers : headers,
+								applicants : usersCommonInfo
+							};
+							utils.sendSuccessResponse(res, content);
 						}
 					});
 				}
