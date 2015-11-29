@@ -16,6 +16,10 @@ a {
 	cursor: pointer;
 }
 
+.unclickable{
+  color: #A8A8A8;
+}
+
 .error{
 	color:red;
 }

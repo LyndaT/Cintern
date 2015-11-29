@@ -80,10 +80,17 @@ exports.getAllListings = function(req, res, next) {
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 			else if (!listings) utils.sendErrResponse(res, 403, "No listings");
 			else {
-				var content = {
-					"listings" : listings,
-				};
-				utils.sendSuccessResponse(res, content);
+				Custom.find({ owner: req.session.user.userId }, { listing: 1 }, function(err, submittedListings) {
+					if (err) utils.sendErrResponse(res, 403, err);
+					else if (!submittedListings) utils.sendErrResponse(res, 403, "No listings");
+					else {
+						var content = {
+							"listings" : listings,
+							"submittedListings" : submittedListings
+						};
+						utils.sendSuccessResponse(res, content);
+					}
+				});
 			}
 		});
 	}

@@ -6,6 +6,12 @@
   <p>Click on a listing for more detailed information.</p>
   <br>
 
+  <div class="error" id="error">
+    {{#if error}}
+      {{error}}
+    {{/if}}
+  </div>
+
   <table class="table table-hover table-condensed row-clickable">
 
     <thead>
@@ -16,7 +22,7 @@
 
     <tbody>
       {{#each listings}}
-        {{> listing this }}
+        {{> listing this submitted=../submitted}}
       {{else}}
         <tr>
           <td>No listings available</td>

@@ -35,6 +35,16 @@ Handlebars.registerHelper('deadlineNotPassed', function(date, options) {
     }
 });
 
+Handlebars.registerHelper('in', function(list, item, options) {
+	if (arguments.length < 3)
+        throw new Error("Handlebars Helper equal needs 2 parameters");
+    if ($.inArray(item, list)) {
+    	return options.fn(this);
+    } else {
+    	return options.inverse(this);
+    }
+});
+
 var mainContainer = '#s-main-container';
 
 // load the dash page
@@ -54,10 +64,14 @@ $(document).on('click', '#common-nav', function(evt) {
 	loadCommonPage();
 })
 
-$(document).on('click', '.s-listing', function(evt) {
+$(document).on('click', '.clickable, .s-listing', function(evt) {
 	var listingId = $(this).data('listing-id');
 	var company = $(this).data('listing-company');
 	loadListingPage(listingId, company);
+});
+
+$(document).on('click', '.unclickable, .s-listing', function(evt) {
+	$('#error').text("You have already applied to this listing.");
 });
 
 $(document).on('click', '.student-custom', function(evt) {
@@ -158,7 +172,8 @@ var loadDashPage = function() {
 // Loads all listings
 var loadAllListingsPage = function() {
 	$.get('/students/listings', function(response) {
-		loadPage(mainContainer, 's_listings', {listings: response.content.listings});
+		loadPage(mainContainer, 's_listings', 
+			{listings: response.content.listings, submitted: response.content.submittedListings});
 	});
 }
 
