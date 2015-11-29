@@ -1,6 +1,7 @@
 /**
- * @author Lynda Tang
+ * @author Lynda Tang and Jennifer Wu
  */
+
 var questionNum = 0;
 
 $(document).on('click', '#add-text-question', function(evt) {

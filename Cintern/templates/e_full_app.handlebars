@@ -3,11 +3,11 @@
 <div class="full-app">
 
 	{{#if isStar}}
-		<button id="unstar-custom-btn" class="btn btn-primary btn-lg" data-custom-id="{{customId}}" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
+		<button class="unstar-custom-btn btn btn-primary btn-lg" data-custom-id="{{customId}}" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
 			<span class='glyphicon glyphicon-star center' style="color:yellow"></span>
 		</button>
 	{{else}}
-		<button id="star-custom-btn" class="btn btn-primary btn-lg" data-custom-id="{{customId}}" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
+		<button class="star-custom-btn btn btn-primary btn-lg" data-custom-id="{{customId}}" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
 			<span class='glyphicon glyphicon-star center'></span>
 		</button>
 	{{/if}}

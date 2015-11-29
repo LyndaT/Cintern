@@ -29,15 +29,35 @@ templates['e_applicants'] = template({"1":function(container,depth0,helpers,part
 
   return "<!-- author: Heeyoon Kim -->\n\n<div>\n  <a href=\"/\" id=\"home-link\">Back to Dash</a>\n\n  <h1>Applicants</h1>\n  \n  <p>Currently "
     + alias1(container.lambda(((stack1 = (depth0 != null ? depth0.applicants : depth0)) != null ? stack1.length : stack1), depth0))
-    + " students have applied to this listing.</p>\n\n  <table class=\"table table-hover table-condensed\">\n    \n    <thead>\n"
+    + " students have applied to this listing.</p>\n\n  <table class=\"table table-hover table-condensed\">\n    \n    <thead>\n\n      <!-- header for star -->\n      <th></th>\n\n"
     + ((stack1 = helpers.each.call(alias2,(depth0 != null ? depth0.headers : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 1, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
-    + "    </thead>\n    \n    <tbody>\n"
+    + "\n      <th>Submit Time</th>\n\n    </thead>\n    \n    <tbody>\n"
     + ((stack1 = helpers.each.call(alias2,(depth0 != null ? depth0.applicants : depth0),{"name":"each","hash":{},"fn":container.program(3, data, 0, blockParams, depths),"inverse":container.program(5, data, 0, blockParams, depths),"data":data,"blockParams":blockParams})) != null ? stack1 : "")
     + "    </tbody>\n\n  </table>\n\n  <button id=\"delete-listing-btn\" class=\"btn btn-primary\" data-listing-id="
     + alias1(((helper = (helper = helpers.listingId || (depth0 != null ? depth0.listingId : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias2,{"name":"listingId","hash":{},"data":data,"blockParams":blockParams}) : helper)))
     + ">Delete Listing</button>\n</div>\n";
 },"usePartial":true,"useData":true,"useDepths":true,"useBlockParams":true});
-templates['e_applicants_row'] = template({"1":function(container,depth0,helpers,partials,data,blockParams,depths) {
+templates['e_applicants_row'] = template({"1":function(container,depth0,helpers,partials,data) {
+    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "  	<td>\n  		<!--<button class=\"unstar-custom-btn btn btn-primary\" data-custom-id=\""
+    + alias4(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"_id","hash":{},"data":data}) : helper)))
+    + "\" data-listing-id=\""
+    + alias4(((helper = (helper = helpers.listing || (depth0 != null ? depth0.listing : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"listing","hash":{},"data":data}) : helper)))
+    + "\" data-user-id=\""
+    + alias4(((helper = (helper = helpers.owner || (depth0 != null ? depth0.owner : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"owner","hash":{},"data":data}) : helper)))
+    + "\">-->\n			<span class='glyphicon glyphicon-star center' style=\"color:yellow\"></span>\n		<!--</button>-->\n  	</td>\n";
+},"3":function(container,depth0,helpers,partials,data) {
+    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "  	<td>\n  		<!--<button class=\"star-custom-btn btn btn-primary\" data-custom-id=\""
+    + alias4(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"_id","hash":{},"data":data}) : helper)))
+    + "\" data-listing-id=\""
+    + alias4(((helper = (helper = helpers.listing || (depth0 != null ? depth0.listing : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"listing","hash":{},"data":data}) : helper)))
+    + "\" data-user-id=\""
+    + alias4(((helper = (helper = helpers.owner || (depth0 != null ? depth0.owner : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"owner","hash":{},"data":data}) : helper)))
+    + "\">-->\n			<span class='glyphicon glyphicon-star-empty center'></span>\n		<!--</button>-->\n  	</td>\n";
+},"5":function(container,depth0,helpers,partials,data,blockParams,depths) {
     return "    <td>"
     + container.escapeExpression((helpers.getValue || (depth0 && depth0.getValue) || helpers.helperMissing).call(depth0 != null ? depth0 : {},depths[1],depth0,{"name":"getValue","hash":{},"data":data}))
     + "</td>\n";
@@ -49,8 +69,12 @@ templates['e_applicants_row'] = template({"1":function(container,depth0,helpers,
     + "\" data-listing-id=\""
     + alias4(((helper = (helper = helpers.listing || (depth0 != null ? depth0.listing : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"listing","hash":{},"data":data}) : helper)))
     + "\">\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.headers : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "</tr>";
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isStar : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.program(3, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + "\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.headers : depth0),{"name":"each","hash":{},"fn":container.program(5, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\n  <td>"
+    + alias4((helpers.formatDate || (depth0 && depth0.formatDate) || alias2).call(alias1,(depth0 != null ? depth0.submitTime : depth0),{"name":"formatDate","hash":{},"data":data}))
+    + "</td>\n</tr>";
 },"useData":true,"useDepths":true});
 templates['e_create_listing'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     return "<!-- author: Lynda Tang -->\n  \n<form id=\"create-listing\">\n	Create a listing here!\n	\n	<br>\n\n	Position Title: <input class=\"form-control\" type=\"text\" name=\"title\" required>\n\n	<br>\n	\n	<div>\n		Description\n		<br>\n		<textarea \n			rows=\"8\" \n			name=\"description\" \n			class=\"form-control\"\n			placeholder=\"Enter description here...\"></textarea>\n	</div>\n\n	<br>\n\n	<div>\n		Requirements\n		<br>\n		<textarea \n			rows=\"8\" \n			name=\"requirements\" \n			class=\"form-control\"\n			placeholder=\"Enter requirements here...\"></textarea>\n	</div>\n\n	<br>\n\n	<div>\n        Deadline\n        <br>\n        <div class=\"form-group\">\n            <div class='input-group date' id='datetimepicker1'>\n                <input type='text' class=\"form-control\" name=\"deadline\" required/>\n                <span class=\"input-group-addon\">\n                    <span class=\"glyphicon glyphicon-calendar\"></span>\n                </span>\n            </div>\n        </div>\n        </div>\n        <script type=\"text/javascript\">\n            $(function () {\n                var date = new Date();\n	            var currentMonth = date.getUTCMonth();\n	            var currentDate = date.getUTCDate();\n	            var currentYear = date.getUTCFullYear();\n            	$('#datetimepicker1').datetimepicker({\n                	format: 'MM/DD/YYYY',\n                	minDate: new Date(currentYear, currentMonth, currentDate)\n                });\n            });\n        </script>\n    </div>\n\n	<div>\n		Questions:\n		<div id=\"question-list\"></div>\n		<div class=\"dropdown-hover\">\n\n		    <!-- trigger button -->\n		    <button type=\"button\" class=\"btn btn-primary\">Add Question</button>\n\n		    <!-- dropdown menu -->\n		    <ul class=\"dropdown-menu\">\n		        <li class=\"clickable\"><a id=\"add-text-question\">Text Question</a></li>\n		        <!-- <li class=\"clickable\"><a id=\"add-dropdown-question\">Dropdown Question</a></li> -->\n		        <li class=\"clickable\"><a id=\"add-radio-question\">Yes or No Question</a></li>\n		    </ul>\n		</div>\n	</div>\n\n	<br>\n	<button type=\"submit\" class=\"btn btn-primary\">Submit</button>\n\n</form>\n";
@@ -69,22 +93,22 @@ templates['e_dash_page'] = template({"1":function(container,depth0,helpers,parti
     + "    </tbody>\n  \n  </table>\n</div>";
 },"usePartial":true,"useData":true,"useDepths":true,"useBlockParams":true});
 templates['e_dash_page_listing'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4=container.lambda;
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression;
 
   return "<!-- author: Maddie Dawson -->\n\n<div class=\"employer-dash-listing\">\n    <tr class=\"clickable listing-row\" data-listing-id="
     + alias3(((helper = (helper = helpers.listingid || (depth0 != null ? depth0.listingid : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"listingid","hash":{},"data":data}) : helper)))
     + ">\n  	  <td>"
-    + alias3(alias4(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1.title : stack1), depth0))
+    + alias3(container.lambda(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1.title : stack1), depth0))
     + "</td>\n  	  <td>"
     + alias3((helpers.getValue || (depth0 && depth0.getValue) || alias2).call(alias1,(depth0 != null ? depth0.numApplicantsMap : depth0),(depth0 != null ? depth0.listingid : depth0),{"name":"getValue","hash":{},"data":data}))
     + "</td>\n  	  <td>"
-    + alias3(alias4(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1.deadline : stack1), depth0))
+    + alias3((helpers.formatDate || (depth0 && depth0.formatDate) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1.deadline : stack1),{"name":"formatDate","hash":{},"data":data}))
     + "</td>\n    </tr>\n</div>";
 },"useData":true});
 templates['e_full_app'] = template({"1":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=container.escapeExpression, alias2=container.lambda;
 
-  return "		<button id=\"unstar-custom-btn\" class=\"btn btn-primary btn-lg\" data-custom-id=\""
+  return "		<button class=\"unstar-custom-btn btn btn-primary btn-lg\" data-custom-id=\""
     + alias1(((helper = (helper = helpers.customId || (depth0 != null ? depth0.customId : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"customId","hash":{},"data":data}) : helper)))
     + "\" data-listing-id=\""
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1._id : stack1), depth0))
@@ -94,7 +118,7 @@ templates['e_full_app'] = template({"1":function(container,depth0,helpers,partia
 },"3":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=container.escapeExpression, alias2=container.lambda;
 
-  return "		<button id=\"star-custom-btn\" class=\"btn btn-primary btn-lg\" data-custom-id=\""
+  return "		<button class=\"star-custom-btn btn btn-primary btn-lg\" data-custom-id=\""
     + alias1(((helper = (helper = helpers.customId || (depth0 != null ? depth0.customId : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"customId","hash":{},"data":data}) : helper)))
     + "\" data-listing-id=\""
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1._id : stack1), depth0))

@@ -30,23 +30,24 @@ exports.getApplicants = function(req, res, next) {
 		else {
 			// get the customs for the listing if the employer owns the listing
 			Custom.getCustomsForListingDash(listingId, function(errMsg, customs) {
-				var customOwnerInfos = customs.map(function(custom) { 
-					return { 
-						custom.owner : { 
-							"state" : custom.state,
-							"submitTime" : custom.submitTime
-						}
-					}
-				});
-
 				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 				else {
-					var headers = Common.getHeadersForApplicantList();
+					var customOwnerInfos = {};
+					
+					// attach the needed custom info for the listing page
+					customs.forEach(function(custom) { 
+						customOwnerInfos[custom.owner] = { 
+							"_id" : custom._id,
+							"isStar" : custom.state === "star", 
+							"submitTime" : custom.submitTime 
+						};
+					});
 
 					// get information to display on page according to headers
 					Common.getCommonInfoForApplicantDisplay(customOwnerInfos, function(errMsg, usersCommonInfo) {
 						if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 						else {
+							var headers = Common.getHeadersForApplicantList();
 							var content = {
 								headers : headers,
 								applicants : usersCommonInfo

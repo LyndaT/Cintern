@@ -1,3 +1,7 @@
+/** 
+ * @author Jennifer Wu
+ */
+ 
 var mainContainer = '#e-main-container';
 
 
@@ -31,7 +35,7 @@ $(document).on('click', '.applicant-row', function(evt) {
     getFullAppPage(userId, listingId);
 });
 
-$(document).on('click', '#star-custom-btn', function(evt) {
+$(document).on('click', '.star-custom-btn', function(evt) {
     evt.preventDefault();
     var customId = $(this).data('custom-id');
     var listingId = $(this).data('listing-id');
@@ -48,7 +52,7 @@ $(document).on('click', '#star-custom-btn', function(evt) {
     });
 });
 
-$(document).on('click', '#unstar-custom-btn', function(evt) {
+$(document).on('click', '.unstar-custom-btn', function(evt) {
     evt.preventDefault();
     var customId = $(this).data('custom-id');
     var listingId = $(this).data('listing-id');
@@ -90,11 +94,6 @@ var loadDashPage = function() {
         loadModal('#new-listing-modal-content', 'e_create_listing');
 	});
 };
-
-// Loads the page to create a listing
-/*var loadCreateListingPage = function() {
-	loadPage(mainContainer, 'e_create_listing');
-};*/
 
 // Loads the applicant page corresponding to the listingId
 var loadApplicantsPage = function(listingId) {

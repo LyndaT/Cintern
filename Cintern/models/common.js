@@ -41,30 +41,30 @@ var commonQuestions = [
 ];
 
 /**
- * Return the headers for the applicant listing page
- *
- * @param{callback} callback(err, headers)
+ * @return the headers for the applicant listing page
  */
 commonSchema.statics.getHeadersForApplicantList = function() {
 	return Object.keys(applicantHeaderInfo);
 };
 
 /**
- * Returns common app info for each user specified in the given
- * list of user IDs
+ * Runs the callback on an array of Objects that contain the appropriate
+ * information for the applicant display and with the same info in
+ * customOwnerInfos
  *
- * @param{userIds} a list of user IDs
- * @param{callback} callback(err, commons)
+ * @param{Array} customOwnerInfos a list of Objects mapping userIds to
+ * 		an Object that has information about the user
+ * @param{Function} callback(err, array)
  */
-commonSchema.statics.getCommonInfoForApplicantDisplay = function(customOwnerInfos, userIds, callback) {
+commonSchema.statics.getCommonInfoForApplicantDisplay = function(customOwnerInfos, callback) {
 	var userIds = Object.keys(customOwnerInfos);
 
 	var info = [];
 
 	Common.find({ 'owner': { $in: userIds } }).populate("application").exec(function(err, commons) {
 		if (err) callback(err.message);
-		else if (!commons) callback("Invalid user");
 		else {
+			console.log(commons);
 			// for each common, get the information for the headers supplied in applicantHeader Info
 			commons.forEach(function(common) {
 				var questions = common.application.questions;
