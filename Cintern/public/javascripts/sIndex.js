@@ -28,7 +28,7 @@ Handlebars.registerHelper('deadlineNotPassed', function(date, options) {
 	if (arguments.length < 2)
         throw new Error("Handlebars Helper deadlineNotPassed need 1 parameter");
     // TODO: possibly remove second statement
-    if( date < Date.now() || date === undefined ) {
+    if( new Date(date) < Date.now() || date === undefined ) {
         return options.inverse(this);
     } else {
         return options.fn(this);

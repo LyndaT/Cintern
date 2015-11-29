@@ -290,22 +290,29 @@ exports.submitCustom = function(req, res, next) {
 	
 		// check that the current user is the owner of the application
 		checkIfCustomOfUser(userId, customId, function() {
-			// check that current user hasn't exceeded the maximum number of submits allowed
-			Custom.numCustomsPerStateForOwner(userId, function(errMsg, numPerState) {
-				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-				else {
-					// check that max number of submissions hasn't been reached
-					if (numPerState.subm + numPerState.star >= maxNumSubmitsForStudent) {
-						utils.sendErrResponse(res, 403, "Reached max number of submissions");
-					} else {
-						Custom.update(customId, answerArray, true, function(errMsg, custom) {
-							if (errMsg) utils.sendErrResponse(res, 403, errMsg);
-							else if (!custom) utils.sendErrResponse(res, 403, "Could not submit custom application");
-							else {
-								utils.sendSuccessResponse(res);
+			Listing.getByListingId(custom.listing, function(err, listing) {
+				// check that the user isn't trying to submit anything that is passed deadline
+				if (new Date(listing.deadline) < Date.now()) {
+					utils.sendErrResponse(res, 403, "You cannot submit because it is passed the deadline");
+				} else {
+					// check that current user hasn't exceeded the maximum number of submits allowed
+					Custom.numCustomsPerStateForOwner(userId, function(errMsg, numPerState) {
+						if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+						else {
+							// check that max number of submissions hasn't been reached
+							if (numPerState.subm + numPerState.star >= maxNumSubmitsForStudent) {
+								utils.sendErrResponse(res, 403, "Reached max number of submissions");
+							} else {
+								Custom.update(customId, answerArray, true, function(errMsg, custom) {
+									if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+									else if (!custom) utils.sendErrResponse(res, 403, "Could not submit custom application");
+									else {
+										utils.sendSuccessResponse(res);
+									}
+								});
 							}
-						});
-					}
+						}
+					});
 				}
 			});
 		});
@@ -443,19 +450,20 @@ var checkIfCustomOfEmployer = function(employerId, customId, listingId, callIfTr
 };
 
 /**
- * Runs callIfTrue if the customassociated with the customId has an owner
- * that is the User corresponding to the userId
+ * Runs callIfTrue on the custom belonging associated with the userId and customId
+ * if the customassociated with the customId has an owner that is the User 
+ * corresponding to the userId
  * 
  * @param{ObjectId} userId
  * @param{ObjectId} customId
- * @param{Function} callIfTrue()
+ * @param{Function} callIfTrue(custom)
  */
 var checkIfCustomOfUser = function(userId, customId, callIfTrue) {
 	Custom.getIfOwner(userId, customId, function(errMsg, custom) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 		else if (!custom) utils.sendErrResponse(res, 403, "Not valid");
 		else {
-			callIfTrue();
+			callIfTrue(custom);
 		}
 	});
 };

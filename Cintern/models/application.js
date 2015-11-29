@@ -53,11 +53,7 @@ applicationSchema.pre("save", function(next) {
  * @param{Function} callback(err, Application)
  */
 applicationSchema.statics.createApplication = function(questions, callback) {
-	var app = { 
-		"questions" : questions,
-	};
-
-	var newApp = new Application(app);
+	var newApp = new Application({ "questions" : questions });
 
 	// save the new app in the DB
 	newApp.save(function(err, newApp) {

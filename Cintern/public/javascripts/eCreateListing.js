@@ -99,7 +99,7 @@ var createNewQuestion = function(qNum, isTextQuestion) {
 	}
 
 	// space for question
-	$('<textarea/>').attr({"class" : "form-control", "cols": '50', "name": newId, "required" : true}).appendTo(question);
+	$('<textarea/>').attr({"class": "form-control", "cols": '50', "name": newId, "required" : true}).appendTo(question);
 	$('<br>').appendTo(question);
 	$('<br>').appendTo(question);
 	return question;

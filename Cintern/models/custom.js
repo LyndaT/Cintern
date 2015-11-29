@@ -335,25 +335,19 @@ customSchema.statics.update = function(customId, answers, isSubmission, callback
 		if (err) callback(err.message);
 		else if (!custom) callback("Invalid custom");
 		else {
-			Listing.getByListingId(custom.listing, function(err, listing) {
-				if (listing.deadline < new Date()) {
-					callback("You cannot update your application because the deadline has passed");
-				} else {
-					Application.updateAnswers(custom.application, answers, isSubmission, function(errMsg, app) {
+			Application.updateAnswers(custom.application, answers, isSubmission, function(errMsg, app) {
+				if (errMsg) callback(errMsg);
+				else if (!isSubmission) callback(null, custom)
+				else {
+					changeState(custom._id, ["save"], "subm", function(errMsg, custom) {
 						if (errMsg) callback(errMsg);
-						else if (!isSubmission) callback(null, custom)
-						else {
-							changeState(custom._id, ["save"], "subm", function(errMsg, custom) {
-								if (errMsg) callback(errMsg);
-								else if (!custom) callback("Invalid state change");
-								else { 
-									// finding to get the actual updated version of Custom (we found that
-									// the custom in the callback of findOneAndUpdate isn't updated yet)
-									Custom.findOneAndUpdate({ "_id" : custom._id }, { $set : { submitTime : new Date() } }, function(err, custom) {
-										if (err) callback(err.message);
-										else callback(null, custom);
-									});
-								}
+						else if (!custom) callback("Invalid state change");
+						else { 
+							// finding to get the actual updated version of Custom (we found that
+							// the custom in the callback of findOneAndUpdate isn't updated yet)
+							Custom.findOneAndUpdate({ "_id" : custom._id }, { $set : { submitTime : new Date() } }, function(err, custom) {
+								if (err) callback(err.message);
+								else callback(null, custom);
 							});
 						}
 					});
