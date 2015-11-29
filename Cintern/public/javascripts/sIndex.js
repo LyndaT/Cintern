@@ -35,7 +35,7 @@ Handlebars.registerHelper('deadlineNotPassed', function(date, options) {
     }
 });
 
-//Nicely formats ISO date to MM/dd/YYYY
+// Nicely formats ISO date to MM/dd/YYYY
 Handlebars.registerHelper('formatDate', function(ISODate, format) {
 	if (arguments.length < 2)
 		throw new Error("Handlebars Helper formatDate needs 1 paramater");
