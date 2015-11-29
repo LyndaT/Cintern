@@ -9,7 +9,8 @@ var utils = require('../utils/utils');
 /**
  * GET /employers/listings/:lstgid
  *
- * Retrieves applicants for a given listing
+ * Retrieves applicants for a given listing and their associated
+ * information for the employer applicants page
  *
  * Request body:
  *	- listingId: listing ID for relevant listing
