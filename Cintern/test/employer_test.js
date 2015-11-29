@@ -36,6 +36,8 @@ describe('Employer', function() {
    			Employer.find({company: 'Google'}, function(err, emps){
    				assert.equal(1, emps.length);
    			  id = emps[0].user;
+   			  //Checks to make sure that this employer is not verified yet
+   			  assert.equal(false, emps[0].verified);
    			    
  			    User.findOne({email: 'goog'}, function(err, user){
      				assert.equal(id, user._id.toString());
@@ -76,7 +78,19 @@ describe('Employer', function() {
      			});
    			});
    		});
-   	});
-   	
+   	});	
   });  
+  
+  describe('#verifyEmployer', function(){
+  	it('should change the verified for an employer ', function(done){
+  		Employer.createEmployer('Rito', 'plz', 'Rito', function(errMsg, employer){
+  			Employer.verifyEmployer(employer.user, function(err, res){
+  				Employer.findOne({user: employer.user}, function(err, emp){
+  					assert.equal(true, emp.verified);
+  					done();
+  				});
+  			});
+  		});
+  	});
+  });
 });
