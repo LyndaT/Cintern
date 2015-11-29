@@ -64,6 +64,8 @@ exports.createListing = function(req, res, next) {
  * GET /students/listings
  *
  * Retrieves all the listings available on the site, available for students to view and apply to
+ * Also generate a list of listing IDs that the student has already applied to to
+ * make sure the student does not reapply
  *
  * Request body:
  *  None
@@ -84,9 +86,13 @@ exports.getAllListings = function(req, res, next) {
 					if (err) utils.sendErrResponse(res, 403, err);
 					else if (!submittedListings) utils.sendErrResponse(res, 403, "No listings");
 					else {
+						var submitted = submittedListings.map(function(listing) {
+							return listing.listing;
+						});
+
 						var content = {
 							"listings" : listings,
-							"submittedListings" : submittedListings
+							"submittedListings" : submitted
 						};
 						utils.sendSuccessResponse(res, content);
 					}

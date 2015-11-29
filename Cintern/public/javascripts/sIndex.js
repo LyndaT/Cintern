@@ -38,7 +38,7 @@ Handlebars.registerHelper('deadlineNotPassed', function(date, options) {
 Handlebars.registerHelper('in', function(list, item, options) {
 	if (arguments.length < 3)
         throw new Error("Handlebars Helper equal needs 2 parameters");
-    if ($.inArray(item, list)) {
+    if ($.inArray(item, list) > 0) {
     	return options.fn(this);
     } else {
     	return options.inverse(this);
@@ -64,15 +64,15 @@ $(document).on('click', '#common-nav', function(evt) {
 	loadCommonPage();
 })
 
-$(document).on('click', '.clickable, .s-listing', function(evt) {
+$(document).on('click', '.s-listing', function(evt) {
 	var listingId = $(this).data('listing-id');
 	var company = $(this).data('listing-company');
 	loadListingPage(listingId, company);
 });
 
-$(document).on('click', '.unclickable, .s-listing', function(evt) {
-	$('#error').text("You have already applied to this listing.");
-});
+// $(document).on('click', '.unclickable', function(evt) {
+// 	$('#error').text("You have already applied to this listing.");
+// });
 
 $(document).on('click', '.student-custom', function(evt) {
 	var item = $(this);
