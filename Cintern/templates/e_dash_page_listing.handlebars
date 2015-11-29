@@ -1,7 +1,9 @@
 <!-- author: Maddie Dawson -->
 
 <div class="employer-dash-listing">
-    <tr class="clickable listing-row" data-listing-id={{listing._id}}>
+    <tr class="clickable listing-row" data-listing-id={{listingid}}>
   	  <td>{{listing.title}}</td>
+  	  <td>{{getValue numApplicantsMap listingid}}</td>
+  	  <td>{{listing.deadline}}</td>
     </tr>
 </div>

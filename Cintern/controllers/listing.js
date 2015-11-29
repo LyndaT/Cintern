@@ -64,6 +64,8 @@ exports.createListing = function(req, res, next) {
  * GET /students/listings
  *
  * Retrieves all the listings available on the site, available for students to view and apply to
+ * Also generate a list of listing IDs that the student has already applied to to
+ * make sure the student does not reapply
  *
  * Request body:
  *  None
@@ -80,10 +82,20 @@ exports.getAllListings = function(req, res, next) {
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 			else if (!listings) utils.sendErrResponse(res, 403, "No listings");
 			else {
-				var content = {
-					"listings" : listings,
-				};
-				utils.sendSuccessResponse(res, content);
+				Custom.getCustomsForStudentDash(req.session.user.userId, function(err, userCustoms) {
+					if (err) utils.sendErrResponse(res, 403, err);
+					else {
+						var userListings = userCustoms.map(function(custom) {
+							return custom.listing._id;
+						});
+
+						var content = {
+							"listings" : listings,
+							"userListings" : userListings
+						};
+						utils.sendSuccessResponse(res, content);
+					}
+				});
 			}
 		});
 	}
@@ -111,10 +123,21 @@ exports.getEmployerListings = function(req, res, next) {
 		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 		else if (!listings) utils.sendErrResponse(res, 403, "No listings");
 		else {
-			var content = {
-				"listings" : listings
-			};
-			utils.sendSuccessResponse(res, content);
+			var listingIds = listings.map(function(listing) {
+				return listing._id;
+			});
+
+			Custom.numApplicantsPerListing(listingIds, function(err, numApplicantsMap) {
+				if (err) utils.sendErrResponse(res, 403, err);
+				else if (!numApplicantsMap) utils.sendErrResponse(res, 403, "No listings");
+				else {
+					var content = {
+						"numApplicantsMap" : numApplicantsMap,
+						"listings" : listings
+					};
+					utils.sendSuccessResponse(res, content);
+				}
+			});
 		};
 	});
 };

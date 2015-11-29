@@ -49,6 +49,16 @@ Handlebars.registerHelper('formatDate', function(ISODate, format) {
 });
 
 
+Handlebars.registerHelper('in', function(list, item, options) {
+	if (arguments.length < 3)
+        throw new Error("Handlebars Helper equal needs 2 parameters");
+    if ($.inArray(item, list) >= 0) {
+    	return options.fn(this);
+    } else {
+    	return options.inverse(this);
+    }
+});
+
 var mainContainer = '#s-main-container';
 
 // load the dash page
@@ -73,6 +83,10 @@ $(document).on('click', '.s-listing', function(evt) {
 	var company = $(this).data('listing-company');
 	loadListingPage(listingId, company);
 });
+
+// $(document).on('click', '.unclickable', function(evt) {
+// 	$('#error').text("You have already applied to this listing.");
+// });
 
 $(document).on('click', '.student-custom', function(evt) {
 	var item = $(this);
@@ -173,7 +187,11 @@ var loadDashPage = function() {
 // Loads all listings
 var loadAllListingsPage = function() {
 	$.get('/students/listings', function(response) {
-		loadPage(mainContainer, 's_listings', {listings: response.content.listings});
+		console.log(response.content);
+		loadPage(mainContainer, 's_listings', {
+			listings: response.content.listings, 
+			userListings: response.content.userListings
+		});
 	});
 }
 

@@ -55,26 +55,30 @@ templates['e_applicants_row'] = template({"1":function(container,depth0,helpers,
 templates['e_create_listing'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     return "<!-- author: Lynda Tang -->\n  \n<form id=\"create-listing\">\n	Create a listing here!\n	\n	<br>\n\n	Position Title: <input type=\"text\" name=\"title\" required>\n	\n	<div>\n		Description\n		<br>\n		<textarea \n			rows=\"8\" \n			name=\"description\" \n			class=\"form-control\"\n			placeholder=\"Enter description here...\"></textarea>\n	</div>\n\n	<br>\n\n	<div>\n		Requirements\n		<br>\n		<textarea \n			rows=\"8\" \n			name=\"requirements\" \n			class=\"form-control\"\n			placeholder=\"Enter requirements here...\"></textarea>\n	</div>\n\n	<div>\n        Deadline\n        <br>\n        <div class=\"form-group\">\n            <div class='input-group date' id='datetimepicker1'>\n                <input type='text' class=\"form-control\" name=\"deadline\" required/>\n                <span class=\"input-group-addon\">\n                    <span class=\"glyphicon glyphicon-calendar\"></span>\n                </span>\n            </div>\n        </div>\n        </div>\n        <script type=\"text/javascript\">\n            $(function () {\n                var date = new Date();\n	            var currentMonth = date.getUTCMonth();\n	            var currentDate = date.getUTCDate();\n	            var currentYear = date.getUTCFullYear();\n            	$('#datetimepicker1').datetimepicker({\n                	format: 'MM/DD/YYYY',\n                	minDate: new Date(currentYear, currentMonth, currentDate)\n                });\n            });\n        </script>\n    </div>\n\n	<br>\n\n	<div>\n		Questions:\n		<div id=\"question-list\"></div>\n		<div class=\"dropdown-hover\">\n\n		    <!-- trigger button -->\n		    <button type=\"button\" class=\"btn btn-primary\">Add Question</button>\n\n		    <!-- dropdown menu -->\n		    <ul class=\"dropdown-menu\">\n		        <li class=\"clickable\"><a id=\"add-text-question\">Text Question</a></li>\n		        <!-- <li class=\"clickable\"><a id=\"add-dropdown-question\">Dropdown Question</a></li> -->\n		        <li class=\"clickable\"><a id=\"add-radio-question\">Yes or No Question</a></li>\n		    </ul>\n		</div>\n	</div>\n\n	<br>\n\n	<br>\n	<button type=\"submit\" class=\"btn btn-primary\">Submit</button>\n\n</form>\n";
 },"useData":true});
-templates['e_dash_page'] = template({"1":function(container,depth0,helpers,partials,data,blockParams) {
+templates['e_dash_page'] = template({"1":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1;
 
-  return ((stack1 = container.invokePartial(partials.e_dash_page_listing,depth0,{"name":"e_dash_page_listing","hash":{"listing":blockParams[0][0]},"data":data,"blockParams":blockParams,"indent":"        ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
+  return ((stack1 = container.invokePartial(partials.e_dash_page_listing,depth0,{"name":"e_dash_page_listing","hash":{"numApplicantsMap":(depths[1] != null ? depths[1].numApplicantsMap : depths[1]),"listingid":((stack1 = blockParams[0][0]) != null ? stack1._id : stack1),"listing":blockParams[0][0]},"data":data,"blockParams":blockParams,"indent":"        ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
 },"3":function(container,depth0,helpers,partials,data) {
     return "        <tr>\n        	<td>No listings yet!</td>\n        </tr>\n";
-},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams) {
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1;
 
-  return "<!-- author: Maddie Dawson -->\n\n<div>\n\n  <h1>Welcome!</h1>\n\n  <button class=\"btn btn-primary right-align\" data-toggle=\"modal\" data-target=\"#new-listing-modal\">\n    Create New Listing\n  </button>\n  \n  <!-- New Listing Modal -->\n  <div class=\"modal\" id=\"new-listing-modal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n    <div class=\"modal-dialog\" role=\"document\">\n      <div class=\"modal-content\">\n        <div class=\"modal-header\">\n          <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n          <h4 class=\"modal-title\">Create New Listing</h4>\n        </div>\n        <div class=\"modal-body\" id=\"new-listing-modal-content\"></div>\n      </div>\n    </div>\n  </div>\n\n  Here are your listings:\n\n  <br>\n  <br>\n\n  <table class=\"table table-hover table-condensed\">\n\n    <thead>\n  	  <th>Title</th>\n  	</thead>\n\n    <tbody>\n"
-    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.listings : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 1, blockParams),"inverse":container.program(3, data, 0, blockParams),"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+  return "<!-- author: Maddie Dawson -->\n\n<div>\n\n  <h1>Welcome!</h1>\n\n  <button class=\"btn btn-primary right-align\" data-toggle=\"modal\" data-target=\"#new-listing-modal\">\n    Create New Listing\n  </button>\n  \n  <!-- New Listing Modal -->\n  <div class=\"modal\" id=\"new-listing-modal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n    <div class=\"modal-dialog\" role=\"document\">\n      <div class=\"modal-content\">\n        <div class=\"modal-header\">\n          <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n          <h4 class=\"modal-title\">Create New Listing</h4>\n        </div>\n        <div class=\"modal-body\" id=\"new-listing-modal-content\"></div>\n      </div>\n    </div>\n  </div>\n\n  Here are your listings:\n\n  <br>\n  <br>\n\n  <table class=\"table table-hover table-condensed\">\n\n    <thead>\n  	  <th>Title</th>\n      <th>Number of applicants</th>\n      <th>Deadline</th>\n  	</thead>\n\n    <tbody>\n"
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.listings : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 1, blockParams, depths),"inverse":container.program(3, data, 0, blockParams, depths),"data":data,"blockParams":blockParams})) != null ? stack1 : "")
     + "    </tbody>\n  \n  </table>\n</div>";
-},"usePartial":true,"useData":true,"useBlockParams":true});
+},"usePartial":true,"useData":true,"useDepths":true,"useBlockParams":true});
 templates['e_dash_page_listing'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4=container.lambda;
 
   return "<!-- author: Maddie Dawson -->\n\n<div class=\"employer-dash-listing\">\n    <tr class=\"clickable listing-row\" data-listing-id="
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1._id : stack1), depth0))
+    + alias3(((helper = (helper = helpers.listingid || (depth0 != null ? depth0.listingid : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"listingid","hash":{},"data":data}) : helper)))
     + ">\n  	  <td>"
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1.title : stack1), depth0))
+    + alias3(alias4(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1.title : stack1), depth0))
+    + "</td>\n  	  <td>"
+    + alias3((helpers.getValue || (depth0 && depth0.getValue) || alias2).call(alias1,(depth0 != null ? depth0.numApplicantsMap : depth0),(depth0 != null ? depth0.listingid : depth0),{"name":"getValue","hash":{},"data":data}))
+    + "</td>\n  	  <td>"
+    + alias3(alias4(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1.deadline : stack1), depth0))
     + "</td>\n    </tr>\n</div>";
 },"useData":true});
 templates['e_full_app'] = template({"1":function(container,depth0,helpers,partials,data) {
@@ -339,34 +343,56 @@ templates['s_listing'] = template({"compiler":[7,">= 4.0.0"],"main":function(con
     + alias4(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"_id","hash":{},"data":data}) : helper)))
     + ">Add to my list</button>	\n</div>";
 },"useData":true});
-templates['s_listing_row'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
+templates['s_listing_row'] = template({"1":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=container.escapeExpression;
 
-  return "<!-- author: Heeyoon Kim -->\n\n<div>\n    <tr class=\"clickable s-listing\" data-listing-id="
-    + alias4(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"_id","hash":{},"data":data}) : helper)))
+  return "	  <tr class=\"unclickable\" data-listing-id="
+    + alias1(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"_id","hash":{},"data":data}) : helper)))
     + " data-listing-company="
-    + alias4(alias5(((stack1 = (depth0 != null ? depth0.employer : depth0)) != null ? stack1.company : stack1), depth0))
-    + ">\n      <td>"
-    + alias4(alias5(((stack1 = (depth0 != null ? depth0.employer : depth0)) != null ? stack1.company : stack1), depth0))
+    + alias1(container.lambda(((stack1 = (depth0 != null ? depth0.employer : depth0)) != null ? stack1.company : stack1), depth0))
+    + ">\n";
+},"3":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=container.escapeExpression;
+
+  return "	  <tr class=\"clickable s-listing\" data-listing-id="
+    + alias1(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"_id","hash":{},"data":data}) : helper)))
+    + " data-listing-company="
+    + alias1(container.lambda(((stack1 = (depth0 != null ? depth0.employer : depth0)) != null ? stack1.company : stack1), depth0))
+    + ">\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression;
+
+  return "<!-- author: Maddie Dawson -->\n\n<div>\n"
+    + ((stack1 = (helpers["in"] || (depth0 && depth0["in"]) || alias2).call(alias1,(depth0 != null ? depth0.userListings : depth0),(depth0 != null ? depth0._id : depth0),{"name":"in","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
+    + "    \n      <td>"
+    + alias3(container.lambda(((stack1 = (depth0 != null ? depth0.employer : depth0)) != null ? stack1.company : stack1), depth0))
     + "</td>\n      <td>"
-    + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
+    + alias3(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
     + "</td>\n      <td>"
-    + alias4((helpers.formatDate || (depth0 && depth0.formatDate) || alias2).call(alias1,(depth0 != null ? depth0.deadline : depth0),{"name":"formatDate","hash":{},"data":data}))
+    + alias3((helpers.formatDate || (depth0 && depth0.formatDate) || alias2).call(alias1,(depth0 != null ? depth0.deadline : depth0),{"name":"formatDate","hash":{},"data":data}))
     + "</td>\n    </tr>\n</div>\n";
 },"useData":true});
 templates['s_listings'] = template({"1":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return "      "
+    + container.escapeExpression(((helper = (helper = helpers.error || (depth0 != null ? depth0.error : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"error","hash":{},"data":data}) : helper)))
+    + "\n";
+},"3":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1;
 
-  return ((stack1 = container.invokePartial(partials.listing,depth0,{"name":"listing","data":data,"indent":"        ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
-},"3":function(container,depth0,helpers,partials,data) {
+  return ((stack1 = container.invokePartial(partials.listing,depth0,{"name":"listing","hash":{"userListings":(depths[1] != null ? depths[1].userListings : depths[1])},"data":data,"indent":"        ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
+},"5":function(container,depth0,helpers,partials,data) {
     return "        <tr>\n          <td>No listings available</td>\n        </tr>\n";
-},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1;
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=depth0 != null ? depth0 : {};
 
-  return "<!-- author: Heeyoon Kim -->\n\n<div>\n\n  <h1>Current available listings</h1>\n  <p>Click on a listing for more detailed information.</p>\n  <br>\n\n  <table class=\"table table-hover table-condensed row-clickable\">\n\n    <thead>\n      <th>Company</th>\n      <th>Position</th>\n      <th>Deadline</th>\n    </thead>\n\n    <tbody>\n"
-    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.listings : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
+  return "<!-- author: Maddie Dawson -->\n\n<div>\n\n  <h1>Current available listings</h1>\n  <p>Click on a listing for more detailed information.</p>\n  <br>\n\n  <!--<div class=\"error\" id=\"error\">\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.error : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "  </div>-->\n\n  <table class=\"table table-hover table-condensed row-clickable\">\n\n    <thead>\n      <th>Company</th>\n      <th>Position</th>\n      <th>Deadline</th>\n    </thead>\n\n    <tbody>\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.listings : depth0),{"name":"each","hash":{},"fn":container.program(3, data, 0, blockParams, depths),"inverse":container.program(5, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
     + "    </tbody>\n\n  </table>\n</div>\n";
-},"usePartial":true,"useData":true});
+},"usePartial":true,"useData":true,"useDepths":true});
 templates['s_signup'] = template({"1":function(container,depth0,helpers,partials,data) {
     var helper;
 

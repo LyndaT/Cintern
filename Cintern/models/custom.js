@@ -8,6 +8,7 @@ var Application = require("../models/application");
 var Listing = require ("../models/listing");
 var User = require("../models/User");
 var Employer = require("../models/Employer");
+var async = require('async');
 
 var stateTable = {
 	"save" : "saved",
@@ -382,7 +383,63 @@ customSchema.statics.numCustomsPerStateForOwner = function(ownerId, callback) {
 			callback(null, numCustomsPerState);
 		}
 	});
-}
+};
+
+/**
+ * Creates an Object mapping each listing ID to its number of applicants
+ * and passes it to the callback. Does not acount saved, rejected, or withdrawn apps
+ *
+ * @param{listingIds} list of listing IDs
+ * @param{callback} callback(err, Object)
+ */
+customSchema.statics.numApplicantsPerListing = function(listingIds, callback) {
+	var numApplicantMap = {};
+
+	async.each(listingIds, function(listingId, asyncCallback) {
+		Custom.getOwnersOfCustomsForListingDash(listingId, function(err, customs) {
+			if (err) asyncCallback(err);
+			else if (!customs) asyncCallback('Invalid listing ID');
+			else {
+				numApplicantMap[listingId] = customs.length;
+				asyncCallback();
+			}
+		});
+	},
+	// once all are done
+	function(err) {
+		if (err) {
+			callback(err.message);
+		} else {
+			callback(null, numApplicantMap);
+		}
+	});
+};
+
+/**
+ * Creates an Object mapping each user ID to the date of application submission
+ * and passes it to the callback
+ *
+ * @param{listingId} listing IDs
+ * @param{ownerIds} list of user IDs
+ * @param{callback} callback(err, Object)
+ */
+customSchema.statics.getSubmissionDates = function(listingId, ownerIds, callback) {
+	var submissionDates = {};
+
+	async.each(ownerIds, function(ownerId, asyncCallback) {
+		Custom.getByOwnerAndListing(ownerId, listingId, true, function(err, custom) {
+			submissionDates[ownerId] = custom.submitTime;
+		});
+	},
+	// once all are done
+	function(err) {
+		if (err) {
+			callback(err.message);
+		} else {
+			callback(null, submissionDates);
+		}
+	});
+};
 
 
 /**
