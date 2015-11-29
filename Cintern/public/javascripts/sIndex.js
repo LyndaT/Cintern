@@ -26,7 +26,7 @@ Handlebars.registerHelper('equal', function(lvalue, rvalue, options) {
 // TODO: attach some universal way to check that deadline is not passed
 Handlebars.registerHelper('deadlineNotPassed', function(date, options) {
 	if (arguments.length < 2)
-        throw new Error("Handlebars Helper equal needs 1 parameters");
+        throw new Error("Handlebars Helper deadlineNotPassed need 1 parameter");
     // TODO: possibly remove second statement
     if( date < Date.now() || date === undefined ) {
         return options.inverse(this);
@@ -34,6 +34,20 @@ Handlebars.registerHelper('deadlineNotPassed', function(date, options) {
         return options.fn(this);
     }
 });
+
+//Nicely formats ISO date to MM/dd/YYYY
+Handlebars.registerHelper('formatDate', function(ISODate, format) {
+	if (arguments.length < 2)
+		throw new Error("Handlebars Helper formatDate needs 1 paramater");
+	else {
+		var date = new Date(ISODate);
+		var day = date.getDate();
+		var month = date.getMonth() + 1;
+		var year = date.getFullYear();
+		return month + '/' + day + '/' + year;
+	}
+});
+
 
 var mainContainer = '#s-main-container';
 

@@ -283,7 +283,9 @@ templates['s_dash_page'] = template({"1":function(container,depth0,helpers,parti
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "<!-- author: Maddie Dawson -->\n\n<div>\n  <h1>Welcome!</h1>\n  Here are your applications:\n\n  <br>\n  <br>\n  \n  <table class=\"table table-hover table-condensed\">\n  	\n    <thead>\n  	  <th>Company</th>\n  	  <th>Title</th>\n  	  <th>Status</th>\n  	</thead>\n\n    <tbody>\n"
+  return "<!-- author: Maddie Dawson -->\n\n<div>\n  <h1>Welcome!</h1>\n  You currently have "
+    + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.apps : depth0)) != null ? stack1.length : stack1), depth0))
+    + " applications.\n\n  <br>\n  <br>\n  \n  <table class=\"table table-hover table-condensed\">\n  	\n    <thead>\n  	  <th>Company</th>\n  	  <th>Title</th>\n      <th>Deadline</th>\n      <th>Submitted Date</th>\n  	  <th>Status</th>\n  	</thead>\n\n    <tbody>\n"
     + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.apps : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + "    </tbody>\n  \n  </table>\n</div>";
 },"usePartial":true,"useData":true});
@@ -299,6 +301,12 @@ templates['s_dash_page_app'] = template({"1":function(container,depth0,helpers,p
   return "  		<tr class=\"clickable student-custom error\" data-listing-id=\""
     + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1._id : stack1), depth0))
     + "\">\n";
+},"5":function(container,depth0,helpers,partials,data) {
+    return "    <td></td>\n";
+},"7":function(container,depth0,helpers,partials,data) {
+    return "    <td>"
+    + container.escapeExpression((helpers.formatDate || (depth0 && depth0.formatDate) || helpers.helperMissing).call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.submitTime : depth0),{"name":"formatDate","hash":{},"data":data}))
+    + "</td>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.lambda, alias4=container.escapeExpression;
 
@@ -309,6 +317,10 @@ templates['s_dash_page_app'] = template({"1":function(container,depth0,helpers,p
     + "</td>\n	<td>"
     + alias4(alias3(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1.title : stack1), depth0))
     + "</td>\n	<td>"
+    + alias4((helpers.formatDate || (depth0 && depth0.formatDate) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1.deadline : stack1),{"name":"formatDate","hash":{},"data":data}))
+    + "</td>\n"
+    + ((stack1 = (helpers.equal || (depth0 && depth0.equal) || alias2).call(alias1,(depth0 != null ? depth0.submitTime : depth0),undefined,{"name":"equal","hash":{},"fn":container.program(5, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
+    + "	<td>"
     + alias4((helpers.interpretState || (depth0 && depth0.interpretState) || alias2).call(alias1,(depth0 != null ? depth0.state : depth0),{"name":"interpretState","hash":{},"data":data}))
     + "</td>\n  </tr>\n</div>";
 },"useData":true});
@@ -339,7 +351,7 @@ templates['s_listing_row'] = template({"compiler":[7,">= 4.0.0"],"main":function
     + "</td>\n      <td>"
     + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
     + "</td>\n      <td>"
-    + alias4(((helper = (helper = helpers.deadline || (depth0 != null ? depth0.deadline : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"deadline","hash":{},"data":data}) : helper)))
+    + alias4((helpers.formatDate || (depth0 && depth0.formatDate) || alias2).call(alias1,(depth0 != null ? depth0.deadline : depth0),{"name":"formatDate","hash":{},"data":data}))
     + "</td>\n    </tr>\n</div>\n";
 },"useData":true});
 templates['s_listings'] = template({"1":function(container,depth0,helpers,partials,data) {
