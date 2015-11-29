@@ -7,6 +7,8 @@
   <br>
   <br>
   
+  {{> filter_bar}}
+  
   <table class="table table-hover table-condensed">
   	
     <thead>
@@ -17,7 +19,7 @@
   	  <th>Status</th>
   	</thead>
 
-    <tbody>
+    <tbody class="searchable">
       {{#each apps}}
         {{> s_dash_page_app this }} 
         
