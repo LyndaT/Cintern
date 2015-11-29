@@ -415,6 +415,32 @@ customSchema.statics.numApplicantsPerListing = function(listingIds, callback) {
 	});
 };
 
+/**
+ * Creates an Object mapping each user ID to the date of application submission
+ * and passes it to the callback
+ *
+ * @param{listingId} listing IDs
+ * @param{ownerIds} list of user IDs
+ * @param{callback} callback(err, Object)
+ */
+customSchema.statics.getSubmissionDates = function(listingId, ownerIds, callback) {
+	var submissionDates = {};
+
+	async.each(ownerIds, function(ownerId, asyncCallback) {
+		Custom.getByOwnerAndListing(ownerId, listingId, true, function(err, custom) {
+			submissionDates[ownerId] = custom.submitTime;
+		});
+	},
+	// once all are done
+	function(err) {
+		if (err) {
+			callback(err.message);
+		} else {
+			callback(null, submissionDates);
+		}
+	});
+};
+
 
 /**
  * Creates a new Custom in the DB with listing set as listingId, state set as state, 
