@@ -13,11 +13,12 @@
       {{#each headers as |h|}}
         <th>{{h}}</th>
       {{/each}}
+      <th>Submit time</th>
     </thead>
     
     <tbody>
       {{#each applicants}}
-        {{> applicant this listing=../listingId headers=../headers}}
+        {{> applicant this listing=../listingId headers=../headers submitTimes=../submitTimes}}
       {{else}}
         <tr>
           <td>No applicants have applied yet.</td>
