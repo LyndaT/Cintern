@@ -1,7 +1,6 @@
 /**
  * @author: Jennifer Wu & Maddie Dawson
  */
-
 Handlebars.registerPartial('listing', Handlebars.templates['s_listing_row']);
 Handlebars.registerPartial('s_dash_page_app', Handlebars.templates['s_dash_page_app']);
 Handlebars.registerPartial('application', Handlebars.templates['application']);

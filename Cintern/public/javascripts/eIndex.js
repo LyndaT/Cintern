@@ -1,32 +1,9 @@
-Handlebars.registerPartial('e_dash_page_listing', Handlebars.templates['e_dash_page_listing']);
-Handlebars.registerPartial('applicant', Handlebars.templates['e_applicants_row']);
-Handlebars.registerPartial('question', Handlebars.templates['question']);
-Handlebars.registerPartial('application', Handlebars.templates['application']);
-Handlebars.registerHelper('equal', function(lvalue, rvalue, options) {
-    if (arguments.length < 3)
-        throw new Error("Handlebars Helper equal needs 2 parameters");
-    if( lvalue!=rvalue ) {
-        return options.inverse(this);
-    } else {
-        return options.fn(this);
-    }
-});
-
-Handlebars.registerHelper('getValue', function(obj, key) {
-    return (obj[key]);
-});
-
 var mainContainer = '#e-main-container';
 
 
 $(document).ready(function() {
 	loadDashPage();
 });
-
-
-/*$(document).on('click', '#new-listing-btn', function(evt) {
-	loadCreateListingPage();
-});*/
 
 $(document).on('click', '.listing-row', function(evt) {
 	var item = $(this);
