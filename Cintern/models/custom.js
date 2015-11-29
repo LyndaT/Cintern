@@ -387,7 +387,7 @@ customSchema.statics.numCustomsPerStateForOwner = function(ownerId, callback) {
 
 /**
  * Creates an Object mapping each listing ID to its number of applicants
- * and passes it to the callback
+ * and passes it to the callback. Does not acount saved, rejected, or withdrawn apps
  *
  * @param{listingIds} list of listing IDs
  * @param{callback} callback(err, Object)

@@ -593,7 +593,6 @@ describe('Custom', function() {
     it('should get no owners', function(done) {
       Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
         Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e, listing) {
-          console.log("XXXXXXXXXXXXXXXX", e, listing);
           Listing.find({}, function(e, listings) {
             Custom.getOwnersOfCustomsForListingDash(listings[0]._id, function(e, owners) {
               assert.equal(0, owners.length);
@@ -2482,19 +2481,156 @@ describe('Custom', function() {
    * input: listingIds
    *    valid listings
    *    no listings
-   *    at least one invalid listing
+   *
+   * applicants have:
+   *    submitted
+   *    been starred
+   *    been rejected
+   *    withdrawn
+   *    saved
    */
   describe('#numApplicantsPerListing', function() {
-    it('should return a map from listing ID to number of applicants', function(done) {
-
+    it('should return a map of listings to their numbers of applicants', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  assert.equal("save", c1.state);
+                  Custom.update(c1._id, [], true, function(e, c1) {
+                    assert.equal("subm", c1.state);
+                    Custom.numApplicantsPerListing([listings[0]._id], function(err, map) {
+                      assert.equal(err, null);
+                      var key = listings[0]._id;
+                      assert(_.isEqual(map, {key : 1}));
+                      done();
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
     });
 
-    it('should return an empty object if not listings are provided', function(done) {
-
+    it('should not count saved customs', function(done) {
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  assert.equal("save", c1.state);
+                  Custom.numApplicantsPerListing([listings[0]._id], function(err, map) {
+                    assert.equal(err, null);
+                    var key = listings[0]._id;
+                    assert(_.isEqual(map, {key : 0}));
+                    done();
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
     });
 
-    it('should generate an error if a listing ID is invalid', function(done) {
+    it('should not count rejected customs', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  assert.equal("save", c1.state);
+                  Custom.update(c1._id, [], true, function(e, c1) {
+                    assert.equal("subm", c1.state);
+                    Custom.reject(c1._id, function(e, custom) {
+                      assert.equal("rej", custom.state);
+                      Custom.numApplicantsPerListing([listings[0]._id], function(err, map) {
+                        assert.equal(err, null);
+                        var key = listings[0]._id;
+                        assert(_.isEqual(map, {key : 0}));
+                        done();
+                      });
+                    });                    
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
 
+    it('should not count withdrawn customs', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  assert.equal("save", c1.state);
+                  Custom.update(c1._id, [], true, function(e, c1) {
+                    assert.equal("subm", c1.state);
+                    Custom.withdraw(c1._id, function(e, custom) {
+                      assert.equal("with", custom.state);
+                      Custom.numApplicantsPerListing([listings[0]._id], function(err, map) {
+                        assert.equal(err, null);
+                        var key = listings[0]._id;
+                        assert(_.isEqual(map, {key : 0}));
+                        done();
+                      });
+                    });                    
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('should count starred customs', function(done) {
+      var questions = [];
+      Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+          Listing.find({}, function(e, listings) {
+            Custom.createTemplate(listings[0]._id, questions, emp._id, function(e, t1) {
+              User.addUser("abc@gmail.com", "abcd", true, function(e, user2) {
+                Custom.copyTemplateToSave(listings[0]._id, user2._id, function(e, c1) {
+                  assert.equal("save", c1.state);
+                  Custom.update(c1._id, [], true, function(e, c1) {
+                    assert.equal("subm", c1.state);
+                    Custom.star(c1._id, function(e, c2) {
+                      assert.equal("star", c1.state);
+                      Custom.numApplicantsPerListing([listings[0]._id], function(err, map) {
+                        assert.equal(err, null);
+                        var key = listings[0]._id;
+                        assert(_.isEqual(map, {key : 1}));
+                        done();
+                      });                  
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('should return an empty object if no listings are provided', function(done) {
+      Custom.numApplicantsPerListing([], function(err, map) {
+        assert.equal(err, null);
+        assert(_.isEqual(map, {}));
+        done();
+      });
     });
   });
 
