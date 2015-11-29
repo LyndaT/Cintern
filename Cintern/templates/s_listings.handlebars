@@ -12,6 +12,8 @@
     {{/if}}
   </div>-->
 
+  {{> filter_bar}}
+
   <table class="table table-hover table-condensed row-clickable">
 
     <thead>
@@ -20,7 +22,7 @@
       <th>Deadline</th>
     </thead>
 
-    <tbody>
+    <tbody class="searchable">
       {{#each listings}}
         {{> listing this submitted=../submitted}}
       {{else}}
