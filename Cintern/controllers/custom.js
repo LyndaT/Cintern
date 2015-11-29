@@ -270,7 +270,7 @@ exports.addCustom = function(req, res, next) {
  *	- err: on failure (i.e. server fail, invalid submission, invalid custom)
  */ 
 exports.submitCustom = function(req, res, next) {
-	var maxNumSubmitsForStudent = 5;
+	var maxNumSubmitsForStudent = 40;
 
 	if (!req.session.user.studentInfo.commonFilled){
 		utils.sendErrResponse(res, 403, "Common application not filled");
@@ -289,7 +289,7 @@ exports.submitCustom = function(req, res, next) {
 	    });
 	
 		// check that the current user is the owner of the application
-		checkIfCustomOfUser(userId, customId, function() {
+		checkIfCustomOfUser(userId, customId, function(custom) {
 			Listing.getByListingId(custom.listing, function(err, listing) {
 				// check that the user isn't trying to submit anything that is passed deadline
 				if (new Date(listing.deadline) < Date.now()) {
