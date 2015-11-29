@@ -592,7 +592,8 @@ describe('Custom', function() {
   describe('#getOwnersOfCustomsForListingDash', function() {
     it('should get no owners', function(done) {
       Employer.createEmployer("jennwu@mit.edu", "asdf123gh", "abc", function(e, emp) {
-        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e) {
+        Listing.createListing(emp._id, "title", "desc", "reqs", new Date(), function(e, listing) {
+          console.log("XXXXXXXXXXXXXXXX", e, listing);
           Listing.find({}, function(e, listings) {
             Custom.getOwnersOfCustomsForListingDash(listings[0]._id, function(e, owners) {
               assert.equal(0, owners.length);
@@ -2483,7 +2484,7 @@ describe('Custom', function() {
    *    no listings
    *    at least one invalid listing
    */
-  describe('#numCustomsPerStateForOwner', function() {
+  describe('#numApplicantsPerListing', function() {
     it('should return a map from listing ID to number of applicants', function(done) {
 
     });

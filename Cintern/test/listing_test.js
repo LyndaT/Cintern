@@ -41,11 +41,13 @@ var EMPLOYER = {
 
 var LISTING1 = {
  	title: "hello",
- 	description: "world"
+ 	description: "world",
+  deadline: new Date()
 };
 
 var LISTING2 = {
- 	title: "meow"
+ 	title: "meow",
+  deadline: new Date()
 };
 
 describe('Listing', function() {
@@ -82,7 +84,7 @@ describe('Listing', function() {
     });
 
     it('should create a listing given at least employerId and title', function(done) {
-      Listing.createListing(ObjectId("507f1f77bcf86cd799439011"), "a title", undefined, undefined, undefined, function(e, listing) {
+      Listing.createListing(ObjectId("507f1f77bcf86cd799439011"), "a title", undefined, undefined, new Date(), function(e, listing) {
         Listing.find({}, function(err, listing) {
           assert.equal(1, listing.length);
           done();
@@ -148,10 +150,10 @@ describe('Listing', function() {
   describe('#getAllListings', function() {
   	it('should retrieve all listings', function(done) {
       Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, employer) {
-        Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"], function(err1, listing1) {
+        Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"].getTime(), function(err1, listing1) {
           assert.equal(err1, null);
 
-          Listing.createListing(employer["_id"], LISTING2["title"], LISTING2["description"], LISTING2["requirements"], LISTING2["deadline"], function(err2, listing2) {
+          Listing.createListing(employer["_id"], LISTING2["title"], LISTING2["description"], LISTING2["requirements"], LISTING2["deadline"].getTime(), function(err2, listing2) {
             assert.equal(err2, null);
             
             Listing.getAllListings(function(err, listings) {
@@ -164,7 +166,7 @@ describe('Listing', function() {
               assert.equal(listings[0]["title"], LISTING1["title"]);
               assert.equal(listings[0]["description"], LISTING1["description"]);
               assert.equal(listings[0]["requirements"], LISTING1["requirements"]);
-              assert.equal(listings[0]["deadline"], LISTING1["deadline"]);
+              assert.equal(listings[0]["deadline"].getTime(), LISTING1["deadline"].getTime());
 
               assert.equal(listings[1]["employer"]["company"], employer["company"]);
               assert.equal(listings[1]["employer"]["_id"].toHexString(), employer["_id"].toHexString());
@@ -172,7 +174,7 @@ describe('Listing', function() {
               assert.equal(listings[1]["title"], LISTING2["title"]);
               assert.equal(listings[1]["description"], LISTING2["description"]);
               assert.equal(listings[1]["requirements"], LISTING2["requirements"]);
-              assert.equal(listings[1]["deadline"], LISTING2["deadline"]);
+              assert.equal(listings[1]["deadline"].getTime(), LISTING2["deadline"].getTime());
 
               done();
             });
@@ -192,10 +194,10 @@ describe('Listing', function() {
   describe('#filterListings', function() {
   	it('should return listings filtered by the given query', function(done) {
       Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, employer) {
-        Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"], function(err1, listing1) {
+        Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"].getTime(), function(err1, listing1) {
           assert.equal(err1, null);
           
-          Listing.createListing(employer["_id"], LISTING2["title"], LISTING2["description"], LISTING2["requirements"], LISTING2["deadline"], function(err2, listing2) {
+          Listing.createListing(employer["_id"], LISTING2["title"], LISTING2["description"], LISTING2["requirements"], LISTING2["deadline"].getTime(), function(err2, listing2) {
             assert.equal(err2, null);
             
             Listing.filterListings({ title: "hello" }, function(err, listings) {
@@ -208,7 +210,7 @@ describe('Listing', function() {
               assert.equal(listings[0]["title"], LISTING1["title"]);
               assert.equal(listings[0]["description"], LISTING1["description"]);
               assert.equal(listings[0]["requirements"], LISTING1["requirements"]);
-              assert.equal(listings[0]["deadline"], LISTING1["deadline"]);
+              assert.equal(listings[0]["deadline"].getTime(), LISTING1["deadline"].getTime());
 
               done();
             });
@@ -219,10 +221,10 @@ describe('Listing', function() {
 
   	it('should return all listings if no filter is provided', function(done) {
       Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, employer) {
-        Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"], function(err1, listing1) {
+        Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"].getTime(), function(err1, listing1) {
           assert.equal(err1, null);
           
-          Listing.createListing(employer["_id"], LISTING2["title"], LISTING2["description"], LISTING2["requirements"], LISTING2["deadline"], function(err2, listing2) {
+          Listing.createListing(employer["_id"], LISTING2["title"], LISTING2["description"], LISTING2["requirements"], LISTING2["deadline"].getTime(), function(err2, listing2) {
             assert.equal(err2, null);
             
             Listing.filterListings({}, function(err, listings) {
@@ -235,7 +237,7 @@ describe('Listing', function() {
               assert.equal(listings[0]["title"], LISTING1["title"]);
               assert.equal(listings[0]["description"], LISTING1["description"]);
               assert.equal(listings[0]["requirements"], LISTING1["requirements"]);
-              assert.equal(listings[0]["deadline"], LISTING1["deadline"]);
+              assert.equal(listings[0]["deadline"].getTime(), LISTING1["deadline"].getTime());
 
               assert.equal(listings[1]["employer"]["company"], employer["company"]);
               assert.equal(listings[1]["employer"]["_id"].toHexString(), employer["_id"].toHexString());
@@ -243,7 +245,7 @@ describe('Listing', function() {
               assert.equal(listings[1]["title"], LISTING2["title"]);
               assert.equal(listings[1]["description"], LISTING2["description"]);
               assert.equal(listings[1]["requirements"], LISTING2["requirements"]);
-              assert.equal(listings[1]["deadline"], LISTING2["deadline"]);
+              assert.equal(listings[1]["deadline"].getTime(), LISTING2["deadline"].getTime());
 
               done();
             });
@@ -254,10 +256,10 @@ describe('Listing', function() {
 
   	it('should return an empty list if the filter matches no listings', function(done) {
       Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, employer) {
-        Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"], function(err1, listing1) {
+        Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"].getTime(), function(err1, listing1) {
           assert.equal(err1, null);
           
-          Listing.createListing(employer["_id"], LISTING2["title"], LISTING2["description"], LISTING2["requirements"], LISTING2["deadline"], function(err2, listing2) {
+          Listing.createListing(employer["_id"], LISTING2["title"], LISTING2["description"], LISTING2["requirements"], LISTING2["deadline"].getTime(), function(err2, listing2) {
             assert.equal(err2, null);
             
             Listing.filterListings({ title: "hi" }, function(err, listings) {
@@ -274,10 +276,10 @@ describe('Listing', function() {
   describe('#getAllEmployerListings', function() {
   	it('should return the listings for an employer', function(done) {
       Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, employer) {
-        Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"], function(err1, listing1) {
+        Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"].getTime(), function(err1, listing1) {
           assert.equal(err1, null);
           
-          Listing.createListing(employer["_id"], LISTING2["title"], LISTING2["description"], LISTING2["requirements"], LISTING2["deadline"], function(err2, listing2) {
+          Listing.createListing(employer["_id"], LISTING2["title"], LISTING2["description"], LISTING2["requirements"], LISTING2["deadline"].getTime(), function(err2, listing2) {
             assert.equal(err2, null);
             
             Listing.getAllEmployerListings(employer["_id"], function(err, listings) {
@@ -290,7 +292,7 @@ describe('Listing', function() {
               assert.equal(listings[0]["title"], LISTING1["title"]);
               assert.equal(listings[0]["description"], LISTING1["description"]);
               assert.equal(listings[0]["requirements"], LISTING1["requirements"]);
-              assert.equal(listings[0]["deadline"], LISTING1["deadline"]);
+              assert.equal(listings[0]["deadline"].getTime(), LISTING1["deadline"].getTime());
 
               assert.equal(listings[1]["employer"]["company"], employer["company"]);
               assert.equal(listings[1]["employer"]["_id"].toHexString(), employer["_id"].toHexString());
@@ -298,7 +300,7 @@ describe('Listing', function() {
               assert.equal(listings[1]["title"], LISTING2["title"]);
               assert.equal(listings[1]["description"], LISTING2["description"]);
               assert.equal(listings[1]["requirements"], LISTING2["requirements"]);
-              assert.equal(listings[1]["deadline"], LISTING2["deadline"]);
+              assert.equal(listings[1]["deadline"].getTime(), LISTING2["deadline"].getTime());
 
               done();
             });
@@ -326,7 +328,7 @@ describe('Listing', function() {
   describe('#getByListingId', function() {
   	it('should return all listing information', function(done) {
       Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, employer) {
-        Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"], function(err1, listing1) {
+        Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"].getTime(), function(err1, listing1) {
           assert.equal(err1, null);
 
           Listing.getAllListings(function(err, listings) {
@@ -344,7 +346,7 @@ describe('Listing', function() {
               assert.equal(listings[0]["title"], LISTING1["title"]);
               assert.equal(listings[0]["description"], LISTING1["description"]);
               assert.equal(listings[0]["requirements"], LISTING1["requirements"]);
-              assert.equal(listings[0]["deadline"], LISTING1["deadline"]);
+              assert.equal(listings[0]["deadline"].getTime(), LISTING1["deadline"].getTime());
 
               done();
             });
@@ -372,7 +374,7 @@ describe('Listing', function() {
   describe('#doesEmployerOwnListing', function() {
     it('should be true if employer does own listing', function(done) {
       Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, employer) {
-        Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"], function(err1, listing1) {
+        Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"].getTime(), function(err1, listing1) {
           Listing.doesEmployerOwnListing(employer._id, listing1._id, function(errMsg, isOwn) {
             assert.equal(true, isOwn);
             done();
@@ -383,7 +385,7 @@ describe('Listing', function() {
 
     it('should be false if employer does not own listing', function(done) {
       Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, employer1) {
-        Listing.createListing(employer1["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"], function(err1, listing1) {
+        Listing.createListing(employer1["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"].getTime(), function(err1, listing1) {
           Employer.createEmployer("a", "a", "a", function(err0, employer2) {
             Listing.doesEmployerOwnListing(employer2._id, listing1._id, function(errMsg, isOwn) {
               assert.equal(false, isOwn);
@@ -396,7 +398,7 @@ describe('Listing', function() {
 
     it('should be false if employer is not valid ObjectId', function(done) {
       Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, employer) {
-        Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"], function(err1, listing1) {
+        Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"].getTime(), function(err1, listing1) {
           Listing.doesEmployerOwnListing("2a", listing1._id, function(errMsg, isOwn) {
             assert.equal(false, isOwn);
             done();
@@ -407,7 +409,7 @@ describe('Listing', function() {
 
     it('should be false if listing is not a valid ObjectId', function(done) {
       Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, employer) {
-        Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"], function(err1, listing1) {
+        Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"].getTime(), function(err1, listing1) {
           Listing.doesEmployerOwnListing(employer._id, "@", function(errMsg, isOwn) {
             assert.equal(false, isOwn);
             done();
