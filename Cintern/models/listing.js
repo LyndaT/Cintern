@@ -32,7 +32,7 @@ listingSchema.statics.createListing = function(currEmployerId, title, desc, reqs
 		title: title,
 		description: desc,
 		requirements: reqs,
-		deadline: deadline
+		deadline: new Date(deadline)
 	}, function(err, listing) {
 	    if (err) {
 	    	callback(err.message);
