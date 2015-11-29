@@ -23,6 +23,7 @@
  * reject
  * update
  * numCustomsPerStateForOwner
+ * numApplicantsPerListing
  */
 var assert = require("assert");
 var Custom = require('../models/custom');
@@ -2473,6 +2474,26 @@ describe('Custom', function() {
           });
         });
       });
+    });
+  });
+
+  /**
+   * input: listingIds
+   *    valid listings
+   *    no listings
+   *    at least one invalid listing
+   */
+  describe('#numCustomsPerStateForOwner', function() {
+    it('should return a map from listing ID to number of applicants', function(done) {
+
+    });
+
+    it('should return an empty object if not listings are provided', function(done) {
+
+    });
+
+    it('should generate an error if a listing ID is invalid', function(done) {
+
     });
   });
 

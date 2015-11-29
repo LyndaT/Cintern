@@ -57,6 +57,7 @@ describe('Common', function() {
                   var header = headers[i];
                   var answer = answer_map[header];
                   assert.equal(answer, result);
+                  done();
                 });
               });
             });
