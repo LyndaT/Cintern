@@ -40,13 +40,13 @@ var EMPLOYER = {
 };
 
 var LISTING1 = {
- 	title: "hello",
- 	description: "world",
+  title: "hello",
+  description: "world",
   deadline: new Date()
 };
 
 var LISTING2 = {
- 	title: "meow",
+  title: "meow",
   deadline: new Date()
 };
 
@@ -148,7 +148,7 @@ describe('Listing', function() {
   });
 
   describe('#getAllListings', function() {
-  	it('should retrieve all listings', function(done) {
+    it('should retrieve all listings', function(done) {
       Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, employer) {
         Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"].getTime(), function(err1, listing1) {
           assert.equal(err1, null);
@@ -181,18 +181,18 @@ describe('Listing', function() {
           });
         });
       });
-  	});
+    });
 
-  	it('should return an empty list if no listings exist', function(done) {
-  		Listing.getAllListings(function(err, listings) {
-  			_.isEqual(listings, []);
-  			done();
-  		});
-  	});
+    it('should return an empty list if no listings exist', function(done) {
+      Listing.getAllListings(function(err, listings) {
+        _.isEqual(listings, []);
+        done();
+      });
+    });
   });
 
   describe('#filterListings', function() {
-  	it('should return listings filtered by the given query', function(done) {
+    it('should return listings filtered by the given query', function(done) {
       Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, employer) {
         Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"].getTime(), function(err1, listing1) {
           assert.equal(err1, null);
@@ -217,9 +217,9 @@ describe('Listing', function() {
           });
         });
       });
-  	});
+    });
 
-  	it('should return all listings if no filter is provided', function(done) {
+    it('should return all listings if no filter is provided', function(done) {
       Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, employer) {
         Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"].getTime(), function(err1, listing1) {
           assert.equal(err1, null);
@@ -252,9 +252,9 @@ describe('Listing', function() {
           });
         });
       });
-  	});
+    });
 
-  	it('should return an empty list if the filter matches no listings', function(done) {
+    it('should return an empty list if the filter matches no listings', function(done) {
       Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, employer) {
         Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"].getTime(), function(err1, listing1) {
           assert.equal(err1, null);
@@ -270,11 +270,11 @@ describe('Listing', function() {
           });
         });
       });
-  	});
+    });
   });
 
   describe('#getAllEmployerListings', function() {
-  	it('should return the listings for an employer', function(done) {
+    it('should return the listings for an employer', function(done) {
       Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, employer) {
         Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"].getTime(), function(err1, listing1) {
           assert.equal(err1, null);
@@ -307,15 +307,15 @@ describe('Listing', function() {
           });
         });
       });
-  	});
+    });
 
-  	it('should return an empty list if the employer does not exist', function(done) {
-  		Listing.getAllEmployerListings(ObjectId("507f1f77bcf86cd799439011"), function(err, listings) {
-  			assert.equal(err, null);
-  			assert(_.isEqual([], listings));
-  			done();
-  		});
-  	});
+    it('should return an empty list if the employer does not exist', function(done) {
+      Listing.getAllEmployerListings(ObjectId("507f1f77bcf86cd799439011"), function(err, listings) {
+        assert.equal(err, null);
+        assert(_.isEqual([], listings));
+        done();
+      });
+    });
 
     it('should return an error if the ID passed is not an ObjectId', function(done) {
       Listing.getAllEmployerListings(123, function(err, listings) {
@@ -326,7 +326,7 @@ describe('Listing', function() {
   });
 
   describe('#getByListingId', function() {
-  	it('should return all listing information', function(done) {
+    it('should return all listing information', function(done) {
       Employer.createEmployer(EMPLOYER["email"], EMPLOYER["password"], EMPLOYER["companyName"], function(err0, employer) {
         Listing.createListing(employer["_id"], LISTING1["title"], LISTING1["description"], LISTING1["requirements"], LISTING1["deadline"].getTime(), function(err1, listing1) {
           assert.equal(err1, null);
@@ -355,13 +355,13 @@ describe('Listing', function() {
       });
     });
 
-  	it('should return an error if the listing does not exist', function(done) {
-  		Listing.getByListingId(ObjectId("507f1f77bcf86cd799439011"), function(err, listing) {
-  			assert.notEqual(err, null);
-  			assert.equal(err, 'Invalid listing.');
-  			done();
-  		});
-  	});
+    it('should return an error if the listing does not exist', function(done) {
+      Listing.getByListingId(ObjectId("507f1f77bcf86cd799439011"), function(err, listing) {
+        assert.notEqual(err, null);
+        assert.equal(err, 'Invalid listing.');
+        done();
+      });
+    });
 
     it('should return an error if the ID passed is not an ObjectId', function(done) {
       Listing.getByListingId(123, function(err, listings) {
