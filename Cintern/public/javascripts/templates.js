@@ -316,7 +316,7 @@ templates['s_dash_page'] = template({"1":function(container,depth0,helpers,parti
     + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.apps : depth0)) != null ? stack1.length : stack1), depth0))
     + " applications.\n\n  <br>\n  <br>\n  \n"
     + ((stack1 = container.invokePartial(partials.filter_bar,depth0,{"name":"filter_bar","data":data,"indent":"  ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
-    + "  \n  <table class=\"table table-hover table-condensed tablesorter\" id=\"s-dash-table\">\n  	\n    <thead class=\"clickable-headers\">\n  	  <th>Company</th>\n  	  <th>Title</th>\n      <th>Deadline</th>\n      <th>Submitted Date</th>\n  	  <th>Status</th>\n  	</thead>\n\n    <tbody class=\"searchable\">\n"
+    + "  \n  <table class=\"table table-hover table-condensed tablesorter\" id=\"s-dash-table\">\n  	\n    <thead class=\"clickable-headers\">\n  	  <th>Company</th>\n  	  <th>Title</th>\n      <th>Deadline</th>\n      <th>Submitted Time</th>\n  	  <th>Status</th>\n  	</thead>\n\n    <tbody class=\"searchable\">\n"
     + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.apps : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + "    </tbody>\n  \n  </table>\n</div>";
 },"usePartial":true,"useData":true});
