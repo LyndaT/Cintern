@@ -45,6 +45,12 @@ exports.createListing = function(req, res, next) {
 			})
 		});
 
+		var date = new Date(deadline);
+		var day = date.getDate();
+    	var month = date.getMonth();
+    	var year = date.getFullYear();
+    	deadline = new Date(year, month, day, 23, 59, 59);
+
 		Listing.createListing(employerId, title, desc, reqs, deadline, function(errMsg, listing) {
 			
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);

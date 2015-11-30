@@ -40,8 +40,8 @@ Handlebars.registerHelper('formatDate', function(ISODate, format) {
     throw new Error("Handlebars Helper formatDate needs 1 paramater");
   else {
     var date = new Date(ISODate);
-    var day = date.getDate();
-    var month = date.getMonth() + 1;
+    var day = ("0" + date.getDate()).slice(-2);  
+    var month = ("0" + (date.getMonth()+1)).slice(-2)
     var year = date.getFullYear();
     return month + '/' + day + '/' + year;
   }
@@ -62,6 +62,13 @@ Handlebars.registerHelper('getValue', function(obj, key) {
     return (obj[key]);
 });
 
+
+var twoDigitDate = function(date) {
+  if (date < 10) {
+    return "0" + date;
+  }
+  return date;
+};
 /**
  * This function loads the Handlebar template called template initialized
  * with data into the container
