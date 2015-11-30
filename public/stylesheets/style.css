@@ -60,6 +60,10 @@ a {
   color: red;
 }
 
+textarea {
+    resize:none;
+}
+
 /**Buttons of fun**/
 .btn-default.unstar-custom-btn {
 	margin-left: 0px;
@@ -96,5 +100,6 @@ a {
 .star:hover {
 	color: #FFBB33;
 }
+
 
 
