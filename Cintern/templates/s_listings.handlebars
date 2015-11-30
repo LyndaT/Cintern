@@ -2,6 +2,19 @@
 
 <div>
 
+  <!-- Listing Modal -->
+  <div class="modal fade" id="listingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-listing-id="{{listingId}}">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Listing Info</h4>
+        </div>
+        <div class="modal-body" id="listing-modal-content"></div>
+      </div>
+    </div>
+  </div>
+
   <h1>Current available listings</h1>
   <p>Click on a listing for more detailed information.</p>
   <br>

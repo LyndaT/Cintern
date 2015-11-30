@@ -57,6 +57,12 @@
 
 	{{#equal type "radio"}}
 		<input 
+			type="radio" name="{{_id}}" value=""
+			{{#equal answer ""}}
+				checked
+			{{/equal}} style="display:none">
+
+		<input 
 			type="radio" name="{{_id}}" value="yes"
 			{{#if isInProgress}} 
 			{{else}}
@@ -74,6 +80,5 @@
 			{{#equal answer "no"}}
 				checked
 			{{/equal}}>No
-		
 	{{/equal}}
 </div>

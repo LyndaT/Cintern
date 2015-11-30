@@ -57,11 +57,15 @@ $(document).on('submit', '#create-listing', function(evt) {
         $('#new-listing-modal').modal('hide');
         // TODO : may need timeout
         //setTimeout(function() { loadDashPage(); }, 1000);
-        loadDashPage();
+        //loadDashPage();
  	}).fail(function(responseObject) {
  		console.log(responseObject);
     	var response = $.parseJSON(responseObject.responseText);
   	});
+});
+
+$(document).on('hidden.bs.modal', '#new-listing-modal', function(evt) {
+  loadDashPage();
 });
 
 /**

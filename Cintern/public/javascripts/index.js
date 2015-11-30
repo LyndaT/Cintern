@@ -72,6 +72,11 @@ $(document).on('submit', '#e-signup-form', function(evt) {
     });
 });
 
+// clear form on modals when it's hidden
+$(document).on('hidden.bs.modal', '.modal', function(evt) {
+  $(this).find('form')[0].reset();
+});
+
 // Loads the home page
 var loadHomePage = function() {
   loadPage(mainContainer, 'index');

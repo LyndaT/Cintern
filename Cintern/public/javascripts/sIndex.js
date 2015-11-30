@@ -24,7 +24,7 @@ $(document).on('click', '#common-nav', function(evt) {
 $(document).on('click', '.s-listing', function(evt) {
 	var listingId = $(this).data('listing-id');
 	var company = $(this).data('listing-company');
-	loadListingPage(listingId, company);
+	loadListingModal(listingId, company);
 });
 
 // $(document).on('click', '.unclickable', function(evt) {
@@ -34,7 +34,7 @@ $(document).on('click', '.s-listing', function(evt) {
 $(document).on('click', '.student-custom', function(evt) {
 	var item = $(this);
 	var listingId = item.data('listing-id');
-	loadCustomAppPage(listingId);
+	loadCustomModal(listingId);
 });
 
 // save listing's custom template to user's list
@@ -44,7 +44,7 @@ $(document).on('click', '#add-custom', function(evt) {
 		type: 'POST', 
 		url: '/students/applications/custom/added/' + listingId,
 	}).done(function(response) {
-		loadAllListingsPage();
+		$('#listingModal').modal('hide');
 	}).fail(function(response) {
 		// example of how we might want to display error message
 		console.log(JSON.parse(response.responseText).err);
@@ -57,7 +57,7 @@ $(document).on('click', '#withdraw-custom-btn', function(evt) {
 		type: 'PUT', 
 		url: '/students/applications/withdrawal/' + customId,
 	}).done(function(response) {
-		loadDashPage();
+		$('#customModal').modal('hide');
 	}).fail(function(response) {
 		console.log('Error');
 	});
@@ -69,7 +69,7 @@ $(document).on('click', '#delete-custom-btn', function(evt) {
 		type: 'DELETE', 
 		url: '/students/applications/' + customId,
 	}).done(function(response) {
-		loadDashPage();
+		$('#customModal').modal('hide');
 	}).fail(function(response) {
 		console.log('Error');
 	});
@@ -87,7 +87,7 @@ $(document).on('submit', '#submit-custom-form', function(evt) {
         contentType: 'application/json',
         data: JSON.stringify({ "answers" : formData})
     }).done(function(response) {
-        loadDashPage();
+    	$('#customModal').modal('hide');
     }).fail(function(responseObject) {
         var response = $.parseJSON(responseObject.responseText);
         console.log(JSON.parse(responseObject.responseText).err);
@@ -107,7 +107,7 @@ $(document).on('click', '#save-custom-btn', function(evt) {
         contentType: 'application/json',
         data: JSON.stringify({ "answers" : formData})
     }).done(function(response) {
-        loadCustomAppPage(listingId);
+        loadCustomModal(listingId);
     }).fail(function(responseObject) {
         var response = $.parseJSON(responseObject.responseText);
     });
@@ -150,20 +150,25 @@ var loadCommonPage = function() {
 }
 
 // Loads an individual listing page corresponding to the listingId
-var loadListingPage = function(listingId, company) {
+var loadListingModal = function(listingId, company) {
 	$.get('/students/listings/' + listingId, function(response) {
 		var data = response.content.listing;
 		data.company = company;
-		loadPage(mainContainer, 's_listing', data);
+		
+		loadModal('#listing-modal-content', 's_listing', data);
+
+		$('#listingModal').modal('show');
 	});
 }
 
 // Loads the Custom App page corresponding to the userId and listingId
-var loadCustomAppPage = function(listingId) {
+var loadCustomModal = function(listingId) {
 	$.ajax({
 		type: "GET",
 		url: "/students/applications/custom/" + listingId
 	}).done(function(response) {
+
+		console.log(response.content);
 		var data = {
 	      title : response.content.listing.title,
 	      listing : listingId, 
@@ -172,8 +177,22 @@ var loadCustomAppPage = function(listingId) {
 	      state : response.content.state,
 	      isInProgress : response.content.state === "save",
 	    };
-	    loadPage(mainContainer, 's_custom', data);
+
+    	loadModal('#custom-modal-content', 's_custom', data);
+
+        $('#customModal').modal('show'); 
+
 	}).fail(function(response) {
 		console.log("ERROR :(");
 	});
 }
+
+// reload page when applicant modal is closed
+$(document).on('hidden.bs.modal', '#customModal', function(evt) {
+    loadDashPage();
+});
+
+// reload page when applicant modal is closed
+$(document).on('hidden.bs.modal', '#listingModal', function(evt) {
+    loadAllListingsPage();
+});

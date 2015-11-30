@@ -3,6 +3,20 @@
 <div>
   <a href="/" id="home-link">Back to Dash</a>
 
+  <!-- Applicant Modal -->
+  <div class="modal fade" id="applicantModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-listing-id="{{listingId}}">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Applicant Info</h4>
+        </div>
+        <div class="modal-body" id="applicant-modal-content"></div>
+      </div>
+    </div>
+  </div>
+
+
   <h1>Applicants</h1>
   
   <p>Currently {{applicants.length}} students have applied to this listing.</p>

@@ -32,7 +32,7 @@ $(document).on('click', '.applicant-row', function(evt) {
 	var item = $(this);
     var userId = item.data('applicant-id');
     var listingId = item.data('listing-id');
-    getFullAppPage(userId, listingId);
+    getFullAppModal(userId, listingId);
 });
 
 $(document).on('click', '.star-custom-btn', function(evt) {
@@ -46,7 +46,7 @@ $(document).on('click', '.star-custom-btn', function(evt) {
         url: '/employers/applications/starred/' + customId,
         data : { "listingId" : listingId }
     }).done(function(response) {
-        getFullAppPage(userId, listingId);
+        getFullAppModal(userId, listingId);
     }).fail(function(responseObject) {
         var response = $.parseJSON(responseObject.responseText);
     });
@@ -63,7 +63,7 @@ $(document).on('click', '.unstar-custom-btn', function(evt) {
         url: '/employers/applications/unstarred/' + customId,
         data : { "listingId" : listingId }
     }).done(function(response) {
-        getFullAppPage(userId, listingId);
+        getFullAppModal(userId, listingId);
     }).fail(function(responseObject) {
         var response = $.parseJSON(responseObject.responseText);
     });
@@ -80,7 +80,7 @@ $(document).on('click', '#reject-custom-btn', function(evt) {
         url: '/employers/applications/rejected/' + customId,
         data : { "listingId" : listingId }
     }).done(function(response) {
-        loadApplicantsPage(listingId);
+        $('#applicantModal').modal('hide');
     }).fail(function(responseObject) {
         var response = $.parseJSON(responseObject.responseText);
     });
@@ -110,19 +110,26 @@ var loadApplicantsPage = function(listingId) {
 };
 
 // Loads the Full Application page corresponding to the userId and listingId
-var getFullAppPage = function(userId, listingId) {
+var getFullAppModal = function(userId, listingId) {
 	$.get('/employers/applications/fullapp/' + userId + '/' + listingId, function(response) {
 
-        console.log(response.content.commonApp);
+        var data = {
+            common : response.content.commonApp,
+            custom : response.content.customApp,
+            customId : response.content.customId,
+            listing : response.content.listing,
+            owner : response.content.owner,
+            isStar : response.content.state === "star",
+            isSubmitted : true
+        };
 
-    	loadPage(mainContainer, 'e_full_app', {
-    		common : response.content.commonApp,
-    		custom : response.content.customApp,
-    		customId : response.content.customId,
-    		listing : response.content.listing,
-    		owner : response.content.owner,
-    		isStar : response.content.state === "star",
-    		isSubmitted : true
-    	});
+    	loadModal('#applicant-modal-content', 'e_full_app', data);
+
+        $('#applicantModal').modal('show'); 
 	});
 };
+
+// reload page when applicant modal is closed
+$(document).on('hidden.bs.modal', '#applicantModal', function(evt) {
+    loadApplicantsPage($('#applicantModal').data('listing-id'));
+});
