@@ -33,6 +33,12 @@ exports.createListing = function(req, res, next) {
 	var deadline = req.body.deadline;
 	var questions = req.body.questions;
 
+	var deadline = new Date(deadline);
+	var day = deadline.getDate();
+	var month = deadline.getMonth();
+	var year = deadline.getFullYear();
+	deadline = new Date(year, month, day, 23, 59, 59, 59);
+
 	// TODO: clean up deadline so that it's a uniform time somehow
 	if (new Date(deadline) < Date.now()) utils.sendErrResponse(res, 403, "Selected deadline has passed");
 	else {
@@ -44,12 +50,6 @@ exports.createListing = function(req, res, next) {
 				"required" : question.required
 			})
 		});
-
-		var date = new Date(deadline);
-		var day = date.getDate();
-    	var month = date.getMonth();
-    	var year = date.getFullYear();
-    	deadline = new Date(year, month, day, 23, 59, 59);
 
 		Listing.createListing(employerId, title, desc, reqs, deadline, function(errMsg, listing) {
 			
