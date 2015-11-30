@@ -92,6 +92,17 @@ var loadDashPage = function() {
 		loadPage(mainContainer, 'e_dash_page', 
             { listings: response.content.listings, numApplicantsMap: response.content.numApplicantsMap });
         loadModal('#new-listing-modal-content', 'e_create_listing');
+
+        // bind datetimepicker
+        var date = new Date();
+        var currentMonth = date.getUTCMonth();
+        var currentDate = date.getUTCDate();
+        var currentYear = date.getUTCFullYear();
+        $('#datetimepicker1').datetimepicker({
+            format: 'MM/DD/YYYY',
+            minDate: new Date(currentYear, currentMonth, currentDate)
+        });
+
         $("#e-dash-table").tablesorter();
 	});
 };
@@ -124,8 +135,9 @@ var getFullAppModal = function(userId, listingId) {
         };
 
     	loadModal('#applicant-modal-content', 'e_full_app', data);
-
+        
         $('#applicantModal').modal('show'); 
+
 	});
 };
 
