@@ -40,11 +40,11 @@ templates['e_applicants'] = template({"1":function(container,depth0,helpers,part
     + ">Delete Listing</button>\n</div>\n";
 },"usePartial":true,"useData":true,"useDepths":true,"useBlockParams":true});
 templates['e_applicants_row'] = template({"1":function(container,depth0,helpers,partials,data) {
-    return "  		<td>\n			<span class='glyphicon glyphicon-star center' style=\"color:yellow\"></span>\n  		</td>\n";
+    return "		<td>\n		<span class='glyphicon glyphicon-star center' style=\"color:yellow\"></span>\n		</td>\n";
 },"3":function(container,depth0,helpers,partials,data) {
-    return "  		<td>\n			<span class='glyphicon glyphicon-star-empty center'></span>\n  		</td>\n";
+    return "		<td>\n		<span class='glyphicon glyphicon-star-empty center'></span>\n		</td>\n";
 },"5":function(container,depth0,helpers,partials,data,blockParams,depths) {
-    return "    	<td>"
+    return "  	<td>"
     + container.escapeExpression((helpers.getValue || (depth0 && depth0.getValue) || helpers.helperMissing).call(depth0 != null ? depth0 : {},depths[1],depth0,{"name":"getValue","hash":{},"data":data}))
     + "</td>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
@@ -58,7 +58,7 @@ templates['e_applicants_row'] = template({"1":function(container,depth0,helpers,
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isStar : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.program(3, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
     + "\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.headers : depth0),{"name":"each","hash":{},"fn":container.program(5, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "\n  	<td data-sort-value=\""
+    + "\n	<td data-sort-value=\""
     + alias4(((helper = (helper = helpers.submitTime || (depth0 != null ? depth0.submitTime : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"submitTime","hash":{},"data":data}) : helper)))
     + "\">"
     + alias4((helpers.formatDate || (depth0 && depth0.formatDate) || alias2).call(alias1,(depth0 != null ? depth0.submitTime : depth0),{"name":"formatDate","hash":{},"data":data}))
@@ -85,15 +85,15 @@ templates['e_dash_page'] = template({"1":function(container,depth0,helpers,parti
 templates['e_dash_page_listing'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression;
 
-  return "<!-- author: Maddie Dawson -->\n\n<div class=\"employer-dash-listing\">\n    <tr class=\"clickable listing-row\" data-listing-id="
+  return "<!-- author: Maddie Dawson -->\n\n<tr class=\"clickable listing-row\" data-listing-id="
     + alias3(((helper = (helper = helpers.listingid || (depth0 != null ? depth0.listingid : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"listingid","hash":{},"data":data}) : helper)))
-    + ">\n  	  <td>"
+    + ">\n  <td>"
     + alias3(container.lambda(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1.title : stack1), depth0))
-    + "</td>\n  	  <td>"
+    + "</td>\n  <td>"
     + alias3((helpers.getValue || (depth0 && depth0.getValue) || alias2).call(alias1,(depth0 != null ? depth0.numApplicantsMap : depth0),(depth0 != null ? depth0.listingid : depth0),{"name":"getValue","hash":{},"data":data}))
-    + "</td>\n  	  <td>"
+    + "</td>\n  <td>"
     + alias3((helpers.formatDate || (depth0 && depth0.formatDate) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1.deadline : stack1),{"name":"formatDate","hash":{},"data":data}))
-    + "</td>\n    </tr>\n</div>";
+    + "</td>\n</tr>\n";
 },"useData":true});
 templates['e_full_app'] = template({"1":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=container.escapeExpression, alias2=container.lambda;
@@ -317,37 +317,37 @@ templates['s_dash_page'] = template({"1":function(container,depth0,helpers,parti
 templates['s_dash_page_app'] = template({"1":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "  		<tr class=\"clickable student-custom\" data-listing-id=\""
+  return "  <tr class=\"clickable student-custom\" data-listing-id=\""
     + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1._id : stack1), depth0))
     + "\">\n";
 },"3":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "  		<tr class=\"clickable student-custom error\" data-listing-id=\""
+  return "	<tr class=\"clickable student-custom error\" data-listing-id=\""
     + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1._id : stack1), depth0))
     + "\">\n";
 },"5":function(container,depth0,helpers,partials,data) {
-    return "    <td></td>\n";
+    return "  <td></td>\n";
 },"7":function(container,depth0,helpers,partials,data) {
-    return "    <td>"
+    return "  <td>"
     + container.escapeExpression((helpers.formatDate || (depth0 && depth0.formatDate) || helpers.helperMissing).call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.submitTime : depth0),{"name":"formatDate","hash":{},"data":data}))
     + "</td>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.lambda, alias4=container.escapeExpression;
 
-  return "<!-- author: Heeyoon Kim -->\n\n<div class=\"student-dash-app\">\n"
+  return "<!-- author: Heeyoon Kim -->\n\n"
     + ((stack1 = (helpers.deadlineNotPassed || (depth0 && depth0.deadlineNotPassed) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1.deadline : stack1),{"name":"deadlineNotPassed","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
-    + "\n	<td>"
+    + "\n<td>"
     + alias4(alias3(((stack1 = ((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1.employer : stack1)) != null ? stack1.company : stack1), depth0))
-    + "</td>\n	<td>"
+    + "</td>\n<td>"
     + alias4(alias3(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1.title : stack1), depth0))
-    + "</td>\n	<td>"
+    + "</td>\n<td>"
     + alias4((helpers.formatDate || (depth0 && depth0.formatDate) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1.deadline : stack1),{"name":"formatDate","hash":{},"data":data}))
-    + "</td>\n  \n"
+    + "</td>\n\n"
     + ((stack1 = (helpers.equal || (depth0 && depth0.equal) || alias2).call(alias1,(depth0 != null ? depth0.submitTime : depth0),undefined,{"name":"equal","hash":{},"fn":container.program(5, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
-    + "  \n	<td>"
+    + "\n<td>"
     + alias4((helpers.interpretState || (depth0 && depth0.interpretState) || alias2).call(alias1,(depth0 != null ? depth0.state : depth0),{"name":"interpretState","hash":{},"data":data}))
-    + "</td>\n\n  </tr>\n</div>";
+    + "</td>\n\n</tr>\n";
 },"useData":true});
 templates['s_listing'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
@@ -367,7 +367,7 @@ templates['s_listing'] = template({"compiler":[7,">= 4.0.0"],"main":function(con
 templates['s_listing_row'] = template({"1":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=container.escapeExpression;
 
-  return "	  <tr class=\"unclickable\" data-listing-id="
+  return "  <tr class=\"unclickable\" data-listing-id="
     + alias1(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"_id","hash":{},"data":data}) : helper)))
     + " data-listing-company="
     + alias1(container.lambda(((stack1 = (depth0 != null ? depth0.employer : depth0)) != null ? stack1.company : stack1), depth0))
@@ -375,7 +375,7 @@ templates['s_listing_row'] = template({"1":function(container,depth0,helpers,par
 },"3":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=container.escapeExpression;
 
-  return "	  <tr class=\"clickable s-listing\" data-listing-id="
+  return "  <tr class=\"clickable s-listing\" data-listing-id="
     + alias1(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"_id","hash":{},"data":data}) : helper)))
     + " data-listing-company="
     + alias1(container.lambda(((stack1 = (depth0 != null ? depth0.employer : depth0)) != null ? stack1.company : stack1), depth0))
@@ -383,15 +383,15 @@ templates['s_listing_row'] = template({"1":function(container,depth0,helpers,par
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression;
 
-  return "<!-- author: Maddie Dawson -->\n\n<div>\n"
+  return "<!-- author: Maddie Dawson -->\n\n"
     + ((stack1 = (helpers["in"] || (depth0 && depth0["in"]) || alias2).call(alias1,(depth0 != null ? depth0.userListings : depth0),(depth0 != null ? depth0._id : depth0),{"name":"in","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
-    + "    \n      <td>"
+    + "\n  <td>"
     + alias3(container.lambda(((stack1 = (depth0 != null ? depth0.employer : depth0)) != null ? stack1.company : stack1), depth0))
-    + "</td>\n      <td>"
+    + "</td>\n  <td>"
     + alias3(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
-    + "</td>\n      <td>"
+    + "</td>\n  <td>"
     + alias3((helpers.formatDate || (depth0 && depth0.formatDate) || alias2).call(alias1,(depth0 != null ? depth0.deadline : depth0),{"name":"formatDate","hash":{},"data":data}))
-    + "</td>\n    </tr>\n</div>\n";
+    + "</td>\n</tr>\n";
 },"useData":true});
 templates['s_listings'] = template({"1":function(container,depth0,helpers,partials,data) {
     var helper;

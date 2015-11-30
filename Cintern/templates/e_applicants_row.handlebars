@@ -1,19 +1,19 @@
 <!-- author: Maddie Dawson -->
 
 <tr class="clickable applicant-row" data-applicant-id="{{owner}}" data-listing-id="{{listing}}">
-  	{{#if isStar}}
-  		<td>
-			<span class='glyphicon glyphicon-star center' style="color:yellow"></span>
-  		</td>
-  	{{else}}
-  		<td>
-			<span class='glyphicon glyphicon-star-empty center'></span>
-  		</td>
-  	{{/if}}
+	{{#if isStar}}
+		<td>
+		<span class='glyphicon glyphicon-star center' style="color:yellow"></span>
+		</td>
+	{{else}}
+		<td>
+		<span class='glyphicon glyphicon-star-empty center'></span>
+		</td>
+	{{/if}}
 
-  	{{#each headers}}
-    	<td>{{getValue ../this this}}</td>
-  	{{/each}}
+	{{#each headers}}
+  	<td>{{getValue ../this this}}</td>
+	{{/each}}
 
-  	<td data-sort-value="{{submitTime}}">{{formatDate submitTime}}</td>
+	<td data-sort-value="{{submitTime}}">{{formatDate submitTime}}</td>
 </tr>
