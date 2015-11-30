@@ -67,7 +67,7 @@ templates['e_applicants_row'] = template({"1":function(container,depth0,helpers,
     + "</td>\n</tr>";
 },"useData":true,"useDepths":true});
 templates['e_create_listing'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    return "<!-- author: Lynda Tang -->\n  \n<form id=\"create-listing\">\n	Create a listing here!\n	\n	<br>\n\n	Position Title: <input class=\"form-control\" type=\"text\" name=\"title\" required>\n\n	<br>\n	\n	<div>\n		Description\n		<br>\n		<textarea \n			rows=\"8\" \n			name=\"description\" \n			class=\"form-control\"\n			placeholder=\"Enter description here...\"></textarea>\n	</div>\n\n	<br>\n\n	<div>\n		Requirements\n		<br>\n		<textarea \n			rows=\"8\" \n			name=\"requirements\" \n			class=\"form-control\"\n			placeholder=\"Enter requirements here...\"></textarea>\n	</div>\n\n	<br>\n\n	<div>\n        Deadline\n        <br>\n        <div class=\"form-group\">\n            <div class='input-group date' id='datetimepicker1'>\n                <input type='text' class=\"form-control\" name=\"deadline\" required/>\n                <span class=\"input-group-addon\">\n                    <span class=\"glyphicon glyphicon-calendar\"></span>\n                </span>\n            </div>\n        </div>\n        </div>\n        <script type=\"text/javascript\">\n            $(function () {\n                var date = new Date();\n	            var currentMonth = date.getUTCMonth();\n	            var currentDate = date.getUTCDate();\n	            var currentYear = date.getUTCFullYear();\n            	$('#datetimepicker1').datetimepicker({\n                	format: 'MM/DD/YYYY',\n                	minDate: new Date(currentYear, currentMonth, currentDate)\n                });\n            });\n        </script>\n    </div>\n\n	<div>\n		Questions:\n		<div id=\"question-list\"></div>\n		<div class=\"dropdown-hover\">\n\n		    <!-- trigger button -->\n		    <button type=\"button\" class=\"btn btn-primary\">Add Question</button>\n\n		    <!-- dropdown menu -->\n		    <ul class=\"dropdown-menu\">\n		        <li class=\"clickable\"><a id=\"add-text-question\">Text Question</a></li>\n		        <!-- <li class=\"clickable\"><a id=\"add-dropdown-question\">Dropdown Question</a></li> -->\n		        <li class=\"clickable\"><a id=\"add-radio-question\">Yes or No Question</a></li>\n		    </ul>\n		</div>\n	</div>\n\n	<br>\n	<button type=\"submit\" class=\"btn btn-primary\">Submit</button>\n\n</form>\n";
+    return "<!-- author: Lynda Tang -->\n  \n<form id=\"create-listing\">\n	<h5>Position Title:</h5>\n	<input class=\"form-control\" type=\"text\" name=\"title\" required>\n\n	<br>\n	\n	<div>\n		<h5>Description:</h5>\n		<textarea \n			rows=\"8\" \n			name=\"description\" \n			class=\"form-control\"\n			placeholder=\"Enter description here...\"></textarea>\n	</div>\n\n	<br>\n\n	<div>\n		<h5>Requirements:</h5>\n		<textarea \n			rows=\"8\" \n			name=\"requirements\" \n			class=\"form-control\"\n			placeholder=\"Enter requirements here...\"></textarea>\n	</div>\n\n	<br>\n\n	<div>\n        <h5>Deadline:</h5>\n        <div class=\"form-group\">\n            <div class='input-group date' id='datetimepicker1'>\n                <input type='text' class=\"form-control\" name=\"deadline\" required/>\n                <span class=\"input-group-addon\">\n                    <span class=\"glyphicon glyphicon-calendar\"></span>\n                </span>\n            </div>\n        </div>\n        </div>\n        <script type=\"text/javascript\">\n            $(function () {\n                var date = new Date();\n	            var currentMonth = date.getUTCMonth();\n	            var currentDate = date.getUTCDate();\n	            var currentYear = date.getUTCFullYear();\n            	$('#datetimepicker1').datetimepicker({\n                	format: 'MM/DD/YYYY',\n                	minDate: new Date(currentYear, currentMonth, currentDate)\n                });\n            });\n        </script>\n    </div>\n\n	<div>\n		<h5>Questions:</h5>\n		<div id=\"question-list\"></div>\n		<div class=\"dropdown-hover\">\n\n		    <!-- trigger button -->\n		    <button type=\"button\" class=\"btn btn-primary\">Add Question</button>\n\n		    <!-- dropdown menu -->\n		    <ul class=\"dropdown-menu\">\n		        <li class=\"clickable\"><a id=\"add-text-question\">Text Question</a></li>\n		        <!-- <li class=\"clickable\"><a id=\"add-dropdown-question\">Dropdown Question</a></li> -->\n		        <li class=\"clickable\"><a id=\"add-radio-question\">Yes or No Question</a></li>\n		    </ul>\n		</div>\n	</div>\n\n	<br>\n	<button type=\"submit\" class=\"btn btn-primary\">Submit</button>\n\n</form>\n";
 },"useData":true});
 templates['e_dash_page'] = template({"1":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1;
@@ -100,27 +100,31 @@ templates['e_dash_page_listing'] = template({"compiler":[7,">= 4.0.0"],"main":fu
 templates['e_full_app'] = template({"1":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=container.escapeExpression, alias2=container.lambda;
 
-  return "		<button class=\"unstar-custom-btn btn btn-primary btn-lg\" data-custom-id=\""
+  return "		<button class=\"unstar-custom-btn btn btn-default\" data-custom-id=\""
     + alias1(((helper = (helper = helpers.customId || (depth0 != null ? depth0.customId : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"customId","hash":{},"data":data}) : helper)))
     + "\" data-listing-id=\""
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1._id : stack1), depth0))
     + "\" data-user-id=\""
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.owner : depth0)) != null ? stack1._id : stack1), depth0))
-    + "\">\n			<span class='glyphicon glyphicon-star center' style=\"color:yellow\"></span>\n		</button>\n";
+    + "\">\n			<span class='glyphicon glyphicon-star center unstar'></span>\n		</button>\n";
 },"3":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=container.escapeExpression, alias2=container.lambda;
 
-  return "		<button class=\"star-custom-btn btn btn-primary btn-lg\" data-custom-id=\""
+  return "		<button class=\"star-custom-btn btn btn-default\" data-custom-id=\""
     + alias1(((helper = (helper = helpers.customId || (depth0 != null ? depth0.customId : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"customId","hash":{},"data":data}) : helper)))
     + "\" data-listing-id=\""
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1._id : stack1), depth0))
     + "\" data-user-id=\""
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.owner : depth0)) != null ? stack1._id : stack1), depth0))
-    + "\">\n			<span class='glyphicon glyphicon-star center'></span>\n		</button>\n";
+    + "\">\n			<span class='glyphicon glyphicon-star center star'></span>\n		</button>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=container.escapeExpression, alias3=container.lambda;
 
-  return "<!--poor solution to get out of page-->\n<a href=\"/\" id=\"home-link\">Back to Dash</a>\n<div class=\"full-app\">\n\n"
+  return "<div class=\"full-app\">\n	<h3>Common Application</h3>\n"
+    + ((stack1 = container.invokePartial(partials.application,(depth0 != null ? depth0.common : depth0),{"name":"application","hash":{"isCommon":true,"isSubmitted":(depth0 != null ? depth0.isSubmitted : depth0)},"data":data,"indent":"\t","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
+    + "	<h3>Custom Application</h3>\n"
+    + ((stack1 = container.invokePartial(partials.application,(depth0 != null ? depth0.custom : depth0),{"name":"application","hash":{"isCommon":false,"isSubmitted":(depth0 != null ? depth0.isSubmitted : depth0)},"data":data,"indent":"\t","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
+    + "	\n"
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isStar : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + "\n	<button id=\"reject-custom-btn\" class=\"btn btn-primary\" data-custom-id=\""
     + alias2(((helper = (helper = helpers.customId || (depth0 != null ? depth0.customId : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"customId","hash":{},"data":data}) : helper)))
@@ -128,13 +132,7 @@ templates['e_full_app'] = template({"1":function(container,depth0,helpers,partia
     + alias2(alias3(((stack1 = (depth0 != null ? depth0.listing : depth0)) != null ? stack1._id : stack1), depth0))
     + "\" data-user-id=\""
     + alias2(alias3(((stack1 = (depth0 != null ? depth0.owner : depth0)) != null ? stack1._id : stack1), depth0))
-    + "\">\n		Reject\n	</button>\n\n	<br>\n	<br>\n	\n	<label>Email:</label> "
-    + alias2(alias3(((stack1 = (depth0 != null ? depth0.owner : depth0)) != null ? stack1.email : stack1), depth0))
-    + "\n\n	<h3>Common Application</h3>\n"
-    + ((stack1 = container.invokePartial(partials.application,(depth0 != null ? depth0.common : depth0),{"name":"application","hash":{"isCommon":true,"isSubmitted":(depth0 != null ? depth0.isSubmitted : depth0)},"data":data,"indent":"\t","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
-    + "	<h3>Custom Application</h3>\n"
-    + ((stack1 = container.invokePartial(partials.application,(depth0 != null ? depth0.custom : depth0),{"name":"application","hash":{"isCommon":false,"isSubmitted":(depth0 != null ? depth0.isSubmitted : depth0)},"data":data,"indent":"\t","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
-    + "</div>";
+    + "\">\n		Reject\n	</button>\n</div>";
 },"usePartial":true,"useData":true});
 templates['e_signup'] = template({"1":function(container,depth0,helpers,partials,data) {
     var helper;
@@ -416,7 +414,7 @@ templates['s_listings'] = template({"1":function(container,depth0,helpers,partia
 
   return "<!-- author: Maddie Dawson -->\n\n<div>\n\n  <!-- Listing Modal -->\n  <div class=\"modal fade\" id=\"listingModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" data-listing-id=\""
     + container.escapeExpression(((helper = (helper = helpers.listingId || (depth0 != null ? depth0.listingId : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"listingId","hash":{},"data":data}) : helper)))
-    + "\">\n    <div class=\"modal-dialog\" role=\"document\">\n      <div class=\"modal-content\">\n        <div class=\"modal-header\">\n          <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n          <h4 class=\"modal-title\">Applicant Info</h4>\n        </div>\n        <div class=\"modal-body\" id=\"listing-modal-content\"></div>\n      </div>\n    </div>\n  </div>\n\n  <h1>Current available listings</h1>\n  <p>Click on a listing for more detailed information.</p>\n  <br>\n\n  <!--<div class=\"error\" id=\"error\">\n"
+    + "\">\n    <div class=\"modal-dialog\" role=\"document\">\n      <div class=\"modal-content\">\n        <div class=\"modal-header\">\n          <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n          <h4 class=\"modal-title\">Listing Info</h4>\n        </div>\n        <div class=\"modal-body\" id=\"listing-modal-content\"></div>\n      </div>\n    </div>\n  </div>\n\n  <h1>Current available listings</h1>\n  <p>Click on a listing for more detailed information.</p>\n  <br>\n\n  <!--<div class=\"error\" id=\"error\">\n"
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.error : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "  </div>-->\n\n"
     + ((stack1 = container.invokePartial(partials.filter_bar,depth0,{"name":"filter_bar","data":data,"indent":"  ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")

@@ -59,3 +59,42 @@ a {
 .required{
   color: red;
 }
+
+/**Buttons of fun**/
+.btn-default.unstar-custom-btn {
+	margin-left: 0px;
+	border: none;
+}	
+
+.btn-default.unstar-custom-btn:hover{
+	background-color: #FFFFFF;
+}	
+
+.btn-default.star-custom-btn {
+	margin-left: 0px;
+	border: none;
+}
+
+.btn-default.star-custom-btn:hover{
+	background-color: #FFFFFF;
+}	
+
+.unstar {
+	color: #FFBB33;
+	font-size: 25px;
+}
+
+.unstar:hover {
+	color: #A8A8A8;
+}
+
+.star {
+	color: #A8A8A8;
+	font-size: 25px;
+}
+
+.star:hover {
+	color: #FFBB33;
+}
+
+

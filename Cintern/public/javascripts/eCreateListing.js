@@ -82,30 +82,34 @@ var createNewQuestion = function(qNum, isTextQuestion) {
 	question.setAttribute("id", newId);
 	if (isTextQuestion) {
 		question.setAttribute("data-type", "text");
-		$("<span>Text Question</span>").appendTo(question);
+		$("<span>Text Question </span>").appendTo(question);
 	} else {
 		question.setAttribute("data-type", "radio");
-		$("<span>Yes or No Question</span>").appendTo(question);
+		$("<span>Yes or No Question </span>").appendTo(question);
 	} 
-	// delete button for user to remove question
-	var deleteBtn = $('<button/>').attr({"class":"delete-question btn btn-primary", "data-question": newId});
-	$("<span class='glyphicon glyphicon-trash center'></span>").appendTo(deleteBtn);
-	deleteBtn.appendTo(question);
-
-	// creating checkbox if question is optional
-	$('<input/>').attr({"type": 'hidden', "name": optId, "value": 'no'}).appendTo(question);
-	if (isTextQuestion) {
-		$("<span>Optional</span>").appendTo(question);
-		$('<input/>').attr({"type": 'checkbox', "name": optId, "value":'yes'}).appendTo(question);
-	} else {
-		// TODO: add a class??
-		$("<span><i>Yes or No questions cannnot be optional</i></span>").appendTo(question);
-		$('<br>').appendTo(question);
-	}
 
 	// space for question
 	$('<textarea/>').attr({"class": "form-control", "cols": '50', "name": newId, "required" : true}).appendTo(question);
+	
+		// creating checkbox if question is optional
+	$('<input/>').attr({"type": 'hidden', "name": optId, "value": 'no'}).appendTo(question);
+	if (isTextQuestion) {
+		$('<input/>').attr({"type": 'checkbox', "name": optId, "value":'yes'}).appendTo(question);
+		$("<span> Optional</span>").appendTo(question);
+	} else {
+		// TODO: add a class??
+		$("<span><em>Yes or No questions cannnot be optional</em></span>").appendTo(question);
+	}
+	$('<br>').appendTo(question);
+	
+	// delete button for user to remove question
+	var deleteBtn = $('<button/>').attr({"class":"btn btn-danger btn-xs delete-question", "data-question": newId});
+	$("<span class='glyphicon glyphicon-trash center'></span>").appendTo(deleteBtn);
+	deleteBtn.append(" Delete Question");
+	deleteBtn.appendTo(question);
+	
 	$('<br>').appendTo(question);
 	$('<br>').appendTo(question);
+
 	return question;
-}
+};

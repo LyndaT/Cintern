@@ -1,28 +1,20 @@
-<!--poor solution to get out of page-->
-<a href="/" id="home-link">Back to Dash</a>
 <div class="full-app">
-
+	<h3>Common Application</h3>
+	{{> application common isSubmitted=isSubmitted isCommon=true}}
+	<h3>Custom Application</h3>
+	{{> application custom isSubmitted=isSubmitted isCommon=false}}
+	
 	{{#if isStar}}
-		<button class="unstar-custom-btn btn btn-primary btn-lg" data-custom-id="{{customId}}" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
-			<span class='glyphicon glyphicon-star center' style="color:yellow"></span>
+		<button class="unstar-custom-btn btn btn-default" data-custom-id="{{customId}}" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
+			<span class='glyphicon glyphicon-star center unstar'></span>
 		</button>
 	{{else}}
-		<button class="star-custom-btn btn btn-primary btn-lg" data-custom-id="{{customId}}" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
-			<span class='glyphicon glyphicon-star center'></span>
+		<button class="star-custom-btn btn btn-default" data-custom-id="{{customId}}" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
+			<span class='glyphicon glyphicon-star center star'></span>
 		</button>
 	{{/if}}
 
 	<button id="reject-custom-btn" class="btn btn-primary" data-custom-id="{{customId}}" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
 		Reject
 	</button>
-
-	<br>
-	<br>
-	
-	<label>Email:</label> {{owner.email}}
-
-	<h3>Common Application</h3>
-	{{> application common isSubmitted=isSubmitted isCommon=true}}
-	<h3>Custom Application</h3>
-	{{> application custom isSubmitted=isSubmitted isCommon=false}}
 </div>
