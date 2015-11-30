@@ -1,7 +1,6 @@
 /**
  * @author Lynda Tang
  */
-
 var mongoose = require("mongoose");
 var User = require('../models/User.js');
 var Common = require('../models/common.js');
@@ -65,7 +64,7 @@ StudentSchema.statics.setCommonFilled = function(userId, callback){
 };
 
 /**
- * Finds the Student associaed with the userId
+ * Finds the Student associated with the userId
  * @param{ObjectId} userId
  * @param{Function} callback(err, Student)
  */
@@ -77,7 +76,7 @@ StudentSchema.statics.findByUserId = function(userId, callback) {
 			callback(null, student);
 		}
 	});
-}
+};
 
 var Student = mongoose.model('Student', StudentSchema);
 module.exports = mongoose.model("Student", StudentSchema);

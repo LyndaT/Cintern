@@ -1,8 +1,8 @@
 /**
  * @author Lynda Tang
  */
-
 var mongoose = require("mongoose");
+var passwordHash = require('password-hash');
 
 var UserSchema = mongoose.Schema({
   email: {type: String, unique: true, required: true},
@@ -19,12 +19,13 @@ var UserSchema = mongoose.Schema({
  * 								of (err, User)
  */
 UserSchema.statics.addUser = function(email, password, isStudent, callback){
+	var hashedPassword = passwordHash.generate(password);
 	findUser(email, function(err, user){
 		if (user){
 			callback("This username has already been taken");
 		} else {
 			User.create({   email: email, 
-		                password: password,
+		                password: hashedPassword,
 		                isStudent: isStudent}, 
 			function(err, user) {
 			  if (err) {
@@ -50,7 +51,7 @@ UserSchema.statics.loginUser = function(email, password, callback){
 		if (user == null) {
 			callback("This user does not exist");
 		} else {
-			if (user.password == password) {
+			if (passwordHash.verify(password, user.password)) {
 				callback(null, user);
 			} else {
 				callback("Wrong username and password");

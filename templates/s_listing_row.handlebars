@@ -1,7 +1,12 @@
-<div>
-    <tr class="s_listing" data-listing-id={{_id}} data-listing-company={{employerId.company}}>
-      <td>{{employerId.company}}</td>
-      <td>{{title}}</td>
-      <td>{{description}}</td>
-    </tr>
-</div>
+<!-- author: Maddie Dawson -->
+
+{{#in userListings _id}}
+  <tr class="unclickable" data-listing-id={{_id}} data-listing-company={{employer.company}}>
+{{else}}
+  <tr class="clickable s-listing" data-listing-id={{_id}} data-listing-company={{employer.company}}>
+{{/in}}
+
+  <td>{{employer.company}}</td>
+  <td>{{title}}</td>
+  <td>{{formatDate deadline}}</td>
+</tr>

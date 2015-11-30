@@ -1,21 +1,43 @@
-<div class="s_listings">
-  <a href="/students">Back to Dash</a>
+<!-- author: Maddie Dawson -->
+
+<div>
+
+  <!-- Listing Modal -->
+  <div class="modal fade" id="listingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-listing-id="{{listingId}}">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Listing Info</h4>
+        </div>
+        <div class="modal-body" id="listing-modal-content"></div>
+      </div>
+    </div>
+  </div>
 
   <h1>Current available listings</h1>
   <p>Click on a listing for more detailed information.</p>
   <br>
 
-  <table class="table table-hover table-condensed row-clickable">
+  <!--<div class="error" id="error">
+    {{#if error}}
+      {{error}}
+    {{/if}}
+  </div>-->
 
-    <thead>
+  {{> filter_bar}}
+
+  <table class="table table-hover table-condensed tablesorter" id="s-listing-table">
+
+    <thead class="clickable-headers">
       <th>Company</th>
       <th>Position</th>
-      <th>Description</th>
+      <th>Deadline</th>
     </thead>
 
-    <tbody>
+    <tbody class="searchable">
       {{#each listings}}
-        {{> listing}}
+        {{> listing this userListings=../userListings}}
       {{else}}
         <tr>
           <td>No listings available</td>

@@ -8,6 +8,37 @@ var Student = require('../models/Student.js');
 var utils = require('../utils/utils');
 
 /**
+ * GET /students/applications/common
+ *
+ * Gets the common application associated for the currentUser
+ * 
+ * Response:
+ *  - success: true if succeeded got the common
+ *  - err: on failure (i.e. server failure, invalid user);
+ */
+exports.getCommon = function(req, res, next) {
+	var currentUser = req.session.user;
+	var userId = currentUser.userId;
+	
+	Common.getCommonByOwnerId(userId, function(errMsg, common) {
+		if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+		else if (!common) utils.sendErrResponse(res, 403, "No common");
+		else {
+			common.populateCommon(function(errMsg, common) {
+				if (errMsg) utils.sendErrResponse(res, 403, errMsg);
+				else if (!common) utils.sendErrResponse(res, 403, "No common");
+				else {
+					var content = {
+						"application" : common.application,
+					};
+					utils.sendSuccessResponse(res, content);
+				}
+			});
+		}
+	});
+};
+
+/**
  * POST /students/applications/common
  *
  * Submits answers for the common application
@@ -20,10 +51,10 @@ var utils = require('../utils/utils');
  *	- success: true if succeeded in submitting
  *	- err: on failure (i.e. server fail, invalid submission)
  */ 
-exports.submitCommonApplication = function(req, res, next) {
+exports.submitCustom = function(req, res, next) {
 	var currentUser = req.session.user;
 	if (!currentUser.studentInfo.commonFilled) {
-		var currentUserId = currentUser.userId;
+		var userId = currentUser.userId;
 		var answers = req.body.answers;
 
 		// format answers for model call
@@ -36,12 +67,12 @@ exports.submitCommonApplication = function(req, res, next) {
 	    });
 
 		// submit the common
-		Common.submitCommon(currentUserId, answerArray, function(errMsg, success) {
+		Common.submitCommon(userId, answerArray, function(errMsg, success) {
 			if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 			else if (!success) utils.sendErrResponse(res, 403, "Could not submit");
 			else {
 				// student's common is filled
-				Student.setCommonFilled(currentUserId, function(errMsg, student) {
+				Student.setCommonFilled(userId, function(errMsg, student) {
 					if (errMsg) utils.sendErrResponse(res, 403, errMsg);
 					else if (!student) utils.sendErrResponse(res, 403, "Invalid student");
 					else {

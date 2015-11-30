@@ -23,37 +23,22 @@ var requireStudent = function(req, res, next) {
 
 router.all('*', requireStudent);
 
-
-/**
- * Add a given employer ID to the request body
- */
+// Add a given employer ID to the request body
 router.param('employerid', function(req, res, next, employerId) {
   req.body.employerId = employerId;
   next();
 });
 
-/**
- * Add a given listing ID to the request body
- */
+// Add a given listing ID to the request body
 router.param('lstgid', function(req, res, next, listingId) {
   req.body.listingId = listingId;
   next();
 });
 
-/**
- * Add a given application ID to the request body
- */
+// Add a given application ID to the request body
 router.param('customid', function(req, res, next, customId) {
   req.body.customId = customId;
   next();
-});
-
-router.get('/', function(req, res) {
-  if (req.session.user.studentInfo.commonFilled) {
-    res.render('s-dash', { title: 'Cintern' });    
-  } else {
-    res.render('common', { user : req.session.user.userId });
-  }
 });
 
 /* GET all listings */
@@ -65,31 +50,34 @@ router.get('/listings/employer/:employerid', listing.getEmployerListings);
 /* GET listing */
 router.get('/listings/:lstgid', listing.getListing);
 
-/* GET all applications */
-router.get('/applications', custom.getStudentApplications);
+/* GET common application */
+router.get('/applications/common', common.getCommon);
+
+/* PUT submit common application */
+router.put('/applications/common', common.submitCustom);
 
 /* GET template */
-router.get('/applications/template/:lstgid', custom.getListingTemplate);
+//router.get('/applications/template/:lstgid', custom.getListingTemplate);
+
+/* GET all applications */
+router.get('/applications', custom.getAllStudentCustoms);
+
+/* GET custom application */
+router.get('/applications/custom/:lstgid', custom.getCustom);
 
 /* POST add custom application */
-router.post('/applications/custom/saved/:lstgid', custom.saveCustomApplication);
+router.post('/applications/custom/added/:lstgid', custom.addCustom);
 
-/* POST submit common application */
-router.post('/applications/common', common.submitCommonApplication);
+/* PUT submit custom application */
+router.put('/applications/custom/:customid', custom.submitCustom);
 
-/* GET submit common application */
-//router.get('/applications/common', common.submitCommonApplication);
+/* PUT save updates to a custom application */
+router.put('/applications/saved/:customid', custom.saveCustom);
 
-/* POST submit custom application */
-router.post('/applications/custom/:customid', custom.submitCustomApplication);
+/* PUT withdraw a custom application */
+router.put('/applications/withdrawal/:customid', custom.withdrawCustom);
 
-/* POST application update */
-// router.post('/applications/updates/:customid', custom.updateApplication);
-
-/* POST application withdrawal */
-// router.post('/applications/withdrawal/:customid', custom.withdrawApplication);
-
-/* DELETE application */
-// router.delete('/applications/:customid', custom.deleteApplication);
+/* DELETE delete a custom application */
+router.delete('/applications/:customid', custom.deleteCustom);
 
 module.exports = router;

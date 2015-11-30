@@ -1,18 +1,32 @@
+<!-- author: Jennifer Wu -->
+
 <div>
 
-<a href='/students'>Back to Dash</a>
+	<h1>Custom Application</h1>
 
-<h1>Custom Application</h1>
+	<br>
 
-<br>
+	<label>Position Title: </label> {{title}}
 
-<label>Position Title: </label> {{title}}
+	<br>
+	<br>
 
-<br>
-<br>
+	{{#equal state "save"}}
+		<button id="delete-custom-btn" class="btn btn-primary" data-custom-id="{{customId}}">Delete</button>
+	{{/equal}}
 
-<h3>Application</h3>
+	{{#equal state "subm"}}
+		<button id="withdraw-custom-btn" class="btn btn-primary" data-custom-id="{{customId}}">Withdraw</button>
+	{{/equal}}
 
-{{> application this}}
+	<h3>Application</h3>
 
+	<form id="submit-custom-form" data-custom-id="{{customId}}" data-listing-id="{{listing}}">
+		{{> application this}}
+		{{#equal state "save"}}
+			<button id="save-custom-btn" class="btn btn-primary" >Save</button>
+			<input type="submit" class="btn btn-primary"/>
+		{{/equal}}
+	</form>
+	
 </div>

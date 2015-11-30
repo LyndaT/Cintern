@@ -25,20 +25,79 @@ var createQuestion = function(question, type, required, options) {
 	return q;
 };
 
+// maps a header to the question
+// constraints: no two keys can be the same, and no key can be "owner"
+var applicantHeaderInfo = {
+	"Name": "Name", 
+	"University": "University",
+	"Graduation Year" : "Graduation Year",
+	"Major" : "Major"
+};
+
 var commonQuestions = [
-	createQuestion("Email", "text", true, null),
-	createQuestion("Name", "text", true, null)
+	createQuestion(applicantHeaderInfo.Name, "text", true, null),
+	createQuestion(applicantHeaderInfo.University, "dropdown", true, ["Harvard", "MIT", "Caltech"]),
+	createQuestion(applicantHeaderInfo["Graduation Year"], "dropdown", true, ["2016", "2017", "2018", "2019", "2020", "other"]),
+	createQuestion(applicantHeaderInfo.Major, "dropdown", true, ["Computer Science", "English", "Mathematics"]),
+	createQuestion("Are you eligible to work in the US", "radio", true, null)
 ];
+
+/**
+ * @return the headers for the applicant listing page
+ */
+commonSchema.statics.getHeadersForApplicantList = function() {
+	return Object.keys(applicantHeaderInfo);
+};
+
+/**
+ * Runs the callback on an array of Objects that contain the appropriate
+ * information for the applicant display and with the same info in
+ * customOwnerInfos
+ *
+ * @param{Array} customOwnerInfos a list of Objects mapping userIds to
+ * 		an Object that has information about the user
+ * @param{Function} callback(err, array)
+ */
+commonSchema.statics.getCommonInfoForApplicantDisplay = function(customOwnerInfos, callback) {
+	var userIds = Object.keys(customOwnerInfos);
+
+	var info = [];
+
+	Common.find({ 'owner': { $in: userIds } }).populate("application").exec(function(err, commons) {
+		if (err) callback(err.message);
+		else {
+			// for each common, get the information for the headers supplied in applicantHeader Info
+			commons.forEach(function(common) {
+				var questions = common.application.questions;
+				var commonInfo = {};
+
+				forEachKey(applicantHeaderInfo, function(header) {
+					questions.forEach(function(question) {
+						if (applicantHeaderInfo[header] === question.question) {
+							commonInfo[header] = question.answer;
+						}
+					});
+				});
+
+				commonInfo["owner"] = common.owner;
+
+				forEachKey(customOwnerInfos[common.owner], function(key) {
+					commonInfo[key] = customOwnerInfos[common.owner][key];
+				});
+
+				info.push(commonInfo);
+			});
+
+			callback(null, info);
+		}
+	});
+};
 
 /**
  * @param{ObjectId} ownerId
  * @param{Function} callback(err, Common);
  */
 commonSchema.statics.createCommon = function(ownerId, callback){
-	var commonQuestions = [
-		createQuestion("Email", "text", true, null),
-		createQuestion("Name", "text", true, null)
-	];
 	Application.createApplication(commonQuestions, function(errMsg, app) {
 		if (errMsg) callback(errMsg);
 		else if (!app) callback("No app");
@@ -109,6 +168,14 @@ commonSchema.methods.populateCommon = function(callback) {
 		else callback(null, common);
 	})
 }
+
+var forEachKey = function(obj, fn) {
+  Object.keys(obj).forEach(function(key) {
+    if (obj.hasOwnProperty(key)) {
+      fn(key);
+    }
+  });
+};
 
 var Common = mongoose.model("Common", commonSchema);
 module.exports = Common;

@@ -1,7 +1,6 @@
 /**
  * @author: Lynda Tang
  */
-
 var ObjectID = require('mongodb').ObjectID;
 var Student = require('../models/Student.js');
 var User = require('../models/User.js');
@@ -30,6 +29,7 @@ module.exports.createStudent = function(req, res, next){
 				userId: student.user,
 				studentInfo : {
 					commonFilled : student.commonFilled,
+					_id : student._id
 				}
 			};
 			req.session.user = currUser;

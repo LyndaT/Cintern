@@ -1,15 +1,46 @@
-<a href='/employers'>Back to Dash</a>
-<div class="e_applicants">
-  <h1>Applicants</h1>
-    <p>Currently {{applicants.length}} students have applied to this listing</p>
+<!-- author: Heeyoon Kim -->
 
-  <table class="table table-hover table-condensed">
+<div>
+  <a href="/" id="home-link">Back to Dash</a>
+
+  <!-- Applicant Modal -->
+  <div class="modal fade" id="applicantModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-listing-id="{{listingId}}">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Applicant Info</h4>
+        </div>
+        <div class="modal-body" id="applicant-modal-content"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <h1>Applicants</h1>
+  
+  <p>Currently {{applicants.length}} students have applied to this listing.</p>
+
+  {{> filter_bar}}
+
+  <table class="table table-hover table-condensed tablesorter" id="e-applicants-table">
+    
     <thead>
-      <th>Email</th>
+
+      <!-- header for star -->
+      <th></th>
+
+      {{#each headers as |h|}}
+        <th class="clickable">{{h}}</th>
+      {{/each}}
+
+      <th class="clickable">Submit Time</th>
+
     </thead>
-    <tbody>
+    
+    <tbody class="searchable">
       {{#each applicants}}
-        {{> applicant}}
+        {{> applicant this listing=../listingId headers=../headers}}
       {{else}}
         <tr>
           <td>No applicants have applied yet.</td>
@@ -18,4 +49,6 @@
     </tbody>
 
   </table>
+
+  <button id="delete-listing-btn" class="btn btn-primary" data-listing-id={{listingId}}>Delete Listing</button>
 </div>

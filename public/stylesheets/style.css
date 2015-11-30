@@ -11,3 +11,90 @@ a {
     position: absolute;
     right: 20px;
 }
+
+.clickable{
+	cursor: pointer;
+}
+
+.clickable-headers th{
+  cursor: pointer;
+}
+
+.unclickable{
+  color: #A8A8A8;
+  cursor: default;
+}
+
+.error{
+	color:red;
+}
+
+.dropdown-hover {
+    position: relative;
+
+    /** Make it fit tightly around it's children */
+    display: inline-block;
+}
+
+.dropdown-hover .dropdown-menu {
+    position: absolute;
+
+    /**
+     * Set the top of the dropdown menu to be positioned 100%
+     * from the top of the container, and aligned to the left.
+     */
+    top: 100%;
+    left: 0;
+
+    /** Allow no empty space between this and .dropdown */
+    margin: 0;
+}
+
+.dropdown-hover:hover .dropdown-menu {
+
+    /** Show dropdown menu */
+    display: block;
+}
+
+.required{
+  color: red;
+}
+
+/**Buttons of fun**/
+.btn-default.unstar-custom-btn {
+	margin-left: 0px;
+	border: none;
+}	
+
+.btn-default.unstar-custom-btn:hover{
+	background-color: #FFFFFF;
+}	
+
+.btn-default.star-custom-btn {
+	margin-left: 0px;
+	border: none;
+}
+
+.btn-default.star-custom-btn:hover{
+	background-color: #FFFFFF;
+}	
+
+.unstar {
+	color: #FFBB33;
+	font-size: 25px;
+}
+
+.unstar:hover {
+	color: #A8A8A8;
+}
+
+.star {
+	color: #A8A8A8;
+	font-size: 25px;
+}
+
+.star:hover {
+	color: #FFBB33;
+}
+
+

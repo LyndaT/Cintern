@@ -8,6 +8,7 @@ var Application = require("../models/application");
 var Listing = require ("../models/listing");
 var User = require("../models/User");
 var Employer = require("../models/Employer");
+var async = require('async');
 
 var stateTable = {
 	"save" : "saved",
@@ -116,7 +117,7 @@ customSchema.statics.getCustomsForStudentDash = function(ownerId, callback) {
 		if (err) callback(err.message);
 		else {
 			Custom.populate(customs, {
-				path: "listing.employerId",
+				path: "listing.employer",
 				model: "Employer"
 			},
 			function(err, populated_customs) {
@@ -129,8 +130,7 @@ customSchema.statics.getCustomsForStudentDash = function(ownerId, callback) {
 
 /**
  * Gets all the submitted or starred Customs where the listingId is the 
- * listing in the format so that they can be used to generate the listing dash; 
- * then calls the callback on the Customs
+ * listing 
  *
  * @param{ObjectId} listingId
  * @param{Function} callback(err, [Custom])
@@ -139,9 +139,11 @@ customSchema.statics.getCustomsForListingDash = function(listingId, callback) {
 	Custom.find({
 		"listing" : listingId, 
 		"state" : { $in : ["subm", "star"]} 
-	}).populate("owner").exec(function(err, customs) {
+	}, function(err, customs) {
 		if (err) callback(err.message);
-		else callback(null, customs);
+		else {
+			callback(null, customs);
+		}
 	});
 };
 
@@ -164,17 +166,17 @@ customSchema.statics.getIfOwner = function(ownerId, customId, callback) {
 };
 
 /**
- * Gets a submitted or starred Custom, where the owner is the ownerId and the listing 
+ * Gets a submitted or starred Custom, where the id is the customId and the listing 
  * is the listingId, then runs callback on the submitted Custom
  *
- * @param{ObjectId} ownerId
+ * @param{ObjectId} customId
  * @param{ObjectId} listingId
  * @param{Function} callback(err, Custom)
  */
-customSchema.statics.getStarOrSubmCustomForListing = function(ownerId, listingId, callback) {
+customSchema.statics.getStarOrSubmCustomIfListing = function(customId, listingId, callback) {
 	Custom.findOne({ 
 		"listing" : listingId, 
-		"owner" : ownerId, 
+		"_id" : customId, 
 		state : { $in : ["subm", "star"] } 
 	}, function(err, custom) {
 		if (err) callback(err.message);
@@ -232,22 +234,43 @@ customSchema.statics.withdraw = function(customId, callback) {
 };
 
 /**
- * Deletes the Custom from the db if the Custom has the saved state, then runs calblack
+ * Deletes the Custom from the db if the Custom has the saved state, then runs callback
  *
  * @param{ObjectId} customId
  * @param{Function} callback(err)
  */
-customSchema.statics.deleteCustom = function(customId, callback) {
+customSchema.statics.deleteSavedCustom = function(customId, callback) {
 	Custom.findOne({ "_id" : customId, "state" : "save" }, function(err, custom) {
 		if (err) callback(err.message);
 		else if (!custom) callback("Invalid custom");
 		else {
-			var applicationId = custom.applicationId;
+			var applicationId = custom.application;
 			// remove the Custom from the DB
 			Custom.remove({ "_id" : custom._id }, function(err) {
 				if (err) callback(err.message);
 				// delete the Application associated with the Custom from the DB
-				else Application.deleteApplication(applicationId, callback);
+				else Application.deleteApplications([applicationId], callback);
+			});
+		}
+	});
+};
+
+/**
+ * Deletes all the Customs with a particular listingId, then runs the callback
+ * Used in Listing model for deleting listing.
+ *
+ * @param{ObjectId} listingId
+ * @param{Function} callback(err)
+ */
+customSchema.statics.deleteByListing = function(listingId, callback) {
+	Custom.find({ "listing": listingId }, function(err, customs) {
+		if (err) callback(err.message);
+		else {
+			var applications = [];
+			customs.forEach(function(custom) {applications.push(custom.application);})
+			Custom.remove({"listing": listingId}, function(err, result) {
+				if (err) callback(err.message);
+				else Application.deleteApplications(applications, callback);
 			});
 		}
 	});
@@ -326,20 +349,82 @@ customSchema.statics.update = function(customId, answers, isSubmission, callback
 	});
 };
 
-
-/*customSchema.methods.formatForShow = function(callback) {
-	Application.formatForShow(this.application, function(errMsg, formattedApp) {
-		if (errMsg) callback(errMsg);
-		else { 
-			var formattedCustom = {
-
-				"application" : formattedApp,
-				"state" : state,
-				"submitTime" : submitTime
-			}
+/** 
+ * Creates a Object mapping each state to the number of customs that
+ * the owner associated with ownerId has that are of that state, then runs
+ * the callback on the Object
+ *
+ * @param{ObjectId} ownerId
+ * @param{Function} callback(err, Object)
+ */
+customSchema.statics.numCustomsPerStateForOwner = function(ownerId, callback) {
+	Custom.find({ "owner" : ownerId, "isTemplate" : false }, { "state" : 1, "_id" : 0 }, function(err, customs) {
+		if (err) callback(err.message);
+		else {
+			var numCustomsPerState = {};
+			Object.keys(stateTable).forEach(function(state) {
+				numCustomsPerState[state] = 0;
+			});
+			customs.forEach(function(custom) { numCustomsPerState[custom.state] += 1; });
+			callback(null, numCustomsPerState);
 		}
 	});
-};*/
+};
+
+/**
+ * Creates an Object mapping each listing ID to its number of applicants
+ * and passes it to the callback. Does not acount saved, rejected, or withdrawn apps
+ *
+ * @param{listingIds} list of listing IDs
+ * @param{callback} callback(err, Object)
+ */
+customSchema.statics.numApplicantsPerListing = function(listingIds, callback) {
+	var numApplicantMap = {};
+
+	async.each(listingIds, function(listingId, asyncCallback) {
+		Custom.getCustomsForListingDash(listingId, function(err, customs) {
+			if (err) asyncCallback(err);
+			else {
+				numApplicantMap[listingId] = customs.length;
+				asyncCallback();
+			}
+		});
+	},
+	// once all are done
+	function(err) {
+		if (err) {
+			callback(err.message);
+		} else {
+			callback(null, numApplicantMap);
+		}
+	});
+};
+
+/**
+ * Creates an Object mapping each user ID to the date of application submission
+ * and passes it to the callback
+ *
+ * @param{listingId} listing IDs
+ * @param{ownerIds} list of user IDs
+ * @param{callback} callback(err, Object)
+ */
+customSchema.statics.getSubmissionDates = function(listingId, ownerIds, callback) {
+	var submissionDates = {};
+
+	async.each(ownerIds, function(ownerId, asyncCallback) {
+		Custom.getByOwnerAndListing(ownerId, listingId, true, function(err, custom) {
+			submissionDates[ownerId] = custom.submitTime;
+		});
+	},
+	// once all are done
+	function(err) {
+		if (err) {
+			callback(err.message);
+		} else {
+			callback(null, submissionDates);
+		}
+	});
+};
 
 
 /**

@@ -5,9 +5,13 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
 	if (req.session.user) {
 		if (req.session.user.studentInfo) {
-			res.redirect('/students');
+			if (req.session.user.studentInfo.commonFilled) {
+				res.render('s-index', { title: 'Cintern' });
+			} else {
+				res.render('s-common', { title: 'Cintern' });
+			}
 		} else {
-			res.redirect('/employers');
+			res.render('e-index', { title: 'Cintern' });
 		}
 	}
 	else {
