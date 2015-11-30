@@ -31,7 +31,7 @@ var failCallback = function (req, res, next, nextValidRequestDate) {
 	//Throws errors if using utils/functions
 	res.status(429).json({
 		success: false,
-		err: "You have been locked out due to too many failed login attempts. Please try again later."
+		err: "You've made too many failed attempts in a short period of time, please try again "+moment(nextValidRequestDate).fromNow()
 	}).end();
 };
     
@@ -44,7 +44,7 @@ var failCallback = function (req, res, next, nextValidRequestDate) {
 var userBruteforce = new ExpressBrute(store, {
     freeRetries: 4,
     proxyDepth: 1,
-    minWait: 5*60*1000, // 5 minutes, 
+    minWait: 1*60*1000, // 1 minute, 
     maxWait: 60*60*1000, // 1 hour, 
     failCallback: failCallback
 });
