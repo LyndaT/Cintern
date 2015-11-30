@@ -40,6 +40,7 @@ exports.createListing = function(req, res, next) {
 	deadline = new Date(year, month, day, 23, 59, 59, 59);
 
 	// TODO: clean up deadline so that it's a uniform time somehow
+	// TODO: make sure create listing sets to 11:59 EST
 	if (new Date(deadline) < Date.now()) utils.sendErrResponse(res, 403, "Selected deadline has passed");
 	else {
 		var questionList = [];

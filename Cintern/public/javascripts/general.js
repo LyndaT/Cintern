@@ -43,10 +43,11 @@ Handlebars.registerHelper('formatDate', function(ISODate, format) {
     var day = ("0" + date.getDate()).slice(-2);  
     var month = ("0" + (date.getMonth()+1)).slice(-2)
     var year = date.getFullYear();
-    return month + '/' + day + '/' + year;
+    var hour = date.getHours();
+    var minutes = date.getMinutes();
+    return month + '/' + day + '/' + year + ' ' + formattedTime(hour, minutes);
   }
 });
-
 
 Handlebars.registerHelper('in', function(list, item, options) {
   if (arguments.length < 3)
@@ -62,13 +63,23 @@ Handlebars.registerHelper('getValue', function(obj, key) {
     return (obj[key]);
 });
 
-
+//Makes hours, minutes, day, or month two digits
 var twoDigitDate = function(date) {
   if (date < 10) {
     return "0" + date;
   }
   return date;
 };
+
+//nicely formats time
+var formattedTime = function(hours, minutes) {
+  if (hours < 13) {
+    return twoDigitDate(hours) + ":" + twoDigitDate(minutes) + "AM";
+  } else {
+    return (hours-12) + ":" + minutes + "PM";
+  }
+};
+
 /**
  * This function loads the Handlebar template called template initialized
  * with data into the container
