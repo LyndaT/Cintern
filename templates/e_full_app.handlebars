@@ -1,0 +1,23 @@
+<div class="full-app">
+	<label>Email:</label> {{owner.email}}
+	<br>
+
+	<h3>Common Application</h3>
+	{{> application common isSubmitted=isSubmitted isCommon=true}}
+	<h3>Custom Application</h3>
+	{{> application custom isSubmitted=isSubmitted isCommon=false}}
+	
+	{{#if isStar}}
+		<button class="unstar-custom-btn btn btn-default" data-custom-id="{{customId}}" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
+			<span class='glyphicon glyphicon-star center unstar'></span>
+		</button>
+	{{else}}
+		<button class="star-custom-btn btn btn-default" data-custom-id="{{customId}}" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
+			<span class='glyphicon glyphicon-star center star'></span>
+		</button>
+	{{/if}}
+
+	<button id="reject-custom-btn" class="btn btn-primary" data-custom-id="{{customId}}" data-listing-id="{{listing._id}}" data-user-id="{{owner._id}}">
+		Reject
+	</button>
+</div>

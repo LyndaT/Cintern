@@ -1,0 +1,65 @@
+<!-- author: Lynda Tang -->
+  
+<form id="create-listing">
+	<h5>Position Title:</h5>
+	<input class="form-control" type="text" name="title" required>
+
+	<br>
+	
+	<div>
+		<h5>Description:</h5>
+		<textarea 
+			rows="8" 
+			name="description" 
+			class="form-control"
+			placeholder="Enter description here..."></textarea>
+	</div>
+
+	<br>
+
+	<div>
+		<h5>Requirements:</h5>
+		<textarea 
+			rows="8" 
+			name="requirements" 
+			class="form-control"
+			placeholder="Enter requirements here..."></textarea>
+	</div>
+
+	<br>
+
+	<div>
+        <h5>Deadline:</h5>
+        <div class="form-group">
+            <div class='input-group date' id='datetimepicker1'>
+                <input type='text' class="form-control" name="deadline" required/>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+        </div>
+       
+    </div>
+
+	<div>
+		<h5>Questions:</h5>
+		<div id="question-list"></div>
+		<div class="dropdown-hover">
+
+		    <!-- trigger button -->
+		    <button type="button" class="btn btn-primary">Add Question</button>
+
+		    <!-- dropdown menu -->
+		    <ul class="dropdown-menu">
+		        <li class="clickable"><a id="add-text-question">Text Question</a></li>
+		        <!-- <li class="clickable"><a id="add-dropdown-question">Dropdown Question</a></li> -->
+		        <li class="clickable"><a id="add-radio-question">Yes or No Question</a></li>
+		    </ul>
+		</div>
+	</div>
+
+	<br>
+	<button type="submit" class="btn btn-primary">Submit</button>
+
+</form>

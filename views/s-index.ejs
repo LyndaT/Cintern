@@ -1,0 +1,31 @@
+<!-- author: Jennifer Wu -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="/javascripts/handlebars.runtime-v4.0.2.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.tablesorter.js"></script>
+
+    <script src="/javascripts/templates.js"></script>
+    <script src="/javascripts/helpers.js"></script>
+    <script src="/javascripts/general.js"></script>
+    <script src="/javascripts/sIndex.js"></script>
+    <script src="/javascripts/filter.js"></script>
+  </head>
+  <body>
+    <button id="logout-btn" class="btn btn-primary right-align">Logout</button>
+
+    <ul class="nav nav-tabs clickable" id="main-menu">
+      <li role="presentation" class="active" data-toggle="tab" id="dash-nav"><a>Dash</a></li>
+      <li role="presentation" data-toggle="tab" id="listing-nav"><a>All Listings</a></li>
+      <li role="presentation" data-toggle="tab" id="common-nav"><a>Common</a></li>
+    </ul>
+
+    <div id="s-main-container"></div>	   
+  </body>
+</html>

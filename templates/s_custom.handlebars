@@ -1,0 +1,32 @@
+<!-- author: Jennifer Wu -->
+
+<div>
+
+	<h1>Custom Application</h1>
+
+	<br>
+
+	<label>Position Title: </label> {{title}}
+
+	<br>
+	<br>
+
+	{{#equal state "save"}}
+		<button id="delete-custom-btn" class="btn btn-primary" data-custom-id="{{customId}}">Delete</button>
+	{{/equal}}
+
+	{{#equal state "subm"}}
+		<button id="withdraw-custom-btn" class="btn btn-primary" data-custom-id="{{customId}}">Withdraw</button>
+	{{/equal}}
+
+	<h3>Application</h3>
+
+	<form id="submit-custom-form" data-custom-id="{{customId}}" data-listing-id="{{listing}}">
+		{{> application this}}
+		{{#equal state "save"}}
+			<button id="save-custom-btn" class="btn btn-primary" >Save</button>
+			<input type="submit" class="btn btn-primary"/>
+		{{/equal}}
+	</form>
+	
+</div>
