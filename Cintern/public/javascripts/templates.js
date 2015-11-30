@@ -15,7 +15,7 @@ templates['application'] = template({"1":function(container,depth0,helpers,parti
     + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.questions : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.program(3, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "");
 },"usePartial":true,"useData":true,"useDepths":true});
 templates['e_applicants'] = template({"1":function(container,depth0,helpers,partials,data,blockParams) {
-    return "        <th>"
+    return "        <th class=\"clickable\">"
     + container.escapeExpression(container.lambda(blockParams[0][0], depth0))
     + "</th>\n";
 },"3":function(container,depth0,helpers,partials,data,blockParams,depths) {
@@ -31,9 +31,9 @@ templates['e_applicants'] = template({"1":function(container,depth0,helpers,part
     + alias1(container.lambda(((stack1 = (depth0 != null ? depth0.applicants : depth0)) != null ? stack1.length : stack1), depth0))
     + " students have applied to this listing.</p>\n\n"
     + ((stack1 = container.invokePartial(partials.filter_bar,depth0,{"name":"filter_bar","data":data,"blockParams":blockParams,"indent":"  ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
-    + "\n  <table class=\"table table-hover table-condensed\">\n    \n    <thead>\n\n      <!-- header for star -->\n      <th></th>\n\n"
+    + "\n  <table class=\"table table-hover table-condensed tablesorter\" id=\"e-applicants-table\">\n    \n    <thead>\n\n      <!-- header for star -->\n      <th></th>\n\n"
     + ((stack1 = helpers.each.call(alias2,(depth0 != null ? depth0.headers : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 1, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
-    + "\n      <th>Submit Time</th>\n\n    </thead>\n    \n    <tbody class=\"searchable\">\n"
+    + "\n      <th class=\"clickable\">Submit Time</th>\n\n    </thead>\n    \n    <tbody class=\"searchable\">\n"
     + ((stack1 = helpers.each.call(alias2,(depth0 != null ? depth0.applicants : depth0),{"name":"each","hash":{},"fn":container.program(3, data, 0, blockParams, depths),"inverse":container.program(5, data, 0, blockParams, depths),"data":data,"blockParams":blockParams})) != null ? stack1 : "")
     + "    </tbody>\n\n  </table>\n\n  <button id=\"delete-listing-btn\" class=\"btn btn-primary\" data-listing-id="
     + alias1(((helper = (helper = helpers.listingId || (depth0 != null ? depth0.listingId : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias2,{"name":"listingId","hash":{},"data":data,"blockParams":blockParams}) : helper)))
@@ -58,7 +58,9 @@ templates['e_applicants_row'] = template({"1":function(container,depth0,helpers,
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isStar : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.program(3, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
     + "\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.headers : depth0),{"name":"each","hash":{},"fn":container.program(5, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "\n  	<td>"
+    + "\n  	<td data-sort-value=\""
+    + alias4(((helper = (helper = helpers.submitTime || (depth0 != null ? depth0.submitTime : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"submitTime","hash":{},"data":data}) : helper)))
+    + "\">"
     + alias4((helpers.formatDate || (depth0 && depth0.formatDate) || alias2).call(alias1,(depth0 != null ? depth0.submitTime : depth0),{"name":"formatDate","hash":{},"data":data}))
     + "</td>\n</tr>";
 },"useData":true,"useDepths":true});
@@ -76,7 +78,7 @@ templates['e_dash_page'] = template({"1":function(container,depth0,helpers,parti
 
   return "<!-- author: Maddie Dawson -->\n\n<div>\n\n  <h1>Welcome!</h1>\n\n  <button class=\"btn btn-primary right-align\" data-toggle=\"modal\" data-target=\"#new-listing-modal\">\n    Create New Listing\n  </button>\n  \n  <!-- New Listing Modal -->\n  <div class=\"modal\" id=\"new-listing-modal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n    <div class=\"modal-dialog\" role=\"document\">\n      <div class=\"modal-content\">\n        <div class=\"modal-header\">\n          <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n          <h4 class=\"modal-title\">Create New Listing</h4>\n        </div>\n        <div class=\"modal-body\" id=\"new-listing-modal-content\"></div>\n      </div>\n    </div>\n  </div>\n\n  Here are your listings:\n\n  <br>\n  <br>\n\n"
     + ((stack1 = container.invokePartial(partials.filter_bar,depth0,{"name":"filter_bar","data":data,"blockParams":blockParams,"indent":"  ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
-    + "\n  <table class=\"table table-hover table-condensed\">\n\n    <thead>\n  	  <th>Title</th>\n      <th>Number of applicants</th>\n      <th>Deadline</th>\n  	</thead>\n\n    <tbody class=\"searchable\">\n"
+    + "\n  <table class=\"table table-hover table-condensed tablesorter\" id=\"e-dash-table\">\n\n    <thead class=\"clickable-headers\">\n  	  <th>Title</th>\n      <th>Number of applicants</th>\n      <th>Deadline</th>\n  	</thead>\n\n    <tbody class=\"searchable\">\n"
     + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.listings : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 1, blockParams, depths),"inverse":container.program(3, data, 0, blockParams, depths),"data":data,"blockParams":blockParams})) != null ? stack1 : "")
     + "    </tbody>\n  \n  </table>\n</div>";
 },"usePartial":true,"useData":true,"useDepths":true,"useBlockParams":true});
@@ -308,7 +310,7 @@ templates['s_dash_page'] = template({"1":function(container,depth0,helpers,parti
     + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.apps : depth0)) != null ? stack1.length : stack1), depth0))
     + " applications.\n\n  <br>\n  <br>\n  \n"
     + ((stack1 = container.invokePartial(partials.filter_bar,depth0,{"name":"filter_bar","data":data,"indent":"  ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
-    + "  \n  <table class=\"table table-hover table-condensed\">\n  	\n    <thead>\n  	  <th>Company</th>\n  	  <th>Title</th>\n      <th>Deadline</th>\n      <th>Submitted Date</th>\n  	  <th>Status</th>\n  	</thead>\n\n    <tbody class=\"searchable\">\n"
+    + "  \n  <table class=\"table table-hover table-condensed tablesorter\" id=\"s-dash-table\">\n  	\n    <thead class=\"clickable-headers\">\n  	  <th>Company</th>\n  	  <th>Title</th>\n      <th>Deadline</th>\n      <th>Submitted Date</th>\n  	  <th>Status</th>\n  	</thead>\n\n    <tbody class=\"searchable\">\n"
     + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.apps : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + "    </tbody>\n  \n  </table>\n</div>";
 },"usePartial":true,"useData":true});
@@ -410,7 +412,7 @@ templates['s_listings'] = template({"1":function(container,depth0,helpers,partia
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.error : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "  </div>-->\n\n"
     + ((stack1 = container.invokePartial(partials.filter_bar,depth0,{"name":"filter_bar","data":data,"indent":"  ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
-    + "\n  <table class=\"table table-hover table-condensed row-clickable\">\n\n    <thead>\n      <th>Company</th>\n      <th>Position</th>\n      <th>Deadline</th>\n    </thead>\n\n    <tbody class=\"searchable\">\n"
+    + "\n  <table class=\"table table-hover table-condensed tablesorter\" id=\"s-listing-table\">\n\n    <thead class=\"clickable-headers\">\n      <th>Company</th>\n      <th>Position</th>\n      <th>Deadline</th>\n    </thead>\n\n    <tbody class=\"searchable\">\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.listings : depth0),{"name":"each","hash":{},"fn":container.program(3, data, 0, blockParams, depths),"inverse":container.program(5, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
     + "    </tbody>\n\n  </table>\n</div>\n";
 },"usePartial":true,"useData":true,"useDepths":true});

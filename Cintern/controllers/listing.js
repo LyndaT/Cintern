@@ -103,7 +103,7 @@ exports.getAllListings = function(req, res, next) {
 
 
 /**
- * GET /employers/listings and GET users/students/listings
+ * GET /employers/listings
  *
  * Retrieves all of the listings that the employer has created
  *

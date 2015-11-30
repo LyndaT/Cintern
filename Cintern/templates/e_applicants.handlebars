@@ -9,7 +9,7 @@
 
   {{> filter_bar}}
 
-  <table class="table table-hover table-condensed">
+  <table class="table table-hover table-condensed tablesorter" id="e-applicants-table">
     
     <thead>
 
@@ -17,10 +17,10 @@
       <th></th>
 
       {{#each headers as |h|}}
-        <th>{{h}}</th>
+        <th class="clickable">{{h}}</th>
       {{/each}}
 
-      <th>Submit Time</th>
+      <th class="clickable">Submit Time</th>
 
     </thead>
     

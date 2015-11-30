@@ -66,7 +66,6 @@ commonSchema.statics.getCommonInfoForApplicantDisplay = function(customOwnerInfo
 	Common.find({ 'owner': { $in: userIds } }).populate("application").exec(function(err, commons) {
 		if (err) callback(err.message);
 		else {
-			console.log(commons);
 			// for each common, get the information for the headers supplied in applicantHeader Info
 			commons.forEach(function(common) {
 				var questions = common.application.questions;

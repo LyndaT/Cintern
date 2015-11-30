@@ -123,6 +123,7 @@ $(document).on('click', 'ul.nav-tabs li', function(e){
 var loadDashPage = function() {
 	$.get('/students/applications', function(response) {
 		loadPage(mainContainer, 's_dash_page', { apps: response.content.applications });
+		$("#s-dash-table").tablesorter();
 	});
 };
 
@@ -134,6 +135,7 @@ var loadAllListingsPage = function() {
 			listings: response.content.listings, 
 			userListings: response.content.userListings
 		});
+		$("#s-listing-table").tablesorter();
 	});
 }
 

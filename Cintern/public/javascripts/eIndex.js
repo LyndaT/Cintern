@@ -92,8 +92,10 @@ var loadDashPage = function() {
 		loadPage(mainContainer, 'e_dash_page', 
             { listings: response.content.listings, numApplicantsMap: response.content.numApplicantsMap });
         loadModal('#new-listing-modal-content', 'e_create_listing');
+        $("#e-dash-table").tablesorter();
 	});
 };
+
 
 // Loads the applicant page corresponding to the listingId
 var loadApplicantsPage = function(listingId) {
@@ -103,6 +105,7 @@ var loadApplicantsPage = function(listingId) {
             applicants: response.content.applicants,
             headers: response.content.headers, listingId: listingId
         });
+        $("#e-applicants-table").tablesorter();
 	});
 };
 

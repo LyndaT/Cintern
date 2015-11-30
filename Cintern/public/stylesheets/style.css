@@ -16,8 +16,13 @@ a {
 	cursor: pointer;
 }
 
+.clickable-headers th{
+  cursor: pointer;
+}
+
 .unclickable{
   color: #A8A8A8;
+  cursor: default;
 }
 
 .error{
